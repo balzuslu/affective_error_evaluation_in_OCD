@@ -1,0 +1,31 @@
+---
+output: 
+  html_document:
+    toc: false
+---
+<br><br><br><br><br>
+
+<center>
+
+****
+
+<br>
+
+This site contains analysis code and results of statistical analyses for the manuscript:
+<br><br>
+
+<font size="4">**Affective Evaluation of Errors and Neural Error Processing in Obsessive-Compulsive Disorder**</font>
+<br><br>
+
+by Luisa Balzus, Franziska Jüres, Norbert Kathmann, and Julia Klawohn
+
+<br>
+
+****
+
+<br>
+
+Data and code to reproduce statistical analyses are available at <br> 
+https://github.com/balzuslu/affective_error_evaluation_in_OCD.
+
+<center>

@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Go/No-Go Data</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="web_style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Affective Error Evaluation in OCD</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="0_Project_and_Data_Description.html">
+    <span class="glyphicon glyphicon-info-sign"></span>
+     
+    Project &amp; Data
+  </a>
+</li>
+<li>
+  <a href="1_Participants.html">
+    <span class="glyphicon glyphicon-info-sign"></span>
+     
+    Participants
+  </a>
+</li>
+<li>
+  <a href="2_Go_No-Go.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-hand-up"></span>
+     
+    Go/No-Go Data
+  </a>
+</li>
+<li>
+  <a href="3_Word_Categorization.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-hand-up"></span>
+     
+    Word Categorization Data (&amp; ERPs)
+  </a>
+</li>
+<li>
+  <a href="4_ERP.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-flash"></span>
+     
+    ERP Data
+  </a>
+</li>
+<li>
+  <a href="5_Plots.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-stats"></span>
+     
+    Plots
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:luisa.balzus@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Go/No-Go Data</h1>
+
+</div>
+
+
+<!-- Set general settings -->
+<pre class="r"><code># Set general settings for markdown file
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  comment = &quot;&quot;,
+  results = &quot;hold&quot;)
+
+
+# Clear environment
+rm(list = ls())
+
+
+# Load packages
+library(dplyr)      # for data wrangling
+library(knitr)      # for integrating computing and reporting in markdown
+library(pastecs)    # for descriptive statistics
+library(kableExtra) # for customizing appearance of tables
+library(MASS)       # for boxcox function and contrast definition
+library(lme4)       # for (G)LMMs
+library(lmerTest)   # for LMM p values (Satterthwaite&#39;s method for approximating dfs for t and F tests)
+library(sjPlot)     # for tab_model function to display (G)LMM results
+
+
+# Load functions
+source(&quot;./functions/summarySEwithinO.R&quot;)  # Function provided by R-cookbook: http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+source(&quot;./functions/my_table_template.R&quot;) # Function to create table template
+
+
+# Turn off scientific notation
+options(scipen = 999)
+
+
+# Prepare labels for (G)LMM tables
+labels &lt;- c(
+  &quot;(Intercept)&quot;                   = &quot;Intercept&quot;,
+  &quot;gng_response_type2-1&quot;          = &quot;FH – SH&quot;,
+  &quot;gng_response_type3-2&quot;          = &quot;FA – FH&quot;,
+  &quot;group2-1&quot;                      = &quot;Group (OCD – HC)&quot;,
+  &quot;gng_response_type2-1:group2-1&quot; = &quot;FH – SH x Group&quot;,
+  &quot;gng_response_type3-2:group2-1&quot; = &quot;FA – FH x Group&quot;)</code></pre>
+<p><br></p>
+<div id="data-cleaning" class="section level2">
+<h2>Data Cleaning</h2>
+<hr />
+<pre class="r"><code># Load data
+load(file = &quot;./data/Single_Trial_Data.rda&quot;)
+
+
+# Create numeric accuracy variable (0 = FA; 1 = SH, FH, IR)
+single_trial_data &lt;- single_trial_data %&gt;%
+  dplyr::mutate(gng_accuracy_numeric = ifelse(gng_response_type == &quot;FH&quot; | gng_response_type == &quot;SH&quot; |
+      gng_response_type == &quot;IR&quot;, 1, ifelse(gng_response_type == &quot;FA&quot;, 0, NA)))
+
+
+# For RT analysis, exclude inhibited gng responses, missing gng responses, gng responses with
+# wrong key, gng RT outliers, and trials with ERP artifacts
+single_trial_data_gng_rt &lt;- single_trial_data %&gt;%
+  dplyr::filter(
+    gng_response_type != &quot;IR&quot; &amp;
+    gng_response_type != &quot;miss&quot; &amp;
+    gng_response_type != &quot;wrong_key&quot; &amp;
+    (is.na(gng_rt_invalid) | gng_rt_invalid == FALSE) &amp;
+    stimulation == &quot;sham&quot; &amp;
+    MFN_artifact == FALSE)
+
+
+# For accuracy analysis, exclude missing gng responses, gng responses with wrong key, gng RT outliers,
+# and trials with ERP artifacts
+single_trial_data_gng_acc &lt;- single_trial_data %&gt;%
+  dplyr::filter(
+    gng_response_type != &quot;miss&quot; &amp;
+    gng_response_type != &quot;wrong_key&quot; &amp;
+    (is.na(gng_rt_invalid) | gng_rt_invalid == FALSE) &amp;
+    stimulation == &quot;sham&quot; &amp;
+    MFN_artifact == FALSE)
+
+
+# Make categorical variables factors
+single_trial_data_gng_rt$gng_response_type &lt;- factor(single_trial_data_gng_rt$gng_response_type,
+  levels = c(&quot;SH&quot;, &quot;FH&quot;, &quot;FA&quot;))
+single_trial_data_gng_rt$participant_id    &lt;- factor(single_trial_data_gng_rt$participant_id)
+single_trial_data_gng_rt$group             &lt;- factor(single_trial_data_gng_rt$group)
+single_trial_data_gng_acc$participant_id   &lt;- factor(single_trial_data_gng_acc$participant_id)
+single_trial_data_gng_acc$group            &lt;- factor(single_trial_data_gng_acc$group)</code></pre>
+<p>In the analysis of RT and accuracy in the go/no-go task, trials were discarded if RT in the go/no-go task was below 100 ms or above 800 ms, no response was made, or the response was made with a key not assigned to the go/no-go task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points. <br><br><br></p>
+</div>
+<div id="descriptive-statistics" class="section level2">
+<h2>Descriptive Statistics</h2>
+<hr />
+<p>This table corresponds to Table S2 in the supplemental material.</p>
+<pre class="r"><code># Calculate descriptive statistics for RT
+descriptive_statistics_rt &lt;- summarySEwithinO(
+  data          = single_trial_data_gng_rt,
+  measurevar    = &quot;gng_rt&quot;,
+  withinvars    = &quot;gng_response_type&quot;,
+  betweenvars   = &quot;group&quot;,
+  idvar         = &quot;participant_id&quot;,
+  conf.interval = .95) %&gt;%
+  # Rename variable and select variables for subsequent merging
+  dplyr::rename(mean = gng_rt) %&gt;%
+  dplyr::select(&quot;group&quot;, &quot;gng_response_type&quot;, &quot;mean&quot;, &quot;ci&quot;)
+
+
+# Prepare calculation of descriptive statistics for proportion of response types (based on all trials)
+descriptive_statistics_proportion &lt;- single_trial_data %&gt;%
+  dplyr::filter(stimulation == &quot;sham&quot;) %&gt;%
+  dplyr::group_by(participant_id, group) %&gt;%
+  dplyr::summarize(
+    SH         = sum(gng_response_type == &quot;SH&quot;)        / length(participant_id) * 100,
+    FH         = sum(gng_response_type == &quot;FH&quot;)        / length(participant_id) * 100,
+    FA         = sum(gng_response_type == &quot;FA&quot;)        / length(participant_id) * 100,
+    IR         = sum(gng_response_type == &quot;IR&quot;)        / length(participant_id) * 100,
+    misses     = sum(gng_response_type == &quot;miss&quot;)      / length(participant_id) * 100,
+    wrong_key  = sum(gng_response_type == &quot;wrong_key&quot;) / length(participant_id) * 100) %&gt;%
+  dplyr::ungroup()
+
+
+# Calculate descriptive statistics for proportion (exclude first column containing participant ID)
+descriptive_statistics_proportion &lt;- descriptive_statistics_proportion[, -c(1)] %&gt;%
+  dplyr::group_by(group) %&gt;%
+  do(data.frame(t(stat.desc(.)))) %&gt;%
+  na.omit() %&gt;%
+  dplyr::ungroup() %&gt;%
+  # Create response type column, rename variable, and select variables for subsequent merging
+  dplyr::mutate(gng_response_type = rep(c(&quot;SH &quot;,&quot;FH &quot;,&quot;FA &quot;,&quot;IR&quot;, &quot;Missing response&quot;, &quot;Wrong key response&quot;),2)) %&gt;%
+  dplyr::rename(ci = CI.mean) %&gt;%
+  dplyr::select(&quot;group&quot;, &quot;gng_response_type&quot;, &quot;mean&quot;, &quot;ci&quot;)
+
+
+# Combine measures
+descriptive_statistics &lt;- as.data.frame(rbind(descriptive_statistics_rt, descriptive_statistics_proportion))
+
+
+# Create column with format &quot;M [CI]&quot; for RT (round to 0 decimals)
+descriptive_statistics$M_CI &lt;- paste0(round(descriptive_statistics$mean, 0), &quot; [&quot;,
+  round(descriptive_statistics$mean - descriptive_statistics$ci, 0), &quot;, &quot;,
+  round(descriptive_statistics$mean + descriptive_statistics$ci, 0), &quot;]&quot;)
+
+
+# Create column with format &quot;M [CI]&quot; for accuracy (round to 2 decimals)
+descriptive_statistics[c(7:18), ]$M_CI &lt;- paste0(
+  format(round(descriptive_statistics[c(7:18), ]$mean, 2), nsmall = 2), &quot; [&quot;,
+  format(round(descriptive_statistics[c(7:18), ]$mean -
+               descriptive_statistics[c(7:18), ]$ci,   2), nsmall = 2), &quot;, &quot;,
+  format(round(descriptive_statistics[c(7:18), ]$mean +
+               descriptive_statistics[c(7:18), ]$ci,   2), nsmall = 2), &quot;]&quot;)
+
+
+# Split and re-merge table to display both groups next to each other
+descriptive_statistics &lt;- split(descriptive_statistics, descriptive_statistics$group)
+descriptive_statistics_display &lt;- cbind(descriptive_statistics$OCD[, c(&quot;gng_response_type&quot;, &quot;M_CI&quot;)],
+                                        descriptive_statistics$HC[, &quot;M_CI&quot;])
+
+
+# Display table (and rearrange rows)
+my_table_template(descriptive_statistics_display[c(3:1, 4:9), ],
+  caption = &quot;Descriptive Statistics for Behavioral Performance in the Go/No-Go Task&quot;,
+  col_names = c(&quot;Measure&quot;, rep(&quot;M [95% CI]&quot;, 2)),
+  header_above_config = c(&quot;&quot;, &quot;Patients with OCD&quot;, &quot;Healthy control participants&quot;)) %&gt;%
+  add_footnote(&quot;\n Note. CIs are adjusted for within-participant designs using the method described 
+  by Morey (2008).&quot;, notation = &quot;none&quot;) %&gt;%
+  pack_rows(&quot;Response time (ms)&quot;, 1, 3) %&gt;%
+  pack_rows(&quot;Proportion of responses (%)&quot;, 4, 9)</code></pre>
+<table class="table table-striped table-condensed" style="font-size: 12px; width: auto !important; ">
+<caption style="font-size: initial !important;">
+Descriptive Statistics for Behavioral Performance in the Go/No-Go Task
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Patients with OCD
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Healthy control participants
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Measure
+</th>
+<th style="text-align:left;">
+M [95% CI]
+</th>
+<th style="text-align:left;">
+M [95% CI]
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="3">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>Response time (ms)</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+SH
+</td>
+<td style="text-align:left;">
+363 [360, 365]
+</td>
+<td style="text-align:left;">
+362 [360, 365]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+FH
+</td>
+<td style="text-align:left;">
+297 [295, 298]
+</td>
+<td style="text-align:left;">
+283 [281, 285]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+FA
+</td>
+<td style="text-align:left;">
+285 [279, 290]
+</td>
+<td style="text-align:left;">
+296 [290, 302]
+</td>
+</tr>
+<tr grouplength="6">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>Proportion of responses (%)</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+SH
+</td>
+<td style="text-align:left;">
+44.77 [41.70, 47.85]
+</td>
+<td style="text-align:left;">
+46.37 [42.86, 49.88]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+FH
+</td>
+<td style="text-align:left;">
+21.23 [18.23, 24.24]
+</td>
+<td style="text-align:left;">
+19.69 [16.47, 22.91]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+FA
+</td>
+<td style="text-align:left;">
+9.14 [ 6.97, 11.30]
+</td>
+<td style="text-align:left;">
+8.76 [ 7.33, 10.19]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+IR
+</td>
+<td style="text-align:left;">
+23.34 [21.19, 25.49]
+</td>
+<td style="text-align:left;">
+23.74 [22.33, 25.15]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Missing response
+</td>
+<td style="text-align:left;">
+1.03 [ 0.52, 1.54]
+</td>
+<td style="text-align:left;">
+1.17 [ 0.45, 1.89]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+Wrong key response
+</td>
+<td style="text-align:left;">
+0.49 [ 0.26, 0.71]
+</td>
+<td style="text-align:left;">
+0.27 [ 0.16, 0.38]
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> <br> Note. CIs are adjusted for within-participant designs using the method described <br> by Morey (2008).
+</td>
+</tr>
+</tfoot>
+</table>
+<p><br><br></p>
+</div>
+<div id="analysis-of-response-time" class="section level2 tabset">
+<h2>Analysis of Response Time</h2>
+<hr />
+<p>We performed a linear mixed model (LMM) on single-trial data. Analysis of RT in the go/no-go task included group and response type (slow hit, fast hit, false alarm) as fixed effects.</p>
+<p>We used sliding difference contrasts for categorical fixed effects and started with the maximal random-effects structure for each model. In case of non-convergence, random effects were specified as uncorrelated. Using principal component analysis, we identified random effects explaining zero variance and removed these, as recommended by Bates, Kliegl, et al. (2015). <br><br></p>
+<div id="determine-data-transformation" class="section level3">
+<h3>Determine Data Transformation</h3>
+<p>RT was log-transformed to normalize residuals. This was determined using the Box–Cox procedure (Box &amp; Cox, 1964).</p>
+<pre class="r"><code># Arrange plots
+par(mfrow = c(1, 5))
+
+
+# Determine transformation by estimating optimal lambda using Box–Cox procedure
+bc_rt &lt;- boxcox(gng_rt ~ 1, data = single_trial_data_gng_rt)
+optlambda_rt &lt;- bc_rt$x[which.max(bc_rt$y)]
+
+
+# Density plot for raw RT
+plot(density(single_trial_data_gng_rt$gng_rt), main = &quot;Raw RT: Density Plot&quot;)
+
+
+# Q-q plot for raw RT
+qqnorm(single_trial_data_gng_rt$gng_rt, main = &quot;Raw RT: Q-Q Plot&quot;, pch = 1)
+
+
+# Density plot for log RT
+plot(density(single_trial_data_gng_rt$gng_rt_log), main = &quot;Log RT: Density Plot&quot;)
+
+
+# Q-q plot for log RT
+qqnorm(single_trial_data_gng_rt$gng_rt_log, main = &quot;Log RT: Q-Q Plot&quot;, pch = 1)</code></pre>
+<p><img src="2_Go_No-Go_files/figure-html/rt-determine-transformation-1.png" width="1152" /></p>
+<pre class="r"><code># Reset plot layout
+par(mfrow = c(1, 1))</code></pre>
+<p>The optimal lambda is -0.55, suggesting that log transformation is appropriate. <br><br><br></p>
+</div>
+<div id="lmm" class="section level3 active">
+<h3>LMM</h3>
+<p>This table corresponds to Table 2 in the manuscript.</p>
+<pre class="r"><code># Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_gng_rt$gng_response_type) &lt;- contr.sdif(3)
+contrasts(single_trial_data_gng_rt$group)             &lt;- contr.sdif(2)
+
+
+# Run model with maximal random-effects structure
+LMM_gng_rt &lt;- lmer(gng_rt_log ~ gng_response_type * group +
+  (1 + gng_response_type | participant_id),
+  data = single_trial_data_gng_rt,
+  REML = TRUE,
+  control = lmerControl(optimizer = &quot;bobyqa&quot;))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_gng_rt)        # Model does converge
+# isSingular(LMM_gng_rt)     # No singular fit
+# summary(rePCA(LMM_gng_rt)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(LMM_gng_rt,
+  dv.labels = &quot;RT&quot;, pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = &quot;-&quot;, string.pred = &quot;Fixed effects&quot;,
+  string.est = &quot;b&quot;, string.stat = &quot;t&quot;, string.ci = &quot;95 % CI&quot;, p.val = &quot;satterthwaite&quot;,
+  title = &quot;LMM Results for RT in the Go/No-Go Task&quot;)
+
+
+# Display random effects
+print(&quot;Random effects:&quot;)
+print(VarCorr(LMM_gng_rt), digits = 1, comp = &quot;Std.Dev.&quot;)</code></pre>
+<table style="border-collapse:collapse; border:none;">
+<caption style="font-weight: bold; text-align:left;">
+LMM Results for RT in the Go/No-Go Task
+</caption>
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="4" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+RT
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Fixed effects
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+b
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+95 % CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+t
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+Intercept
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+5.73
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+5.69 – 5.76
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+300.78
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+FH – SH
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.26
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.28 – -0.24
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-24.82
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+FA – FH
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.04
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.02 – 0.07
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+3.41
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+Group (OCD – HC)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.01
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.07 – 0.09
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.26
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.797
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+FH – SH x Group
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.01
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.03 – 0.05
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.37
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.710
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+FA – FH x Group
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.02
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.07 – 0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.93
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.359
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="4">
+21164
+</td>
+</tr>
+</table>
+<pre><code>[1] &quot;Random effects:&quot;
+ Groups         Name                 Std.Dev. Corr       
+ participant_id (Intercept)          0.14                
+                gng_response_type2-1 0.07     -0.20      
+                gng_response_type3-2 0.08      0.14 -0.20
+ Residual                            0.18                </code></pre>
+<p><br> RTs were shorter for fast hits than for slow hits and false alarms. There was no significant group difference in RT. <br><br><br></p>
+</div>
+</div>
+<div id="analysis-of-accuracy" class="section level2 tabset">
+<h2>Analysis of Accuracy</h2>
+<hr />
+<p>We performed a binomial generalized linear mixed model (GLMM) on single-trial data. Analysis of accuracy in the go/no-go task included group as fixed effect.</p>
+<p>We used sliding difference contrasts for categorical fixed effects and started with the maximal random-effects structure for each model. In case of non-convergence, random effects were specified as uncorrelated. Using principal component analysis, we identified random effects explaining zero variance and removed these, as recommended by Bates, Kliegl, et al. (2015). <br><br></p>
+<div id="glmm" class="section level3">
+<h3>GLMM</h3>
+<p>This table corresponds to Table 2 in the manuscript.</p>
+<pre class="r"><code># Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_gng_acc$group) &lt;- contr.sdif(2)
+
+
+# Run model with maximal random-effects structure
+GLMM_gng_acc &lt;- glmer(gng_accuracy_numeric ~ group + (1 | participant_id),
+  data = single_trial_data_gng_acc,
+  family = binomial,
+  control = glmerControl(optimizer = &quot;bobyqa&quot;))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(GLMM_gng_acc)        # Model does converge
+# isSingular(GLMM_gng_acc)     # No singular fit
+# summary(rePCA(GLMM_gng_acc)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(GLMM_gng_acc,
+  dv.labels = &quot;Accuracy&quot;, pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = &quot;-&quot;, string.pred = &quot;Fixed effects&quot;,
+  string.est = &quot;Odds ratio&quot;, string.stat = &quot;z&quot;, string.ci = &quot;95 % CI&quot;, 
+  title = &quot;GLMM Results for Accuracy in the Go/No-Go Task&quot;)
+
+
+# Display random effects
+print(&quot;Random effects:&quot;)
+print(VarCorr(GLMM_gng_acc), digits = 2, comp = &quot;Std.Dev.&quot;)</code></pre>
+<table style="border-collapse:collapse; border:none;">
+<caption style="font-weight: bold; text-align:left;">
+GLMM Results for Accuracy in the Go/No-Go Task
+</caption>
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="4" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+Accuracy
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Fixed effects
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Odds ratio
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+95 % CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+z
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+Intercept
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+11.57
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+9.88 – 13.54
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+30.45
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+Group (OCD – HC)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+1.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.75 – 1.41
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.19
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.848
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="4">
+27892
+</td>
+</tr>
+</table>
+<pre><code>[1] &quot;Random effects:&quot;
+ Groups         Name        Std.Dev.
+ participant_id (Intercept) 0.58    </code></pre>
+<p><br> There was no significant group difference in accuracy. <br><br><br></p>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<hr />
+<p>Bates, D., Kliegl, R., Vasishth, S., &amp; Baayen, H. (2015). <em>Parsimonious mixed models.</em> arXiv. <a href="https://arxiv.org/abs/1506.04967v2" class="uri">https://arxiv.org/abs/1506.04967v2</a> <br><br> Box, G. E., &amp; Cox, D. R. (1964). An analysis of transformations. <em>Journal of the Royal Statistical Society: Series B (Methodological), 26</em>(2), 211–243. <a href="https://doi.org/10.1111/j.2517-6161.1964.tb00553.x" class="uri">https://doi.org/10.1111/j.2517-6161.1964.tb00553.x</a> <br><br> Morey, R. (2008). Confidence intervals from normalized data: A correction to Cousineau (2005). <em>Tutorials in Quantitative Methods for Psychology, 4</em>(2), 61–64. <a href="https://doi.org/10.20982/tqmp.04.2.p061" class="uri">https://doi.org/10.20982/tqmp.04.2.p061</a> <br><br><br></p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<hr />
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19044)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=German_Germany.1252  LC_CTYPE=German_Germany.1252   
+[3] LC_MONETARY=German_Germany.1252 LC_NUMERIC=C                   
+[5] LC_TIME=German_Germany.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base     
+
+other attached packages:
+ [1] plyr_1.8.7       sjPlot_2.8.11    lmerTest_3.1-3   lme4_1.1-25     
+ [5] Matrix_1.5-1     MASS_7.3-51.4    kableExtra_1.3.4 pastecs_1.3.21  
+ [9] knitr_1.40       dplyr_1.0.10    
+
+loaded via a namespace (and not attached):
+ [1] httr_1.4.4          sass_0.4.0          tidyr_1.2.1        
+ [4] jsonlite_1.8.3      viridisLite_0.4.1   splines_3.6.1      
+ [7] modelr_0.1.9        bslib_0.4.0         datawizard_0.6.2   
+[10] assertthat_0.2.1    statmod_1.4.37      highr_0.9          
+[13] renv_0.12.0         yaml_2.2.1          bayestestR_0.13.0  
+[16] numDeriv_2016.8-1.1 pillar_1.8.1        backports_1.4.1    
+[19] lattice_0.20-45     glue_1.6.2          digest_0.6.30      
+[22] rvest_1.0.3         minqa_1.2.4         colorspace_2.0-3   
+[25] htmltools_0.5.3     pkgconfig_2.0.3     broom_1.0.1        
+[28] purrr_0.3.5         xtable_1.8-4        mvtnorm_1.1-3      
+[31] scales_1.2.1        webshot_0.5.4       svglite_2.1.0      
+[34] emmeans_1.6.0       tibble_3.1.8        generics_0.1.3     
+[37] ggplot2_3.3.6       sjlabelled_1.2.0    cachem_1.0.4       
+[40] withr_2.5.0         cli_3.4.1           magrittr_2.0.3     
+[43] effectsize_0.7.0.5  estimability_1.4.1  evaluate_0.16      
+[46] fansi_1.0.3         nlme_3.1-140        xml2_1.3.3         
+[49] tools_3.6.1         lifecycle_1.0.3     stringr_1.4.1      
+[52] munsell_0.5.0       ggeffects_1.1.3     compiler_3.6.1     
+[55] jquerylib_0.1.4     systemfonts_1.0.4   rlang_1.0.6        
+[58] grid_3.6.1          nloptr_1.2.2.2      parameters_0.19.0  
+[61] rstudioapi_0.14     rmarkdown_2.16      boot_1.3-22        
+[64] gtable_0.3.1        sjstats_0.18.1      DBI_1.1.3          
+[67] sjmisc_2.8.9        R6_2.5.1            performance_0.10.0 
+[70] fastmap_1.1.0       utf8_1.2.2          insight_0.18.4     
+[73] stringi_1.6.1       Rcpp_1.0.9          vctrs_0.5.0        
+[76] tidyselect_1.2.0    xfun_0.33          </code></pre>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkdvL05vLUdvIERhdGEiDQpvdXRwdXQ6IA0KICBodG1sX2RvY3VtZW50DQotLS0NCg0KPCEtLSBTZXQgZ2VuZXJhbCBzZXR0aW5ncyAtLT4NCg0KYGBge3Igc2V0dXAsIG1lc3NhZ2UgPSBGQUxTRSwgd2FybmluZyA9IEZBTFNFfQ0KDQojIFNldCBnZW5lcmFsIHNldHRpbmdzIGZvciBtYXJrZG93biBmaWxlDQprbml0cjo6b3B0c19jaHVuayRzZXQoDQogIG1lc3NhZ2UgPSBGQUxTRSwNCiAgd2FybmluZyA9IEZBTFNFLA0KICBjb21tZW50ID0gIiIsDQogIHJlc3VsdHMgPSAiaG9sZCIpDQoNCg0KIyBDbGVhciBlbnZpcm9ubWVudA0Kcm0obGlzdCA9IGxzKCkpDQoNCg0KIyBMb2FkIHBhY2thZ2VzDQpsaWJyYXJ5KGRwbHlyKSAgICAgICMgZm9yIGRhdGEgd3JhbmdsaW5nDQpsaWJyYXJ5KGtuaXRyKSAgICAgICMgZm9yIGludGVncmF0aW5nIGNvbXB1dGluZyBhbmQgcmVwb3J0aW5nIGluIG1hcmtkb3duDQpsaWJyYXJ5KHBhc3RlY3MpICAgICMgZm9yIGRlc2NyaXB0aXZlIHN0YXRpc3RpY3MNCmxpYnJhcnkoa2FibGVFeHRyYSkgIyBmb3IgY3VzdG9taXppbmcgYXBwZWFyYW5jZSBvZiB0YWJsZXMNCmxpYnJhcnkoTUFTUykgICAgICAgIyBmb3IgYm94Y294IGZ1bmN0aW9uIGFuZCBjb250cmFzdCBkZWZpbml0aW9uDQpsaWJyYXJ5KGxtZTQpICAgICAgICMgZm9yIChHKUxNTXMNCmxpYnJhcnkobG1lclRlc3QpICAgIyBmb3IgTE1NIHAgdmFsdWVzIChTYXR0ZXJ0aHdhaXRlJ3MgbWV0aG9kIGZvciBhcHByb3hpbWF0aW5nIGRmcyBmb3IgdCBhbmQgRiB0ZXN0cykNCmxpYnJhcnkoc2pQbG90KSAgICAgIyBmb3IgdGFiX21vZGVsIGZ1bmN0aW9uIHRvIGRpc3BsYXkgKEcpTE1NIHJlc3VsdHMNCg0KDQojIExvYWQgZnVuY3Rpb25zDQpzb3VyY2UoIi4vZnVuY3Rpb25zL3N1bW1hcnlTRXdpdGhpbk8uUiIpICAjIEZ1bmN0aW9uIHByb3ZpZGVkIGJ5IFItY29va2Jvb2s6IGh0dHA6Ly93d3cuY29va2Jvb2stci5jb20vR3JhcGhzL1Bsb3R0aW5nX21lYW5zX2FuZF9lcnJvcl9iYXJzXyhnZ3Bsb3QyKS8NCnNvdXJjZSgiLi9mdW5jdGlvbnMvbXlfdGFibGVfdGVtcGxhdGUuUiIpICMgRnVuY3Rpb24gdG8gY3JlYXRlIHRhYmxlIHRlbXBsYXRlDQoNCg0KIyBUdXJuIG9mZiBzY2llbnRpZmljIG5vdGF0aW9uDQpvcHRpb25zKHNjaXBlbiA9IDk5OSkNCg0KDQojIFByZXBhcmUgbGFiZWxzIGZvciAoRylMTU0gdGFibGVzDQpsYWJlbHMgPC0gYygNCiAgIihJbnRlcmNlcHQpIiAgICAgICAgICAgICAgICAgICA9ICJJbnRlcmNlcHQiLA0KICAiZ25nX3Jlc3BvbnNlX3R5cGUyLTEiICAgICAgICAgID0gIkZIIOKAkyBTSCIsDQogICJnbmdfcmVzcG9uc2VfdHlwZTMtMiIgICAgICAgICAgPSAiRkEg4oCTIEZIIiwNCiAgImdyb3VwMi0xIiAgICAgICAgICAgICAgICAgICAgICA9ICJHcm91cCAoT0NEIOKAkyBIQykiLA0KICAiZ25nX3Jlc3BvbnNlX3R5cGUyLTE6Z3JvdXAyLTEiID0gIkZIIOKAkyBTSCB4IEdyb3VwIiwNCiAgImduZ19yZXNwb25zZV90eXBlMy0yOmdyb3VwMi0xIiA9ICJGQSDigJMgRkggeCBHcm91cCIpDQpgYGANCjxicj4NCg0KIyMgRGF0YSBDbGVhbmluZw0KKioqDQoNCmBgYHtyIGxvYWQtYW5kLWNsZWFuLWRhdGF9DQoNCiMgTG9hZCBkYXRhDQpsb2FkKGZpbGUgPSAiLi9kYXRhL1NpbmdsZV9UcmlhbF9EYXRhLnJkYSIpDQoNCg0KIyBDcmVhdGUgbnVtZXJpYyBhY2N1cmFjeSB2YXJpYWJsZSAoMCA9IEZBOyAxID0gU0gsIEZILCBJUikNCnNpbmdsZV90cmlhbF9kYXRhIDwtIHNpbmdsZV90cmlhbF9kYXRhICU+JQ0KICBkcGx5cjo6bXV0YXRlKGduZ19hY2N1cmFjeV9udW1lcmljID0gaWZlbHNlKGduZ19yZXNwb25zZV90eXBlID09ICJGSCIgfCBnbmdfcmVzcG9uc2VfdHlwZSA9PSAiU0giIHwNCiAgICAgIGduZ19yZXNwb25zZV90eXBlID09ICJJUiIsIDEsIGlmZWxzZShnbmdfcmVzcG9uc2VfdHlwZSA9PSAiRkEiLCAwLCBOQSkpKQ0KDQoNCiMgRm9yIFJUIGFuYWx5c2lzLCBleGNsdWRlIGluaGliaXRlZCBnbmcgcmVzcG9uc2VzLCBtaXNzaW5nIGduZyByZXNwb25zZXMsIGduZyByZXNwb25zZXMgd2l0aA0KIyB3cm9uZyBrZXksIGduZyBSVCBvdXRsaWVycywgYW5kIHRyaWFscyB3aXRoIEVSUCBhcnRpZmFjdHMNCnNpbmdsZV90cmlhbF9kYXRhX2duZ19ydCA8LSBzaW5nbGVfdHJpYWxfZGF0YSAlPiUNCiAgZHBseXI6OmZpbHRlcigNCiAgICBnbmdfcmVzcG9uc2VfdHlwZSAhPSAiSVIiICYNCiAgICBnbmdfcmVzcG9uc2VfdHlwZSAhPSAibWlzcyIgJg0KICAgIGduZ19yZXNwb25zZV90eXBlICE9ICJ3cm9uZ19rZXkiICYNCiAgICAoaXMubmEoZ25nX3J0X2ludmFsaWQpIHwgZ25nX3J0X2ludmFsaWQgPT0gRkFMU0UpICYNCiAgICBzdGltdWxhdGlvbiA9PSAic2hhbSIgJg0KICAgIE1GTl9hcnRpZmFjdCA9PSBGQUxTRSkNCg0KDQojIEZvciBhY2N1cmFjeSBhbmFseXNpcywgZXhjbHVkZSBtaXNzaW5nIGduZyByZXNwb25zZXMsIGduZyByZXNwb25zZXMgd2l0aCB3cm9uZyBrZXksIGduZyBSVCBvdXRsaWVycywNCiMgYW5kIHRyaWFscyB3aXRoIEVSUCBhcnRpZmFjdHMNCnNpbmdsZV90cmlhbF9kYXRhX2duZ19hY2MgPC0gc2luZ2xlX3RyaWFsX2RhdGEgJT4lDQogIGRwbHlyOjpmaWx0ZXIoDQogICAgZ25nX3Jlc3BvbnNlX3R5cGUgIT0gIm1pc3MiICYNCiAgICBnbmdfcmVzcG9uc2VfdHlwZSAhPSAid3Jvbmdfa2V5IiAmDQogICAgKGlzLm5hKGduZ19ydF9pbnZhbGlkKSB8IGduZ19ydF9pbnZhbGlkID09IEZBTFNFKSAmDQogICAgc3RpbXVsYXRpb24gPT0gInNoYW0iICYNCiAgICBNRk5fYXJ0aWZhY3QgPT0gRkFMU0UpDQoNCg0KIyBNYWtlIGNhdGVnb3JpY2FsIHZhcmlhYmxlcyBmYWN0b3JzDQpzaW5nbGVfdHJpYWxfZGF0YV9nbmdfcnQkZ25nX3Jlc3BvbnNlX3R5cGUgPC0gZmFjdG9yKHNpbmdsZV90cmlhbF9kYXRhX2duZ19ydCRnbmdfcmVzcG9uc2VfdHlwZSwNCiAgbGV2ZWxzID0gYygiU0giLCAiRkgiLCAiRkEiKSkNCnNpbmdsZV90cmlhbF9kYXRhX2duZ19ydCRwYXJ0aWNpcGFudF9pZCAgICA8LSBmYWN0b3Ioc2luZ2xlX3RyaWFsX2RhdGFfZ25nX3J0JHBhcnRpY2lwYW50X2lkKQ0Kc2luZ2xlX3RyaWFsX2RhdGFfZ25nX3J0JGdyb3VwICAgICAgICAgICAgIDwtIGZhY3RvcihzaW5nbGVfdHJpYWxfZGF0YV9nbmdfcnQkZ3JvdXApDQpzaW5nbGVfdHJpYWxfZGF0YV9nbmdfYWNjJHBhcnRpY2lwYW50X2lkICAgPC0gZmFjdG9yKHNpbmdsZV90cmlhbF9kYXRhX2duZ19hY2MkcGFydGljaXBhbnRfaWQpDQpzaW5nbGVfdHJpYWxfZGF0YV9nbmdfYWNjJGdyb3VwICAgICAgICAgICAgPC0gZmFjdG9yKHNpbmdsZV90cmlhbF9kYXRhX2duZ19hY2MkZ3JvdXApDQpgYGANCg0KSW4gdGhlIGFuYWx5c2lzIG9mIFJUIGFuZCBhY2N1cmFjeSBpbiB0aGUgZ28vbm8tZ28gdGFzaywgdHJpYWxzIHdlcmUgZGlzY2FyZGVkIGlmIFJUIGluIHRoZSBnby9uby1nbyB0YXNrIHdhcyBiZWxvdyAxMDAgbXMgb3IgYWJvdmUgODAwIG1zLCBubyByZXNwb25zZSB3YXMgbWFkZSwgb3IgdGhlIHJlc3BvbnNlIHdhcyBtYWRlIHdpdGggYSBrZXkgbm90IGFzc2lnbmVkIHRvIHRoZSBnby9uby1nbyB0YXNrLiBXZSBmdXJ0aGVyIGRpc2NhcmRlZCB0cmlhbHMgY29udGFpbmluZyBhcnRpZmFjdHMgaW4gdGhlIEVFRywgaS5lLiwgYSB2b2x0YWdlIGRpZmZlcmVuY2UgZXhjZWVkaW5nIDIwMCDOvFYgd2l0aGluIGFuIGVwb2NoIG9yIDUwIM68ViBiZXR3ZWVuIHNhbXBsZSBwb2ludHMuIA0KPGJyPjxicj48YnI+DQoNCiMjIERlc2NyaXB0aXZlIFN0YXRpc3RpY3MNCioqKg0KDQpUaGlzIHRhYmxlIGNvcnJlc3BvbmRzIHRvIFRhYmxlIFMyIGluIHRoZSBzdXBwbGVtZW50YWwgbWF0ZXJpYWwuICANCg0KYGBge3IgZGVzY3JpcHRpdmUtc3RhdGlzdGljcy10YWJsZX0NCg0KIyBDYWxjdWxhdGUgZGVzY3JpcHRpdmUgc3RhdGlzdGljcyBmb3IgUlQNCmRlc2NyaXB0aXZlX3N0YXRpc3RpY3NfcnQgPC0gc3VtbWFyeVNFd2l0aGluTygNCiAgZGF0YSAgICAgICAgICA9IHNpbmdsZV90cmlhbF9kYXRhX2duZ19ydCwNCiAgbWVhc3VyZXZhciAgICA9ICJnbmdfcnQiLA0KICB3aXRoaW52YXJzICAgID0gImduZ19yZXNwb25zZV90eXBlIiwNCiAgYmV0d2VlbnZhcnMgICA9ICJncm91cCIsDQogIGlkdmFyICAgICAgICAgPSAicGFydGljaXBhbnRfaWQiLA0KICBjb25mLmludGVydmFsID0gLjk1KSAlPiUNCiAgIyBSZW5hbWUgdmFyaWFibGUgYW5kIHNlbGVjdCB2YXJpYWJsZXMgZm9yIHN1YnNlcXVlbnQgbWVyZ2luZw0KICBkcGx5cjo6cmVuYW1lKG1lYW4gPSBnbmdfcnQpICU+JQ0KICBkcGx5cjo6c2VsZWN0KCJncm91cCIsICJnbmdfcmVzcG9uc2VfdHlwZSIsICJtZWFuIiwgImNpIikNCg0KDQojIFByZXBhcmUgY2FsY3VsYXRpb24gb2YgZGVzY3JpcHRpdmUgc3RhdGlzdGljcyBmb3IgcHJvcG9ydGlvbiBvZiByZXNwb25zZSB0eXBlcyAoYmFzZWQgb24gYWxsIHRyaWFscykNCmRlc2NyaXB0aXZlX3N0YXRpc3RpY3NfcHJvcG9ydGlvbiA8LSBzaW5nbGVfdHJpYWxfZGF0YSAlPiUNCiAgZHBseXI6OmZpbHRlcihzdGltdWxhdGlvbiA9PSAic2hhbSIpICU+JQ0KICBkcGx5cjo6Z3JvdXBfYnkocGFydGljaXBhbnRfaWQsIGdyb3VwKSAlPiUNCiAgZHBseXI6OnN1bW1hcml6ZSgNCiAgICBTSCAgICAgICAgID0gc3VtKGduZ19yZXNwb25zZV90eXBlID09ICJTSCIpICAgICAgICAvIGxlbmd0aChwYXJ0aWNpcGFudF9pZCkgKiAxMDAsDQogICAgRkggICAgICAgICA9IHN1bShnbmdfcmVzcG9uc2VfdHlwZSA9PSAiRkgiKSAgICAgICAgLyBsZW5ndGgocGFydGljaXBhbnRfaWQpICogMTAwLA0KICAgIEZBICAgICAgICAgPSBzdW0oZ25nX3Jlc3BvbnNlX3R5cGUgPT0gIkZBIikgICAgICAgIC8gbGVuZ3RoKHBhcnRpY2lwYW50X2lkKSAqIDEwMCwNCiAgICBJUiAgICAgICAgID0gc3VtKGduZ19yZXNwb25zZV90eXBlID09ICJJUiIpICAgICAgICAvIGxlbmd0aChwYXJ0aWNpcGFudF9pZCkgKiAxMDAsDQogICAgbWlzc2VzICAgICA9IHN1bShnbmdfcmVzcG9uc2VfdHlwZSA9PSAibWlzcyIpICAgICAgLyBsZW5ndGgocGFydGljaXBhbnRfaWQpICogMTAwLA0KICAgIHdyb25nX2tleSAgPSBzdW0oZ25nX3Jlc3BvbnNlX3R5cGUgPT0gIndyb25nX2tleSIpIC8gbGVuZ3RoKHBhcnRpY2lwYW50X2lkKSAqIDEwMCkgJT4lDQogIGRwbHlyOjp1bmdyb3VwKCkNCg0KDQojIENhbGN1bGF0ZSBkZXNjcmlwdGl2ZSBzdGF0aXN0aWNzIGZvciBwcm9wb3J0aW9uIChleGNsdWRlIGZpcnN0IGNvbHVtbiBjb250YWluaW5nIHBhcnRpY2lwYW50IElEKQ0KZGVzY3JpcHRpdmVfc3RhdGlzdGljc19wcm9wb3J0aW9uIDwtIGRlc2NyaXB0aXZlX3N0YXRpc3RpY3NfcHJvcG9ydGlvblssIC1jKDEpXSAlPiUNCiAgZHBseXI6Omdyb3VwX2J5KGdyb3VwKSAlPiUNCiAgZG8oZGF0YS5mcmFtZSh0KHN0YXQuZGVzYyguKSkpKSAlPiUNCiAgbmEub21pdCgpICU+JQ0KICBkcGx5cjo6dW5ncm91cCgpICU+JQ0KICAjIENyZWF0ZSByZXNwb25zZSB0eXBlIGNvbHVtbiwgcmVuYW1lIHZhcmlhYmxlLCBhbmQgc2VsZWN0IHZhcmlhYmxlcyBmb3Igc3Vic2VxdWVudCBtZXJnaW5nDQogIGRwbHlyOjptdXRhdGUoZ25nX3Jlc3BvbnNlX3R5cGUgPSByZXAoYygiU0ggIiwiRkggIiwiRkEgIiwiSVIiLCAiTWlzc2luZyByZXNwb25zZSIsICJXcm9uZyBrZXkgcmVzcG9uc2UiKSwyKSkgJT4lDQogIGRwbHlyOjpyZW5hbWUoY2kgPSBDSS5tZWFuKSAlPiUNCiAgZHBseXI6OnNlbGVjdCgiZ3JvdXAiLCAiZ25nX3Jlc3BvbnNlX3R5cGUiLCAibWVhbiIsICJjaSIpDQoNCg0KIyBDb21iaW5lIG1lYXN1cmVzDQpkZXNjcmlwdGl2ZV9zdGF0aXN0aWNzIDwtIGFzLmRhdGEuZnJhbWUocmJpbmQoZGVzY3JpcHRpdmVfc3RhdGlzdGljc19ydCwgZGVzY3JpcHRpdmVfc3RhdGlzdGljc19wcm9wb3J0aW9uKSkNCg0KDQojIENyZWF0ZSBjb2x1bW4gd2l0aCBmb3JtYXQgIk0gW0NJXSIgZm9yIFJUIChyb3VuZCB0byAwIGRlY2ltYWxzKQ0KZGVzY3JpcHRpdmVfc3RhdGlzdGljcyRNX0NJIDwtIHBhc3RlMChyb3VuZChkZXNjcmlwdGl2ZV9zdGF0aXN0aWNzJG1lYW4sIDApLCAiIFsiLA0KICByb3VuZChkZXNjcmlwdGl2ZV9zdGF0aXN0aWNzJG1lYW4gLSBkZXNjcmlwdGl2ZV9zdGF0aXN0aWNzJGNpLCAwKSwgIiwgIiwNCiAgcm91bmQoZGVzY3JpcHRpdmVfc3RhdGlzdGljcyRtZWFuICsgZGVzY3JpcHRpdmVfc3RhdGlzdGljcyRjaSwgMCksICJdIikNCg0KDQojIENyZWF0ZSBjb2x1bW4gd2l0aCBmb3JtYXQgIk0gW0NJXSIgZm9yIGFjY3VyYWN5IChyb3VuZCB0byAyIGRlY2ltYWxzKQ0KZGVzY3JpcHRpdmVfc3RhdGlzdGljc1tjKDc6MTgpLCBdJE1fQ0kgPC0gcGFzdGUwKA0KICBmb3JtYXQocm91bmQoZGVzY3JpcHRpdmVfc3RhdGlzdGljc1tjKDc6MTgpLCBdJG1lYW4sIDIpLCBuc21hbGwgPSAyKSwgIiBbIiwNCiAgZm9ybWF0KHJvdW5kKGRlc2NyaXB0aXZlX3N0YXRpc3RpY3NbYyg3OjE4KSwgXSRtZWFuIC0NCiAgICAgICAgICAgICAgIGRlc2NyaXB0aXZlX3N0YXRpc3RpY3NbYyg3OjE4KSwgXSRjaSwgICAyKSwgbnNtYWxsID0gMiksICIsICIsDQogIGZvcm1hdChyb3VuZChkZXNjcmlwdGl2ZV9zdGF0aXN0aWNzW2MoNzoxOCksIF0kbWVhbiArDQogICAgICAgICAgICAgICBkZXNjcmlwdGl2ZV9zdGF0aXN0aWNzW2MoNzoxOCksIF0kY2ksICAgMiksIG5zbWFsbCA9IDIpLCAiXSIpDQoNCg0KIyBTcGxpdCBhbmQgcmUtbWVyZ2UgdGFibGUgdG8gZGlzcGxheSBib3RoIGdyb3VwcyBuZXh0IHRvIGVhY2ggb3RoZXINCmRlc2NyaXB0aXZlX3N0YXRpc3RpY3MgPC0gc3BsaXQoZGVzY3JpcHRpdmVfc3RhdGlzdGljcywgZGVzY3JpcHRpdmVfc3RhdGlzdGljcyRncm91cCkNCmRlc2NyaXB0aXZlX3N0YXRpc3RpY3NfZGlzcGxheSA8LSBjYmluZChkZXNjcmlwdGl2ZV9zdGF0aXN0aWNzJE9DRFssIGMoImduZ19yZXNwb25zZV90eXBlIiwgIk1fQ0kiKV0sDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRpdmVfc3RhdGlzdGljcyRIQ1ssICJNX0NJIl0pDQoNCg0KIyBEaXNwbGF5IHRhYmxlIChhbmQgcmVhcnJhbmdlIHJvd3MpDQpteV90YWJsZV90ZW1wbGF0ZShkZXNjcmlwdGl2ZV9zdGF0aXN0aWNzX2Rpc3BsYXlbYygzOjEsIDQ6OSksIF0sDQogIGNhcHRpb24gPSAiRGVzY3JpcHRpdmUgU3RhdGlzdGljcyBmb3IgQmVoYXZpb3JhbCBQZXJmb3JtYW5jZSBpbiB0aGUgR28vTm8tR28gVGFzayIsDQogIGNvbF9uYW1lcyA9IGMoIk1lYXN1cmUiLCByZXAoIk0gWzk1JSBDSV0iLCAyKSksDQogIGhlYWRlcl9hYm92ZV9jb25maWcgPSBjKCIiLCAiUGF0aWVudHMgd2l0aCBPQ0QiLCAiSGVhbHRoeSBjb250cm9sIHBhcnRpY2lwYW50cyIpKSAlPiUNCiAgYWRkX2Zvb3Rub3RlKCJcbiBOb3RlLiBDSXMgYXJlIGFkanVzdGVkIGZvciB3aXRoaW4tcGFydGljaXBhbnQgZGVzaWducyB1c2luZyB0aGUgbWV0aG9kIGRlc2NyaWJlZCANCiAgYnkgTW9yZXkgKDIwMDgpLiIsIG5vdGF0aW9uID0gIm5vbmUiKSAlPiUNCiAgcGFja19yb3dzKCJSZXNwb25zZSB0aW1lIChtcykiLCAxLCAzKSAlPiUNCiAgcGFja19yb3dzKCJQcm9wb3J0aW9uIG9mIHJlc3BvbnNlcyAoJSkiLCA0LCA5KQ0KYGBgDQo8YnI+PGJyPg0KDQojIyBBbmFseXNpcyBvZiBSZXNwb25zZSBUaW1lIHsudGFic2V0fQ0KKioqDQoNCldlIHBlcmZvcm1lZCBhIGxpbmVhciBtaXhlZCBtb2RlbCAoTE1NKSBvbiBzaW5nbGUtdHJpYWwgZGF0YS4gQW5hbHlzaXMgb2YgUlQgaW4gdGhlIGdvL25vLWdvIHRhc2sgaW5jbHVkZWQgZ3JvdXAgYW5kIHJlc3BvbnNlIHR5cGUgKHNsb3cgaGl0LCBmYXN0IGhpdCwgZmFsc2UgYWxhcm0pIGFzIGZpeGVkIGVmZmVjdHMuIA0KDQpXZSB1c2VkIHNsaWRpbmcgZGlmZmVyZW5jZSBjb250cmFzdHMgZm9yIGNhdGVnb3JpY2FsIGZpeGVkIGVmZmVjdHMgYW5kIHN0YXJ0ZWQgd2l0aCB0aGUgbWF4aW1hbCByYW5kb20tZWZmZWN0cyBzdHJ1Y3R1cmUgZm9yIGVhY2ggbW9kZWwuIEluIGNhc2Ugb2Ygbm9uLWNvbnZlcmdlbmNlLCByYW5kb20gZWZmZWN0cyB3ZXJlIHNwZWNpZmllZCBhcyB1bmNvcnJlbGF0ZWQuIFVzaW5nIHByaW5jaXBhbCBjb21wb25lbnQgYW5hbHlzaXMsIHdlIGlkZW50aWZpZWQgcmFuZG9tIGVmZmVjdHMgZXhwbGFpbmluZyB6ZXJvIHZhcmlhbmNlIGFuZCByZW1vdmVkIHRoZXNlLCBhcyByZWNvbW1lbmRlZCBieSBCYXRlcywgS2xpZWdsLCBldCBhbC4gKDIwMTUpLiANCjxicj48YnI+DQoNCiMjIyBEZXRlcm1pbmUgRGF0YSBUcmFuc2Zvcm1hdGlvbg0KDQpSVCB3YXMgbG9nLXRyYW5zZm9ybWVkIHRvIG5vcm1hbGl6ZSByZXNpZHVhbHMuIFRoaXMgd2FzIGRldGVybWluZWQgdXNpbmcgdGhlIEJveOKAk0NveCBwcm9jZWR1cmUgKEJveCAmIENveCwgMTk2NCkuDQoNCmBgYHtyIHJ0LWRldGVybWluZS10cmFuc2Zvcm1hdGlvbiwgZmlnLndpZHRoID0gMTIsIGZpZy5oZWlnaHQgPSAzfQ0KDQojIEFycmFuZ2UgcGxvdHMNCnBhcihtZnJvdyA9IGMoMSwgNSkpDQoNCg0KIyBEZXRlcm1pbmUgdHJhbnNmb3JtYXRpb24gYnkgZXN0aW1hdGluZyBvcHRpbWFsIGxhbWJkYSB1c2luZyBCb3jigJNDb3ggcHJvY2VkdXJlDQpiY19ydCA8LSBib3hjb3goZ25nX3J0IH4gMSwgZGF0YSA9IHNpbmdsZV90cmlhbF9kYXRhX2duZ19ydCkNCm9wdGxhbWJkYV9ydCA8LSBiY19ydCR4W3doaWNoLm1heChiY19ydCR5KV0NCg0KDQojIERlbnNpdHkgcGxvdCBmb3IgcmF3IFJUDQpwbG90KGRlbnNpdHkoc2luZ2xlX3RyaWFsX2RhdGFfZ25nX3J0JGduZ19ydCksIG1haW4gPSAiUmF3IFJUOiBEZW5zaXR5IFBsb3QiKQ0KDQoNCiMgUS1xIHBsb3QgZm9yIHJhdyBSVA0KcXFub3JtKHNpbmdsZV90cmlhbF9kYXRhX2duZ19ydCRnbmdfcnQsIG1haW4gPSAiUmF3IFJUOiBRLVEgUGxvdCIsIHBjaCA9IDEpDQoNCg0KIyBEZW5zaXR5IHBsb3QgZm9yIGxvZyBSVA0KcGxvdChkZW5zaXR5KHNpbmdsZV90cmlhbF9kYXRhX2duZ19ydCRnbmdfcnRfbG9nKSwgbWFpbiA9ICJMb2cgUlQ6IERlbnNpdHkgUGxvdCIpDQoNCg0KIyBRLXEgcGxvdCBmb3IgbG9nIFJUDQpxcW5vcm0oc2luZ2xlX3RyaWFsX2RhdGFfZ25nX3J0JGduZ19ydF9sb2csIG1haW4gPSAiTG9nIFJUOiBRLVEgUGxvdCIsIHBjaCA9IDEpDQoNCg0KIyBSZXNldCBwbG90IGxheW91dA0KcGFyKG1mcm93ID0gYygxLCAxKSkNCmBgYA0KVGhlIG9wdGltYWwgbGFtYmRhIGlzIGByIHJvdW5kKG9wdGxhbWJkYV9ydCwgZGlnaXRzID0gMilgLCBzdWdnZXN0aW5nIHRoYXQgbG9nIHRyYW5zZm9ybWF0aW9uIGlzIGFwcHJvcHJpYXRlLiANCjxicj48YnI+PGJyPg0KDQojIyMgTE1NIHsuYWN0aXZlfQ0KDQpUaGlzIHRhYmxlIGNvcnJlc3BvbmRzIHRvIFRhYmxlIDIgaW4gdGhlIG1hbnVzY3JpcHQuIA0KDQpgYGB7ciBsbW0tcnR9DQoNCiMgRGVmaW5lIGNvbnRyYXN0cyAoc2xpZGluZyBkaWZmZXJlbmNlIGNvbnRyYXN0cyA9IGVmZmVjdCBjb2RpbmcgZm9yIGZhY3RvcnMgd2l0aCAyIGxldmVscykNCmNvbnRyYXN0cyhzaW5nbGVfdHJpYWxfZGF0YV9nbmdfcnQkZ25nX3Jlc3BvbnNlX3R5cGUpIDwtIGNvbnRyLnNkaWYoMykNCmNvbnRyYXN0cyhzaW5nbGVfdHJpYWxfZGF0YV9nbmdfcnQkZ3JvdXApICAgICAgICAgICAgIDwtIGNvbnRyLnNkaWYoMikNCg0KDQojIFJ1biBtb2RlbCB3aXRoIG1heGltYWwgcmFuZG9tLWVmZmVjdHMgc3RydWN0dXJlDQpMTU1fZ25nX3J0IDwtIGxtZXIoZ25nX3J0X2xvZyB+IGduZ19yZXNwb25zZV90eXBlICogZ3JvdXAgKw0KICAoMSArIGduZ19yZXNwb25zZV90eXBlIHwgcGFydGljaXBhbnRfaWQpLA0KICBkYXRhID0gc2luZ2xlX3RyaWFsX2RhdGFfZ25nX3J0LA0KICBSRU1MID0gVFJVRSwNCiAgY29udHJvbCA9IGxtZXJDb250cm9sKG9wdGltaXplciA9ICJib2J5cWEiKSkNCg0KDQojIENoZWNrIG1vZGVsIG91dHB1dCBhbmQgUENBIG9mIHJhbmRvbS1lZmZlY3RzIHZhcmlhbmNlLWNvdmFyaWFuY2UgZXN0aW1hdGVzDQojIHN1bW1hcnkoTE1NX2duZ19ydCkgICAgICAgICMgTW9kZWwgZG9lcyBjb252ZXJnZQ0KIyBpc1Npbmd1bGFyKExNTV9nbmdfcnQpICAgICAjIE5vIHNpbmd1bGFyIGZpdA0KIyBzdW1tYXJ5KHJlUENBKExNTV9nbmdfcnQpKSAjIEFsbCB0ZXJtcyBleHBsYWluIHZhcmlhbmNlDQoNCg0KIyBEaXNwbGF5IHJlc3VsdHMgKGZpeGVkIGVmZmVjdHMpDQp0YWJfbW9kZWwoTE1NX2duZ19ydCwNCiAgZHYubGFiZWxzID0gIlJUIiwgcHJlZC5sYWJlbHMgPSBsYWJlbHMsIHNob3cuc3RhdCA9IFRSVUUsIHNob3cuaWNjID0gRkFMU0UsIHNob3cucjIgPSBGQUxTRSwNCiAgc2hvdy5yZS52YXIgPSBGQUxTRSwgc2hvdy5uZ3JvdXBzID0gRkFMU0UsIG1pbnVzLnNpZ24gPSAiLSIsIHN0cmluZy5wcmVkID0gIkZpeGVkIGVmZmVjdHMiLA0KICBzdHJpbmcuZXN0ID0gImIiLCBzdHJpbmcuc3RhdCA9ICJ0Iiwgc3RyaW5nLmNpID0gIjk1ICUgQ0kiLCBwLnZhbCA9ICJzYXR0ZXJ0aHdhaXRlIiwNCiAgdGl0bGUgPSAiTE1NIFJlc3VsdHMgZm9yIFJUIGluIHRoZSBHby9Oby1HbyBUYXNrIikNCg0KDQojIERpc3BsYXkgcmFuZG9tIGVmZmVjdHMNCnByaW50KCJSYW5kb20gZWZmZWN0czoiKQ0KcHJpbnQoVmFyQ29ycihMTU1fZ25nX3J0KSwgZGlnaXRzID0gMSwgY29tcCA9ICJTdGQuRGV2LiIpDQpgYGANCjxicj4NClJUcyB3ZXJlIHNob3J0ZXIgZm9yIGZhc3QgaGl0cyB0aGFuIGZvciBzbG93IGhpdHMgYW5kIGZhbHNlIGFsYXJtcy4gVGhlcmUgd2FzIG5vIHNpZ25pZmljYW50IGdyb3VwIGRpZmZlcmVuY2UgaW4gUlQuIA0KPGJyPjxicj48YnI+DQoNCiMjIEFuYWx5c2lzIG9mIEFjY3VyYWN5IHsudGFic2V0fQ0KKioqDQoNCldlIHBlcmZvcm1lZCBhIGJpbm9taWFsIGdlbmVyYWxpemVkIGxpbmVhciBtaXhlZCBtb2RlbCAoR0xNTSkgb24gc2luZ2xlLXRyaWFsIGRhdGEuIEFuYWx5c2lzIG9mIGFjY3VyYWN5IGluIHRoZSBnby9uby1nbyB0YXNrIGluY2x1ZGVkIGdyb3VwIGFzIGZpeGVkIGVmZmVjdC4gDQoNCldlIHVzZWQgc2xpZGluZyBkaWZmZXJlbmNlIGNvbnRyYXN0cyBmb3IgY2F0ZWdvcmljYWwgZml4ZWQgZWZmZWN0cyBhbmQgc3RhcnRlZCB3aXRoIHRoZSBtYXhpbWFsIHJhbmRvbS1lZmZlY3RzIHN0cnVjdHVyZSBmb3IgZWFjaCBtb2RlbC4gSW4gY2FzZSBvZiBub24tY29udmVyZ2VuY2UsIHJhbmRvbSBlZmZlY3RzIHdlcmUgc3BlY2lmaWVkIGFzIHVuY29ycmVsYXRlZC4gVXNpbmcgcHJpbmNpcGFsIGNvbXBvbmVudCBhbmFseXNpcywgd2UgaWRlbnRpZmllZCByYW5kb20gZWZmZWN0cyBleHBsYWluaW5nIHplcm8gdmFyaWFuY2UgYW5kIHJlbW92ZWQgdGhlc2UsIGFzIHJlY29tbWVuZGVkIGJ5IEJhdGVzLCBLbGllZ2wsIGV0IGFsLiAoMjAxNSkuIA0KPGJyPjxicj4NCg0KIyMjIEdMTU0NCg0KVGhpcyB0YWJsZSBjb3JyZXNwb25kcyB0byBUYWJsZSAyIGluIHRoZSBtYW51c2NyaXB0LiAgDQoNCmBgYHtyIGdsbW0tYWNjdXJhY3l9DQoNCiMgRGVmaW5lIGNvbnRyYXN0cyAoc2xpZGluZyBkaWZmZXJlbmNlIGNvbnRyYXN0cyA9IGVmZmVjdCBjb2RpbmcgZm9yIGZhY3RvcnMgd2l0aCAyIGxldmVscykNCmNvbnRyYXN0cyhzaW5nbGVfdHJpYWxfZGF0YV9nbmdfYWNjJGdyb3VwKSA8LSBjb250ci5zZGlmKDIpDQoNCg0KIyBSdW4gbW9kZWwgd2l0aCBtYXhpbWFsIHJhbmRvbS1lZmZlY3RzIHN0cnVjdHVyZQ0KR0xNTV9nbmdfYWNjIDwtIGdsbWVyKGduZ19hY2N1cmFjeV9udW1lcmljIH4gZ3JvdXAgKyAoMSB8IHBhcnRpY2lwYW50X2lkKSwNCiAgZGF0YSA9IHNpbmdsZV90cmlhbF9kYXRhX2duZ19hY2MsDQogIGZhbWlseSA9IGJpbm9taWFsLA0KICBjb250cm9sID0gZ2xtZXJDb250cm9sKG9wdGltaXplciA9ICJib2J5cWEiKSkNCg0KDQojIENoZWNrIG1vZGVsIG91dHB1dCBhbmQgUENBIG9mIHJhbmRvbS1lZmZlY3RzIHZhcmlhbmNlLWNvdmFyaWFuY2UgZXN0aW1hdGVzDQojIHN1bW1hcnkoR0xNTV9nbmdfYWNjKSAgICAgICAgIyBNb2RlbCBkb2VzIGNvbnZlcmdlDQojIGlzU2luZ3VsYXIoR0xNTV9nbmdfYWNjKSAgICAgIyBObyBzaW5ndWxhciBmaXQNCiMgc3VtbWFyeShyZVBDQShHTE1NX2duZ19hY2MpKSAjIEFsbCB0ZXJtcyBleHBsYWluIHZhcmlhbmNlDQoNCg0KIyBEaXNwbGF5IHJlc3VsdHMgKGZpeGVkIGVmZmVjdHMpDQp0YWJfbW9kZWwoR0xNTV9nbmdfYWNjLA0KICBkdi5sYWJlbHMgPSAiQWNjdXJhY3kiLCBwcmVkLmxhYmVscyA9IGxhYmVscywgc2hvdy5zdGF0ID0gVFJVRSwgc2hvdy5pY2MgPSBGQUxTRSwgc2hvdy5yMiA9IEZBTFNFLA0KICBzaG93LnJlLnZhciA9IEZBTFNFLCBzaG93Lm5ncm91cHMgPSBGQUxTRSwgbWludXMuc2lnbiA9ICItIiwgc3RyaW5nLnByZWQgPSAiRml4ZWQgZWZmZWN0cyIsDQogIHN0cmluZy5lc3QgPSAiT2RkcyByYXRpbyIsIHN0cmluZy5zdGF0ID0gInoiLCBzdHJpbmcuY2kgPSAiOTUgJSBDSSIsIA0KICB0aXRsZSA9ICJHTE1NIFJlc3VsdHMgZm9yIEFjY3VyYWN5IGluIHRoZSBHby9Oby1HbyBUYXNrIikNCg0KDQojIERpc3BsYXkgcmFuZG9tIGVmZmVjdHMNCnByaW50KCJSYW5kb20gZWZmZWN0czoiKQ0KcHJpbnQoVmFyQ29ycihHTE1NX2duZ19hY2MpLCBkaWdpdHMgPSAyLCBjb21wID0gIlN0ZC5EZXYuIikNCmBgYA0KPGJyPg0KVGhlcmUgd2FzIG5vIHNpZ25pZmljYW50IGdyb3VwIGRpZmZlcmVuY2UgaW4gYWNjdXJhY3kuIA0KPGJyPjxicj48YnI+DQoNCiMjIFJlZmVyZW5jZXMNCioqKg0KQmF0ZXMsIEQuLCBLbGllZ2wsIFIuLCBWYXNpc2h0aCwgUy4sICYgQmFheWVuLCBILiAoMjAxNSkuICpQYXJzaW1vbmlvdXMgbWl4ZWQgbW9kZWxzLiogYXJYaXYuIGh0dHBzOi8vYXJ4aXYub3JnL2Ficy8xNTA2LjA0OTY3djIgPGJyPjxicj4NCkJveCwgRy4gRS4sICYgQ294LCBELiBSLiAoMTk2NCkuIEFuIGFuYWx5c2lzIG9mIHRyYW5zZm9ybWF0aW9ucy4gKkpvdXJuYWwgb2YgdGhlIFJveWFsIFN0YXRpc3RpY2FsIFNvY2lldHk6IFNlcmllcyBCIChNZXRob2RvbG9naWNhbCksIDI2KigyKSwgMjEx4oCTMjQzLiBodHRwczovL2RvaS5vcmcvMTAuMTExMS9qLjI1MTctNjE2MS4xOTY0LnRiMDA1NTMueCA8YnI+PGJyPg0KTW9yZXksIFIuICgyMDA4KS4gQ29uZmlkZW5jZSBpbnRlcnZhbHMgZnJvbSBub3JtYWxpemVkIGRhdGE6IEEgY29ycmVjdGlvbiB0byBDb3VzaW5lYXUgKDIwMDUpLiAqVHV0b3JpYWxzIGluIFF1YW50aXRhdGl2ZSBNZXRob2RzIGZvciBQc3ljaG9sb2d5LCA0KigyKSwgNjHigJM2NC4gaHR0cHM6Ly9kb2kub3JnLzEwLjIwOTgyL3RxbXAuMDQuMi5wMDYxIA0KPGJyPjxicj48YnI+DQoNCiMjIFNlc3Npb24gSW5mbw0KKioqDQpgYGB7ciBzZXNzaW9uLWluZm99DQoNCnNlc3Npb25JbmZvKCkNCmBgYA0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("2_Go_No-Go.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

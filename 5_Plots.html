@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Plots</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="web_style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Affective Error Evaluation in OCD</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="0_Project_and_Data_Description.html">
+    <span class="glyphicon glyphicon-info-sign"></span>
+     
+    Project &amp; Data
+  </a>
+</li>
+<li>
+  <a href="1_Participants.html">
+    <span class="glyphicon glyphicon-info-sign"></span>
+     
+    Participants
+  </a>
+</li>
+<li>
+  <a href="2_Go_No-Go.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-hand-up"></span>
+     
+    Go/No-Go Data
+  </a>
+</li>
+<li>
+  <a href="3_Word_Categorization.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-hand-up"></span>
+     
+    Word Categorization Data (&amp; ERPs)
+  </a>
+</li>
+<li>
+  <a href="4_ERP.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-flash"></span>
+     
+    ERP Data
+  </a>
+</li>
+<li>
+  <a href="5_Plots.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-stats"></span>
+     
+    Plots
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:luisa.balzus@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Plots</h1>
+
+</div>
+
+
+<!-- Set general settings -->
+<pre class="r"><code># Set general settings for markdown file
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  comment = &quot;&quot;,
+  results = &quot;hold&quot;)
+
+
+# Clear environment
+rm(list = ls())
+
+
+# Enable/disable caching of time-consuming code chunks
+knitr_cache_enabled = TRUE
+
+
+# Load packages
+library(dplyr)      # for data wrangling
+library(ggplot2)    # for plotting
+library(ggsignif)   # for adding asterisks
+library(cowplot)    # for arranging plots
+library(purrr)      # for calculating within-participant CIs
+library(eegUtils)   # for plotting EEG topographies
+library(tidyr)      # for gather function
+library(sjPlot)     # for plot_model function
+library(ggeffects)  # for extracting certain effects from model
+
+
+# Load functions
+source(&quot;./functions/summarySEwithinO.R&quot;)  # Function provided by R-cookbook: http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+source(&quot;./functions/R_rainclouds.R&quot;)      # Function to create raincloud plots
+
+
+# Define function to create common legend (from http://www.sthda.com/english/wiki/wiki.php?id_contents=7930#add-a-common-legend-for-multiple-ggplot2-graphs)
+get_legend &lt;- function(myggplot) {
+  tmp      &lt;- ggplot_gtable(ggplot_build(myggplot))
+  leg      &lt;- which(sapply(tmp$grobs, function(x) x$name) == &quot;guide-box&quot;)
+  legend   &lt;- tmp$grobs[[leg]]
+  return(legend)}
+
+
+# Set figure theme
+my_figure_theme &lt;- theme_classic(base_size = 11) +
+  theme(legend.position  = &quot;bottom&quot;,
+        axis.ticks.x     = element_blank(),
+        plot.title       = element_text(hjust = 0.5),
+        axis.title.x     = element_text(vjust = -1),
+        strip.background = element_rect(color = &quot;gray84&quot;, fill = &quot;gray94&quot;, size = 0.3))
+
+
+# Set figure colors
+colors &lt;- c(&quot;#2d5a7d&quot;, &quot;tan1&quot;)
+colors_erp &lt;- c(&quot;royalblue1&quot;, &quot;navy&quot;, &quot;tan1&quot;, &quot;sienna3&quot;)</code></pre>
+<p><br></p>
+<div id="plot-behavioral-data-observed" class="section level2">
+<h2>Plot Behavioral Data (Observed)</h2>
+<hr />
+<p>This figure corresponds to Figure 2 in the manuscript.</p>
+<pre class="r"><code># Load aggregated data per participant
+load(file = &quot;./saved_objects_for_plots/data_aggregated_rt.Rda&quot;)
+load(file = &quot;./saved_objects_for_plots/data_aggregated_acc.Rda&quot;)
+
+
+# Define facet labels
+group.labs &lt;- c(&quot;Healthy Control Participants&quot;, &quot;Patients With OCD&quot;)
+names(group.labs) &lt;- c(&quot;HC&quot;, &quot;OCD&quot;)
+
+
+#### Create RT plot ####
+
+# Create raincloud plot
+plot_rt &lt;- ggplot() +
+  geom_flat_violin(data = data_aggregated_rt, aes(x = gng_response_type, y = word_rt, fill = word_valence),
+    position = position_nudge(x = .16, y = 0), adjust = 1.5, trim = FALSE, alpha = .7, color = NA) +
+  geom_point(data = data_aggregated_rt, aes(x = as.numeric(gng_response_type) - .23, y = word_rt, color = word_valence),
+    position = position_jitter(width = .05), size = 1, shape = 20, alpha = 0.8) +
+  geom_boxplot(data = data_aggregated_rt, aes(x = gng_response_type, y = word_rt, fill = word_valence),
+    outlier.shape = NA, alpha = 0.9, width = .3, color = &quot;black&quot;) +
+  labs(x = &quot;Response in the Go/No-Go Task&quot;, y = &quot;Word Categorization RT (ms)&quot;) +
+  coord_cartesian(ylim = c(200, 1600)) +
+  scale_y_continuous(breaks = seq(200, 1600, 200), expand = c(0, 0)) +
+  scale_x_discrete(labels = c(&quot;SH&quot; = &quot;Slow Hit&quot;, &quot;FH&quot; = &quot;Fast Hit&quot;, &quot;FA&quot; = &quot;False Alarm&quot;, &quot;IR&quot; = &quot;Inhibition&quot;)) +
+  scale_color_manual(name = &quot;Word Valence:&quot;, labels = c(&quot;Negative&quot;, &quot;Positive&quot;), values = colors,
+    guide = guide_legend(override.aes = list(size = 6, shape = 15, alpha = 1), label.hjust = -2)) +
+  scale_fill_manual(name  = &quot;Word Valence:&quot;, labels = c(&quot;Negative&quot;, &quot;Positive&quot;), values = colors, guide = &quot;none&quot;) +
+  facet_wrap(~group, labeller = labeller(group = group.labs)) +
+  my_figure_theme
+
+
+# Save and remove legend
+legend &lt;- get_legend(plot_rt)
+plot_rt &lt;- plot_rt + theme(legend.position = &quot;none&quot;)
+
+
+# Add position of asterisks
+asteriks_rt &lt;- data.frame(
+  x1    = c(1.85, 2.85, 1.85, 2.85),
+  x2    = c(2.15, 3.15, 2.15, 3.15),
+  y1    = c(1320, 1320, 1320, 1320),
+  xstar = c(2,    3,    2,    3),
+  ystar = c(1330, 1330, 1330, 1330),
+  lab   = c(&quot;*&quot;, &quot;***&quot;, &quot;**&quot;, &quot;*&quot;),
+  group = c(&quot;HC&quot;, &quot;HC&quot;,  &quot;OCD&quot;, &quot;OCD&quot;))
+
+
+# Add position of asterisks across groups
+asteriks_rt2 &lt;- data.frame(
+  x1    = .370,
+  x2    = .820,
+  y1    = .820,
+  xstar = .595,
+  ystar = .830,
+  lab   = &quot;**&quot;)
+
+
+# Add a new layer on-top to add asterisks
+plot_rt &lt;- plot_rt +
+  geom_text(data = asteriks_rt,    aes(x = xstar, y = ystar, label = lab, size = 2.5),    color = &quot;gray30&quot;) +
+  geom_segment(data = asteriks_rt, aes(x = x1, xend = x2, y = y1, yend = y1), size = 0.3, color = &quot;gray30&quot;) +
+  facet_grid(. ~ group, labeller = labeller(group = group.labs))
+
+
+# Add a new layer on-top to add asterisks across groups
+plot_rt &lt;- ggdraw(plot_rt) +
+  geom_text(data = asteriks_rt2,    aes(x = xstar, y = ystar, label = lab, size = 2.5),    color = &quot;gray30&quot;) +
+  geom_segment(data = asteriks_rt2, aes(x = x1, xend = x2, y = y1, yend = y1), size = 0.3, color = &quot;gray30&quot;)
+
+
+#### Create accuracy plot ####
+
+# Create raincloud plot
+plot_acc &lt;- ggplot() +
+  geom_flat_violin(data = data_aggregated_acc, aes(x = gng_response_type, y = accuracy, fill = word_valence),
+    position = position_nudge(x = .16, y = 0), adjust = 1.5, trim = FALSE, alpha = .7, color = NA) +
+  geom_point(data = data_aggregated_acc, aes(x = as.numeric(gng_response_type) - .23, y = accuracy, color = word_valence),
+    position = position_jitter(width = .05), size = 1, shape = 20, alpha = 0.8) +
+  geom_boxplot(data = data_aggregated_acc, aes(x = gng_response_type, y = accuracy, fill = word_valence),
+    outlier.shape = NA, alpha = 0.9, width = .3, color = &quot;black&quot;) +
+  labs(x = &quot;Response in the Go/No-Go Task&quot;, y = &quot;Word Categorization Accuracy (%)&quot;) +
+  coord_cartesian(ylim = c(0, 101)) +
+  scale_y_continuous(breaks = seq(0, 100, 10), expand = c(0, 0)) +
+  scale_x_discrete(labels = c(&quot;SH&quot; = &quot;Slow Hit&quot;, &quot;FH&quot; = &quot;Fast Hit&quot;, &quot;FA&quot; = &quot;False Alarm&quot;, &quot;IR&quot; = &quot;Inhibition&quot;)) +
+  scale_color_manual(name = &quot;Word Valence:&quot;, labels = c(&quot;Negative&quot;, &quot;Positive&quot;), values = colors) +
+  scale_fill_manual(name  = &quot;Word Valence:&quot;, labels = c(&quot;Negative&quot;, &quot;Positive&quot;), values = colors) +
+  facet_wrap(~group, labeller = labeller(group = group.labs)) +
+  my_figure_theme + theme(legend.position = &quot;none&quot;)
+
+
+# Add position of asterisks
+asteriks_acc &lt;- data.frame(
+  x1    = c(2.85, 2.85),
+  x2    = c(3.15, 3.15),
+  y1    = c(19,   19),
+  xstar = c(3,    3),
+  ystar = c(15,   15),
+  lab   = c(&quot;***&quot;, &quot;***&quot;),
+  group = c(&quot;HC&quot;, &quot;OCD&quot;))
+
+
+# Add a new layer on-top to add asterisks
+plot_acc &lt;- plot_acc +
+  geom_text(data = asteriks_acc,    aes(x = xstar, y = ystar, label = lab, size = 2.5),    color = &quot;gray30&quot;) +
+  geom_segment(data = asteriks_acc, aes(x = x1, xend = x2, y = y1, yend = y1), size = 0.3, color = &quot;gray30&quot;) +
+  facet_grid(. ~ group, labeller = labeller(group = group.labs))
+
+
+# Arrange plots
+figure_obs_val &lt;- ggdraw() +
+  draw_plot(plot_rt,  x = .00, y = .450, width = 1,  height = .55) +
+  draw_plot(plot_acc, x = .00, y = .050, width = 1,  height = .38) +
+  draw_plot(legend,   x = .28, y = .015, width = .5, height = .00) +
+  draw_plot_label(c(&quot;A&quot;, &quot;B&quot;), c(0, 0), c(1, 0.43), size = 15)
+figure_obs_val</code></pre>
+<div class="figure">
+<img src="5_Plots_files/figure-html/create-obs-value-plot-1.png" alt="&lt;br&gt; Note. (A) Observed word categorization RT per preceding response type in the go/no-go task, word valence, and group. (B) Observed word categorization accuracy per preceding response type in the go/no-go task, word valence, and group. (A–B) The plots show individual data points, boxplots, and probability density plots based on raw data that were aggregated by participant. Asterisks indicate significant differences yielded by the (generalized) linear mixed model analysis. * p &lt; .05, ** p &lt; .01, *** p &lt; .001." width="4800" />
+<p class="caption">
+<br> Note. (A) Observed word categorization RT per preceding response type in the go/no-go task, word valence, and group. (B) Observed word categorization accuracy per preceding response type in the go/no-go task, word valence, and group. (A–B) The plots show individual data points, boxplots, and probability density plots based on raw data that were aggregated by participant. Asterisks indicate significant differences yielded by the (generalized) linear mixed model analysis. * p &lt; .05, ** p &lt; .01, *** p &lt; .001.
+</p>
+</div>
+<pre class="r"><code># Save plot
+ggsave(plot = figure_obs_val, &quot;./figures/figure_2.tiff&quot;, width = 16, height = 23,
+  units = &quot;cm&quot;, dpi = 600, compression = &quot;lzw&quot;)</code></pre>
+<p><br><br></p>
+</div>
+<div id="plot-behavioral-data-predicted" class="section level2">
+<h2>Plot Behavioral Data (Predicted)</h2>
+<hr />
+<p>This figure corresponds to Figure 3 in the manuscript.</p>
+<pre class="r"><code># Load (G)LMM output
+LMM_rt_final   &lt;- readRDS(file = &quot;./saved_objects_for_plots/LMM_rt_final.rds&quot;)
+GLMM_acc_final &lt;- readRDS(file = &quot;./saved_objects_for_plots/GLMM_acc_final.rds&quot;)
+
+
+# Define facet labels
+group.labs &lt;- c(&quot;Healthy Control Participants&quot;, &quot;Patients With OCD&quot;)
+names(group.labs) &lt;- c(&quot;HC&quot;, &quot;OCD&quot;)
+
+
+#### Create RT plot ####
+
+# Extract only FA and FH from LMM
+LMM_rt        &lt;- ggpredict(LMM_rt_final, terms = c(&quot;gng_response_type&quot;, &quot;word_valence&quot;, &quot;group&quot;))
+LMM_rt_plot   &lt;- LMM_rt[LMM_rt$x %in% c(&quot;FH&quot;, &quot;FA&quot;), ]
+LMM_rt_plot$x &lt;- droplevels(LMM_rt_plot$x)
+
+
+# Plot predicted means
+plot_LMM_rt &lt;- ggplot() +
+  geom_point(data = LMM_rt_plot, aes(x = x, y = predicted, color = group),
+    position = position_dodge(width = .25), size = 2.5) +
+  geom_errorbar(data = LMM_rt_plot, aes(x = x, ymax = conf.low, ymin = conf.high,  color = group),
+    position = position_dodge(width = .25), size = .7, width = .2) +
+  labs(x = &quot;Response in the Go/No-Go Task&quot;, y = &quot;Predicted Word Categorization RT (ms)&quot;) +
+  coord_cartesian(ylim = c(500, 950)) +
+  scale_y_continuous(breaks = seq(500, 950, 50), expand = c(0, 0)) +
+  scale_x_discrete(labels = c(&quot;FH&quot; = &quot;Fast Hit&quot;, &quot;FA&quot; = &quot;False Alarm&quot;)) +
+  scale_color_manual(name = &quot;Word Valence:&quot;, labels = c(&quot;Negative&quot;, &quot;Positive&quot;), values = colors) +
+  facet_wrap(~facet, labeller = labeller(facet = group.labs)) +
+  my_figure_theme
+
+
+# Save and remove legend
+legend &lt;- get_legend(plot_LMM_rt)
+plot_LMM_rt  &lt;- plot_LMM_rt + theme(legend.position = &quot;none&quot;)
+
+
+# Add position of asterisks
+asteriks_rt &lt;- data.frame(
+  x1    = c(.225, .415, .655, .845, .430),
+  x2    = c(.275, .465, .705, .895, .880),
+  y1    = c(.800, .800, .800, .800, .860),
+  xstar = c(.250, .440, .680, .870, .655),
+  ystar = c(.810, .810, .810, .810, .870),
+  lab   = c(&quot;*&quot;,  &quot;***&quot;, &quot;**&quot;, &quot;*&quot;,  &quot;**&quot;))
+
+
+# Add a new layer on-top to add asterisks
+plot_LMM_rt &lt;- ggdraw(plot_LMM_rt) +
+  geom_text(data = asteriks_rt,    aes(x = xstar, y = ystar, label = lab, size = 2.5),    color = &quot;gray30&quot;) +
+  geom_segment(data = asteriks_rt, aes(x = x1, xend = x2, y = y1, yend = y1), size = 0.3, color = &quot;gray30&quot;)
+
+
+#### Create accuracy plot ####
+
+# Extract only FA and FH from GLMM
+GLMM_acc        &lt;- ggpredict(GLMM_acc_final, terms = c(&quot;gng_response_type&quot;, &quot;word_valence&quot;, &quot;group&quot;))
+GLMM_acc_plot   &lt;- GLMM_acc[GLMM_acc$x %in% c(&quot;FH&quot;, &quot;FA&quot;), ]
+GLMM_acc_plot$x &lt;- droplevels(GLMM_acc_plot$x)
+
+
+# Plot predicted means
+plot_GLMM_acc &lt;- ggplot() +
+  geom_point(data = GLMM_acc_plot, aes(x = x, y = predicted * 100, color = group),
+    position = position_dodge(width = .25), size = 2.5) +
+  geom_errorbar(data = GLMM_acc_plot, aes(x = x, ymax = conf.low * 100, ymin = conf.high * 100, color = group),
+    position = position_dodge(width = .25), size = .7, width = .2) +
+  labs(x = &quot;Response in the Go/No-Go Task&quot;, y = &quot;Predicted Word Categorization Accuracy (%)&quot;) +
+  coord_cartesian(ylim = c(50, 110)) +
+  scale_y_continuous(breaks = seq(50, 100, 5), expand = c(0, 0)) +
+  scale_x_discrete(labels = c(&quot;FH&quot; = &quot;Fast Hit&quot;, &quot;FA&quot; = &quot;False Alarm&quot;)) +
+  scale_color_manual(name = &quot;Word Valence:&quot;, labels = c(&quot;Negative&quot;, &quot;Positive&quot;), values = colors) +
+  facet_wrap(~facet, labeller = labeller(facet = group.labs)) +
+  my_figure_theme +
+  theme(legend.position = &quot;none&quot;)
+
+
+# Add position of asterisks
+asteriks_acc &lt;- data.frame(
+  x1    = c(.415, .845),
+  x2    = c(.465, .895),
+  y1    = c(.800, .800),
+  xstar = c(.440, .870),
+  ystar = c(.810, .810),
+  lab   = c(&quot;***&quot;, &quot;***&quot;))
+
+
+# Add a new layer on-top with ggdraw in order to add asterisks
+plot_GLMM_acc &lt;- ggdraw(plot_GLMM_acc) +
+  geom_text(data = asteriks_acc,    aes(x = xstar,  y = ystar, label = lab, size = 2.5),   color = &quot;gray30&quot;) +
+  geom_segment(data = asteriks_acc, aes(x = x1, xend = x2, y = y1, yend = y1), size = 0.3, color = &quot;gray30&quot;)
+
+
+#### Arrange plots
+figure_pred_val &lt;- ggdraw() +
+  draw_plot(plot_LMM_rt,   x = .00, y = .070, width = .49, height = .93) +
+  draw_plot(plot_GLMM_acc, x = .52, y = .070, width = .49, height = .93) +
+  draw_plot(legend,        x = .28, y = .015, width = .50, height = .00)   +
+  draw_plot_label(c(&quot;A&quot;, &quot;B&quot;), c(0, 0.52), c(1, 1), size = 15)
+figure_pred_val</code></pre>
+<div class="figure">
+<img src="5_Plots_files/figure-html/create-pred-value-plot-1.png" alt="&lt;br&gt; Note. (A) Model-predicted mean word categorization RT per preceding response type (fast hit, false alarm) in the go/no-go task, word valence, and group, computed as partial effects from the linear mixed model (LMM). RT data were log-transformed for analysis but back-transformed to ms for visualization. (B) Model-predicted mean word categorization accuracy per preceding response type (fast hit, false alarm) in the go/no-go task, word valence, and group, computed as partial effects from the generalized linear mixed model (GLMM). (A–B) Error bars indicate 95% confidence intervals. Asterisks indicate significant differences yielded by the (G)LMM analysis. * p &lt; .05, ** p &lt; .01, *** p &lt; .001." width="4800" />
+<p class="caption">
+<br> Note. (A) Model-predicted mean word categorization RT per preceding response type (fast hit, false alarm) in the go/no-go task, word valence, and group, computed as partial effects from the linear mixed model (LMM). RT data were log-transformed for analysis but back-transformed to ms for visualization. (B) Model-predicted mean word categorization accuracy per preceding response type (fast hit, false alarm) in the go/no-go task, word valence, and group, computed as partial effects from the generalized linear mixed model (GLMM). (A–B) Error bars indicate 95% confidence intervals. Asterisks indicate significant differences yielded by the (G)LMM analysis. * p &lt; .05, ** p &lt; .01, *** p &lt; .001.
+</p>
+</div>
+<pre class="r"><code># Save plot
+ggsave(plot = figure_pred_val, &quot;./figures/figure_3.tiff&quot;, width = 20, height = 12,
+  units = &quot;cm&quot;, dpi = 600, compression = &quot;lzw&quot;)</code></pre>
+<p><br><br></p>
+</div>
+<div id="plot-erp-data" class="section level2">
+<h2>Plot ERP Data</h2>
+<hr />
+<p>This figure corresponds to Figure 4 in the manuscript.</p>
+<!-- Load and clean data -->
+<pre class="r"><code># Load data
+resp_locked_data &lt;- read.csv(file = &quot;./data/response_locked_data_for_plots.csv&quot;, header = TRUE)
+
+
+# Create relevant variables and filter data
+resp_locked_data &lt;- resp_locked_data %&gt;%
+  dplyr::mutate(
+    stimulation = factor(ifelse(
+      participant_id == &quot;C_01_T1&quot; | participant_id == &quot;C_02_T1&quot; | participant_id == &quot;C_03_T2&quot; |
+      participant_id == &quot;C_04_T2&quot; | participant_id == &quot;C_05_T1&quot; | participant_id == &quot;C_06_T2&quot; |
+      participant_id == &quot;C_07_T1&quot; | participant_id == &quot;C_08_T1&quot; | participant_id == &quot;C_09_T2&quot; |
+      participant_id == &quot;C_10_T2&quot; | participant_id == &quot;C_11_T2&quot; | participant_id == &quot;C_12_T2&quot; |
+      participant_id == &quot;C_13_T1&quot; | participant_id == &quot;C_15_T2&quot; | participant_id == &quot;C_16_T1&quot; |
+      participant_id == &quot;C_17_T2&quot; | participant_id == &quot;C_18_T2&quot; | participant_id == &quot;C_19_T1&quot; |
+      participant_id == &quot;C_20_T1&quot; | participant_id == &quot;C_21_T2&quot; | participant_id == &quot;C_22_T2&quot; |
+      participant_id == &quot;C_23_T1&quot; | participant_id == &quot;C_24_T1&quot; | participant_id == &quot;C_25_T1&quot; |
+      participant_id == &quot;C_26_T1&quot; | participant_id == &quot;C_27_T2&quot; | participant_id == &quot;C_28_T2&quot; |
+      participant_id == &quot;C_29_T1&quot; | participant_id == &quot;C_30_T2&quot; | participant_id == &quot;P_01_T1&quot; |
+      participant_id == &quot;P_02_T2&quot; | participant_id == &quot;P_03_T2&quot; | participant_id == &quot;P_04_T1&quot; |
+      participant_id == &quot;P_05_T1&quot; | participant_id == &quot;P_06_T1&quot; | participant_id == &quot;P_07_T2&quot; |
+      participant_id == &quot;P_08_T2&quot; | participant_id == &quot;P_09_T2&quot; | participant_id == &quot;P_10_T1&quot; |
+      participant_id == &quot;P_11_T2&quot; | participant_id == &quot;P_12_T2&quot; | participant_id == &quot;P_13_T1&quot; |
+      participant_id == &quot;P_15_T1&quot; | participant_id == &quot;P_16_T1&quot; | participant_id == &quot;P_17_T2&quot; |
+      participant_id == &quot;P_18_T1&quot; | participant_id == &quot;P_19_T1&quot; | participant_id == &quot;P_20_T2&quot; |
+      participant_id == &quot;P_21_T2&quot; | participant_id == &quot;P_22_T1&quot; | participant_id == &quot;P_23_T1&quot; |
+      participant_id == &quot;P_24_T2&quot; | participant_id == &quot;P_25_T1&quot; | participant_id == &quot;P_26_T2&quot; |
+      participant_id == &quot;P_27_T1&quot; | participant_id == &quot;P_28_T2&quot; | participant_id == &quot;P_29_T2&quot; |
+      participant_id == &quot;P_30_T1&quot;, &quot;sham&quot;, &quot;verum&quot;)),
+    condition      = factor(ifelse(condition == 1, &quot;correct&quot;, &quot;incorrect&quot;), levels = c(&quot;incorrect&quot;, &quot;correct&quot;)),
+    group          = factor(ifelse(substr(participant_id, 1, 1) == &quot;C&quot;, &quot;HC&quot;, &quot;OCD&quot;)),
+    session        = factor(ifelse(substr(participant_id, 6, 7) == &quot;T1&quot;, &quot;T1&quot;, &quot;T2&quot;)),
+    participant_id = factor(substr(participant_id, 1, 4))) %&gt;% # to get correct no. of factor levels
+  # Only keep sham session and exclude P_02 and C_02
+  dplyr::filter(stimulation == &quot;sham&quot; &amp; participant_id != &quot;P_02&quot; &amp; participant_id != &quot;C_02&quot;)
+
+
+# Update factor levels
+resp_locked_data$participant_id &lt;- droplevels(resp_locked_data$participant_id)
+
+
+# Calculate running within-participant CIs
+running_ci_mfn &lt;- resp_locked_data %&gt;%
+  split(.$time) %&gt;%
+  map(~ summarySEwithinO(
+    data = .,
+    measurevar  = &quot;FCz&quot;,
+    withinvars  = &quot;condition&quot;,
+    betweenvars = &quot;group&quot;,
+    idvar       = &quot;participant_id&quot;))
+
+
+ci_mfn &lt;- purrr::map_df(running_ci_mfn, magrittr::extract) %&gt;%
+  dplyr::mutate(time = rep(unique(resp_locked_data$time), each = 4))
+# Note. 4 refers to  no. of conditions (group x response_type = 2 x 2 = 4)
+
+
+# Convert to long format for electrodes
+data_topo_mfn &lt;- resp_locked_data %&gt;%
+  # Remove channels of no interest
+  dplyr::select(-IO1, -M1, -F9, -F10) %&gt;%
+  # Change from wide to long format for electrodes
+  tidyr::gather(., electrode, amplitude, Fp1:O2, factor_key = TRUE)  %&gt;%
+  # Select time windows
+  dplyr::filter(time &gt;= 0 &amp; time &lt;= 100) %&gt;%
+  # Add electrode information
+  electrode_locations(., electrode = &quot;electrode&quot;, drop = FALSE, montage = NULL)</code></pre>
+<!-- Create plots -->
+<pre class="r"><code>#### Create waveform plot ####
+
+# Define electrode labels
+label_fcz &lt;- data.frame(time = -320, FCz = 17.5, lab = &quot;Text&quot;) 
+
+
+# Create waveform plot
+plot_waveform_mfn &lt;- ggplot(resp_locked_data, aes(time, FCz)) +
+  stat_summary(fun = mean, geom = &quot;line&quot;, size = 0.5, linetype = &quot;solid&quot;, aes(color = condition:group)) +
+  geom_ribbon(data = ci_mfn, aes(ymin = FCz - ci, ymax = FCz + ci, fill = condition:group), alpha = 0.2) +
+  guides(fill = &quot;none&quot;) +
+  geom_segment(aes(x = 0,    xend = 0,   y = -8, yend = 18), linetype = &quot;dashed&quot;, color = &quot;gray60&quot;, size = 0.2) +
+  geom_segment(aes(x = -400, xend = 800, y =  0, yend = 0),  linetype = &quot;dashed&quot;, color = &quot;gray60&quot;, size = 0.2) +
+  geom_text(data = label_fcz, label = &quot;FCz&quot;) +
+  annotate(&quot;rect&quot;, xmin = 0, xmax = 100, ymin = -8, ymax = 18, alpha = .2, fill = &quot;gray50&quot;) + # Shaded time area
+  labs(x = &quot;Time (ms)&quot;, y = expression(paste(&quot;Amplitude (&quot;, mu, &quot;V)&quot;))) +
+  coord_cartesian(ylim = c(-8, 18), xlim = c(-400, 800)) +
+  scale_y_continuous(breaks = seq(-8, 18, 2), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(-400, 800, 200), expand = c(0, 0)) +
+  scale_color_manual(values = colors_erp, labels = c(&quot;HC: False Alarm&quot;, &quot;OCD: False Alarm&quot;, &quot;HC: Hit&quot;, &quot;OCD: Hit&quot;),
+    guide = guide_legend(override.aes = list(size = 1.3))) + # Thickness legend lines
+  scale_fill_manual(values = colors_erp) +
+  my_figure_theme + 
+  theme(axis.ticks.x = NULL, legend.title = element_blank(), legend.text = element_text(size = 9))
+
+
+#### Create topography plots ####
+
+# Define facet labels
+labs_incorr &lt;- c(&quot;HC: False Alarm&quot;, &quot;OCD: False Alarm&quot;)
+names(labs_incorr) &lt;- c(&quot;HC&quot;, &quot;OCD&quot;)
+
+labs_corr &lt;- c(&quot;HC: Hit&quot;, &quot;OCD: Hit&quot;)
+names(labs_corr) &lt;- c(&quot;HC&quot;, &quot;OCD&quot;)
+
+
+# ERN
+plot_topo_ern &lt;- ggplot(data_topo_mfn[data_topo_mfn$condition == &quot;incorrect&quot;, ],
+  aes(x = x, y = y, fill = amplitude, label = electrode)) +
+  geom_topo(grid_res = 300, interp_limit = &quot;head&quot;, chan_markers = &quot;point&quot;, chan_size = 0.1, head_size = 0.2) +
+  scale_fill_distiller(palette = &quot;RdBu&quot;, limits = c(-4, 4), breaks = c(-4, 0, 4)) +
+  theme_void() +
+  coord_equal() +
+  labs(fill = expression(paste(mu, &quot;V&quot;))) +
+  theme(legend.position = &quot;right&quot;, legend.text = element_text(size = 6.5, color = &quot;gray30&quot;),
+    legend.title = element_text(size = 6.5, color = &quot;gray30&quot;), legend.key.height = unit(0.25, &#39;cm&#39;),
+    legend.key.width = unit(0.25, &#39;cm&#39;), strip.text.x = element_text(size = 6.5)) +
+  facet_wrap(. ~group, ncol = 1, labeller = labeller(group = labs_incorr))
+
+
+# CRN
+plot_topo_crn &lt;- ggplot(data_topo_mfn[data_topo_mfn$condition == &quot;correct&quot;, ],
+  aes(x = x, y = y, fill = amplitude, label = electrode)) +
+  geom_topo(grid_res = 300, interp_limit = &quot;head&quot;, chan_markers = &quot;point&quot;, chan_size = 0.1, head_size = 0.2) +
+  scale_fill_distiller(palette = &quot;RdBu&quot;, limits = c(-4, 8.4), breaks = c(-4, 0, 4, 8)) +
+  theme_void() +
+  coord_equal() +
+  labs(fill = expression(paste(mu, &quot;V&quot;))) +
+  theme(legend.position = &quot;right&quot;, legend.text = element_text(size = 6.5, color = &quot;gray30&quot;),
+    legend.title = element_text(size = 6.5, color = &quot;gray30&quot;), legend.key.height = unit(0.25, &#39;cm&#39;),
+    legend.key.width = unit(0.25, &#39;cm&#39;), strip.text.x = element_text(size = 6.5)) +
+  facet_wrap(. ~group, ncol = 1, labeller = labeller(group = labs_corr))
+
+
+# Overlay waveform and topopgraphy plots
+aligned_plots1_mfn &lt;- align_plots(plot_waveform_mfn, plot_topo_ern, axis = &quot;tr&quot;)
+aligned_plots2_mfn &lt;- align_plots(plot_waveform_mfn, plot_topo_crn, axis = &quot;tr&quot;)
+
+
+# Arrange plots
+figure_ern_crn &lt;- ggdraw() +
+  draw_plot(aligned_plots1_mfn[[1]],  x =  0,  y = 0,    width = .77, height = .99) +
+  draw_plot(aligned_plots1_mfn[[2]],  x = .75, y = .525, width = .3,  height = .45) +
+  draw_plot(aligned_plots2_mfn[[2]],  x = .75, y = .05,  width = .3,  height = .45) +
+  draw_plot_label(c(&quot;A&quot;, &quot;B&quot;), c(0, .75), c(1, 1), size = 15)
+figure_ern_crn</code></pre>
+<div class="figure">
+<img src="5_Plots_files/figure-html/create-erp-plot-1.png" alt="Note. (A) Grand average response-locked waveforms at electrode site FCz with 95% confidence intervals in patients with OCD and HC participants for correct (hit) and incorrect (false alarm) responses in the go/no-go task. The gray shaded time interval was used to quantify ERN and CRN amplitude. (B) Scalp topographies of ERN and CRN in both groups in the time window 0–100 ms after false alarms or hits, respectively." width="4800" />
+<p class="caption">
+Note. (A) Grand average response-locked waveforms at electrode site FCz with 95% confidence intervals in patients with OCD and HC participants for correct (hit) and incorrect (false alarm) responses in the go/no-go task. The gray shaded time interval was used to quantify ERN and CRN amplitude. (B) Scalp topographies of ERN and CRN in both groups in the time window 0–100 ms after false alarms or hits, respectively.
+</p>
+</div>
+<pre class="r"><code># Save plot
+ggsave(plot = figure_ern_crn, &quot;./figures/figure_4.tiff&quot;, width = 16, height = 10,
+  units = &quot;cm&quot;, dpi = 600, compression = &quot;lzw&quot;)</code></pre>
+<p><br><br></p>
+</div>
+<div id="plot-effects-of-ocd-characteristics" class="section level2">
+<h2>Plot Effects of OCD Characteristics</h2>
+<hr />
+<div id="ocd-symptom-severity-oci-r" class="section level3">
+<h3>OCD Symptom Severity (OCI-R)</h3>
+<p><br> This figure corresponds to Figure 5 in the manuscript.</p>
+<pre class="r"><code># Load LMM output and correlation data
+LMM_rt_oci_ocd  &lt;- readRDS(file = &quot;./saved_objects_for_plots/LMM_rt_oci_ocd.rds&quot;)
+load(file = &quot;./saved_objects_for_plots/df_corr.Rda&quot;)
+
+
+# Create plot of estimated interaction effects
+plot_oci_1 &lt;- plot_model(LMM_rt_oci_ocd,
+                         type   = &quot;pred&quot;,
+                         terms  = c(&quot;oci_centered&quot;, &quot;pos_neg&quot;, &quot;FA_FH&quot;),
+                         ci.lvl = .95,
+                         transform = &quot;exp&quot;,
+                         line.size = 1) +
+  labs(title = NULL, y = &quot;Word Categorization RT (ms)&quot;, x = &quot;OCI-R Score (Group-Mean Centered)&quot;) +
+  coord_cartesian(ylim = c(500, 900), xlim = c(-13, 20)) +
+  scale_y_continuous(breaks = seq(500, 900, 50), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(-10, 20, 5), expand = c(0, 0)) +
+  scale_color_manual(name = &quot;Word Valence:&quot;, values = colors, labels = c(&quot;Negative&quot;, &quot;Positive&quot;)) +
+  scale_fill_manual(name  = &quot;Word Valence:&quot;, values = colors, labels = c(&quot;Negative&quot;, &quot;Positive&quot;)) +
+  my_figure_theme +
+  theme(strip.text.x = element_text(size = 11), axis.ticks.x = NULL) +
+  guides(fill = guide_legend(override.aes = list(color = colors, size = 0.65)))
+
+
+# Change facet labels
+plot_oci_1$data$facet &lt;- ifelse(plot_oci_1$data$facet == &quot;FA_FH = -0.5&quot;, &quot;Fast Hits&quot;, &quot;False Alarms&quot;)
+
+
+# Create scatterplot
+plot_oci_2 &lt;- ggplot(data = df_corr[df_corr$group == &quot;OCD&quot;, ], aes(x = oci, y = priming, fill = group)) +
+  geom_point(color = &quot;#003192&quot;, size = 1) +
+  geom_smooth(method = &#39;lm&#39;, color = &quot;#003192&quot;) +
+  labs(title = NULL, x = &quot;OCI-R Score&quot;, y = &quot;Overall Priming Effect (ms)&quot;) +
+  coord_cartesian(ylim = c(-150, 400), xlim = c(12.9, 45.5)) +
+  scale_y_continuous(breaks = seq(-150, 400, 50), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(15, 45, 5), expand = c(0, 0)) +
+  scale_fill_manual(values = &quot;#003192&quot;) +
+  my_figure_theme +
+  theme(legend.position = &quot;none&quot;, axis.ticks.x = NULL) +
+  annotate(&quot;text&quot;, x = 45, y = -120, label = paste(&quot;list(italic(r)(26) ==&quot;, -.41, &quot;, italic(p) == .029)&quot;),
+    parse = TRUE, hjust = 1, size = 3, color = &quot;gray20&quot;)
+
+
+# Arrange plots
+figure_oci &lt;- ggdraw() +
+  draw_plot(plot_oci_1, x = .00, y = .000, width = .60, height = 1) +
+  draw_plot(plot_oci_2, x = .61, y = .115, width = .39, height = .83) +
+  draw_plot_label(c(&quot;A&quot;, &quot;B&quot;), c(0, .61), c(1, 1), size = 15)
+figure_oci</code></pre>
+<div class="figure">
+<img src="5_Plots_files/figure-html/create-plot-oci-1.png" alt="&lt;br&gt; Note. (A) Estimated interaction effect between Obsessive-Compulsive Inventory-Revised (OCI-R) score, preceding response type (fast hit, false alarm) in the go/no-go task, and word valence on word categorization response time (RT) in patients with OCD, computed as partial effect from the linear mixed model. RT data were log-transformed for analysis but were back-transformed to ms for data visualization. (B) Negative correlation between the OCI-R score and the overall priming effect across participants. The overall priming effect refers to the priming effect after false alarms and fast hits and was calculated by subtracting the RT in congruent conditions (positive words after fast hits and negative words after false alarms) from the RT in incongruent conditions (positive words after false alarms and negative words after fast hits) for each participant (Aarts et al., 2012). (A–B) Shaded bands represent 95% confidence intervals." width="4800" />
+<p class="caption">
+<br> Note. (A) Estimated interaction effect between Obsessive-Compulsive Inventory-Revised (OCI-R) score, preceding response type (fast hit, false alarm) in the go/no-go task, and word valence on word categorization response time (RT) in patients with OCD, computed as partial effect from the linear mixed model. RT data were log-transformed for analysis but were back-transformed to ms for data visualization. (B) Negative correlation between the OCI-R score and the overall priming effect across participants. The overall priming effect refers to the priming effect after false alarms and fast hits and was calculated by subtracting the RT in congruent conditions (positive words after fast hits and negative words after false alarms) from the RT in incongruent conditions (positive words after false alarms and negative words after fast hits) for each participant (Aarts et al., 2012). (A–B) Shaded bands represent 95% confidence intervals.
+</p>
+</div>
+<pre class="r"><code># Save plot
+ggsave(plot = figure_oci, &quot;./figures/figure_5.tiff&quot;, width = 20, height = 12,
+  units = &quot;cm&quot;, dpi = 600, compression = &quot;lzw&quot;)</code></pre>
+<p><br><br></p>
+</div>
+<div id="trait-anxiety-stai" class="section level3">
+<h3>Trait Anxiety (STAI)</h3>
+<p><br> This figure corresponds to Figure S1 in the supplemental material.</p>
+<pre class="r"><code># Load LMM output
+LMM_rt_stai_ocd &lt;- readRDS(file = &quot;./saved_objects_for_plots/LMM_rt_stai_ocd.rds&quot;)
+
+
+# Create plot of estimated interaction effects
+plot_stai_1 &lt;- plot_model(LMM_rt_stai_ocd,
+                          type   = &quot;pred&quot;,
+                          terms  = c(&quot;stai_centered&quot;, &quot;pos_neg&quot;, &quot;FA_FH&quot;),
+                          ci.lvl = .95,
+                          transform = &quot;exp&quot;,
+                          line.size = 1) +
+  labs(title = NULL, y = &quot;Word Categorization RT (ms)&quot;, x = &quot;STAI Trait Score (Group-Mean Centered)&quot;) +
+  coord_cartesian(ylim = c(450, 900), xlim = c(-18, 25)) +
+  scale_y_continuous(breaks = seq(450, 900, 50), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(-15, 25, 5), expand = c(0, 0)) +
+  scale_color_manual(name = &quot;Word Valence:&quot;, values = colors, labels = c(&quot;Negative&quot;, &quot;Positive&quot;)) +
+  scale_fill_manual(name  = &quot;Word Valence:&quot;, values = colors, labels = c(&quot;Negative&quot;, &quot;Positive&quot;)) +
+  my_figure_theme +
+  theme(strip.text.x = element_text(size = 11), axis.ticks.x = NULL) +
+  guides(fill = guide_legend(override.aes = list(color = colors, size = 0.65)))
+
+
+# Change facet labels
+plot_stai_1$data$facet &lt;- ifelse(plot_stai_1$data$facet == &quot;FA_FH = -0.5&quot;, &quot;Fast Hits&quot;, &quot;False Alarms&quot;)
+
+
+# Create scatterplot
+plot_stai_2 &lt;- ggplot(data = df_corr[df_corr$group == &quot;OCD&quot;, ], aes(x = stai, y = priming, fill = group)) +
+  geom_point(color = &quot;#003192&quot;, size = 1) +
+  geom_smooth(method = &#39;lm&#39;, color = &quot;#003192&quot;) +
+  labs(title = NULL, x = &quot;STAI Trait Score&quot;, y = &quot;Overall Priming Effect (ms)&quot;) +
+  coord_cartesian(ylim = c(-150, 400), xlim = c(35.8, 80)) +
+  scale_y_continuous(breaks = seq(-150, 400, 50), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(40, 80, 10), expand = c(0, 0)) +
+  scale_fill_manual(values = &quot;#003192&quot;) +
+  my_figure_theme +
+  theme(legend.position = &quot;none&quot;, axis.ticks.x = NULL) +
+  annotate(&quot;text&quot;, x = 80, y = -115, label = paste(&quot;list(italic(r)(26) ==&quot;, -.34, &quot;, italic(p) == .078)&quot;),
+    parse = TRUE, hjust = 1, size = 3, color = &quot;gray20&quot;)
+
+
+# Arrange plots
+figure_stai &lt;- ggdraw() +
+  draw_plot(plot_stai_1, x = .00, y = .000, width = .60, height = 1) +
+  draw_plot(plot_stai_2, x = .61, y = .115, width = .39, height = 0.83) +
+  draw_plot_label(c(&quot;A&quot;, &quot;B&quot;), c(0, .61), c(1, 1), size = 15)
+figure_stai</code></pre>
+<div class="figure">
+<img src="5_Plots_files/figure-html/create-plot-stai-1.png" alt="&lt;br&gt; Note. (A) Estimated interaction effect between State-Trait Anxiety Inventory (STAI) trait score, preceding response type (fast hit, false alarm) in the go/no-go task, and word valence on word categorization response time (RT) in patients with OCD, computed as partial effect from the linear mixed model. RT data were log-transformed for analysis but were back-transformed to ms for data visualization. (B) Negative correlation between the STAI trait score and the overall priming effect across participants. The overall priming effect refers to the priming effect after false alarms and fast hits and was calculated by subtracting the RT in congruent conditions (positive words after fast hits and negative words after false alarms) from the RT in incongruent conditions (positive words after false alarms and negative words after fast hits) for each participant (Aarts et al., 2012). (A–B) Shaded bands represent 95% confidence intervals." width="4800" />
+<p class="caption">
+<br> Note. (A) Estimated interaction effect between State-Trait Anxiety Inventory (STAI) trait score, preceding response type (fast hit, false alarm) in the go/no-go task, and word valence on word categorization response time (RT) in patients with OCD, computed as partial effect from the linear mixed model. RT data were log-transformed for analysis but were back-transformed to ms for data visualization. (B) Negative correlation between the STAI trait score and the overall priming effect across participants. The overall priming effect refers to the priming effect after false alarms and fast hits and was calculated by subtracting the RT in congruent conditions (positive words after fast hits and negative words after false alarms) from the RT in incongruent conditions (positive words after false alarms and negative words after fast hits) for each participant (Aarts et al., 2012). (A–B) Shaded bands represent 95% confidence intervals.
+</p>
+</div>
+<pre class="r"><code># Save plot
+ggsave(plot = figure_stai, &quot;./figures/figure_S1.tiff&quot;, width = 20, height = 12,
+  units = &quot;cm&quot;, dpi = 600, compression = &quot;lzw&quot;)</code></pre>
+<p><br><br></p>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<hr />
+<p>Aarts, K., De Houwer, J., &amp; Pourtois, G. (2012). Evidence for the automatic evaluation of self-generated actions. <em>Cognition, 124</em>(2), 117–127. <a href="https://doi.org/10.1016/j.cognition.2012.05.009" class="uri">https://doi.org/10.1016/j.cognition.2012.05.009</a> <br><br><br></p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<hr />
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19044)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=German_Germany.1252  LC_CTYPE=German_Germany.1252   
+[3] LC_MONETARY=German_Germany.1252 LC_NUMERIC=C                   
+[5] LC_TIME=German_Germany.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base     
+
+other attached packages:
+ [1] plyr_1.8.7      lmerTest_3.1-3  lme4_1.1-25     Matrix_1.5-1   
+ [5] ggeffects_1.1.3 sjPlot_2.8.11   tidyr_1.2.1     eegUtils_0.5.0 
+ [9] purrr_0.3.5     cowplot_1.1.1   ggsignif_0.6.4  ggplot2_3.3.6  
+[13] dplyr_1.0.10   
+
+loaded via a namespace (and not attached):
+  [1] minqa_1.2.4          colorspace_2.0-3     ellipsis_0.3.2      
+  [4] sjlabelled_1.2.0     estimability_1.4.1   parameters_0.19.0   
+  [7] rstudioapi_0.14      listenv_0.8.0        R.matlab_3.7.0      
+ [10] farver_2.1.1         fansi_1.0.3          mvtnorm_1.1-3       
+ [13] codetools_0.2-16     splines_3.6.1        R.methodsS3_1.8.2   
+ [16] cachem_1.0.4         knitr_1.40           sjmisc_2.8.9        
+ [19] jsonlite_1.8.3       nloptr_1.2.2.2       broom_1.0.1         
+ [22] R.oo_1.25.0          shinydashboard_0.7.2 effectsize_0.7.0.5  
+ [25] shiny_1.7.2          compiler_3.6.1       httr_1.4.4          
+ [28] sjstats_0.18.1       emmeans_1.6.0        backports_1.4.1     
+ [31] assertthat_0.2.1     fastmap_1.1.0        lazyeval_0.2.2      
+ [34] cli_3.4.1            later_1.2.0          htmltools_0.5.3     
+ [37] tools_3.6.1          gtable_0.3.1         glue_1.6.2          
+ [40] Rcpp_1.0.9           jquerylib_0.1.4      vctrs_0.5.0         
+ [43] nlme_3.1-140         insight_0.18.4       xfun_0.33           
+ [46] stringr_1.4.1        globals_0.16.1       mime_0.12           
+ [49] miniUI_0.1.1.1       lifecycle_1.0.3      renv_0.12.0         
+ [52] edfReader_1.2.1      statmod_1.4.37       future_1.28.0       
+ [55] MASS_7.3-51.4        scales_1.2.1         ragg_1.2.4          
+ [58] promises_1.2.0.1     parallel_3.6.1       RColorBrewer_1.1-3  
+ [61] yaml_2.2.1           gridExtra_2.3        sass_0.4.0          
+ [64] stringi_1.6.1        highr_0.9            bayestestR_0.13.0   
+ [67] boot_1.3-22          rlang_1.0.6          pkgconfig_2.0.3     
+ [70] systemfonts_1.0.4    matrixStats_0.58.0   pracma_2.4.2        
+ [73] evaluate_0.16        lattice_0.20-45      htmlwidgets_1.5.4   
+ [76] labeling_0.4.2       tidyselect_1.2.0     parallelly_1.32.1   
+ [79] magrittr_2.0.3       R6_2.5.1             generics_0.1.3      
+ [82] ini_0.3.1            DBI_1.1.3            pillar_1.8.1        
+ [85] withr_2.5.0          mgcv_1.8-28          datawizard_0.6.2    
+ [88] abind_1.4-5          tibble_3.1.8         future.apply_1.9.1  
+ [91] performance_0.10.0   modelr_0.1.9         utf8_1.2.2          
+ [94] plotly_4.10.0        rmarkdown_2.16       viridis_0.6.2       
+ [97] grid_3.6.1           data.table_1.14.4    digest_0.6.30       
+[100] xtable_1.8-4         numDeriv_2016.8-1.1  httpuv_1.6.1        
+[103] R.utils_2.12.0       textshaping_0.3.6    signal_0.7-6        
+[106] munsell_0.5.0        viridisLite_0.4.1    bslib_0.4.0         </code></pre>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBsb3RzIg0Kb3V0cHV0OiANCiAgaHRtbF9kb2N1bWVudA0KLS0tDQoNCjwhLS0gU2V0IGdlbmVyYWwgc2V0dGluZ3MgLS0+DQoNCmBgYHtyIHNldHVwLCBtZXNzYWdlID0gRkFMU0UsIHdhcm5pbmcgPSBGQUxTRX0NCg0KIyBTZXQgZ2VuZXJhbCBzZXR0aW5ncyBmb3IgbWFya2Rvd24gZmlsZQ0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KA0KICBtZXNzYWdlID0gRkFMU0UsDQogIHdhcm5pbmcgPSBGQUxTRSwNCiAgY29tbWVudCA9ICIiLA0KICByZXN1bHRzID0gImhvbGQiKQ0KDQoNCiMgQ2xlYXIgZW52aXJvbm1lbnQNCnJtKGxpc3QgPSBscygpKQ0KDQoNCiMgRW5hYmxlL2Rpc2FibGUgY2FjaGluZyBvZiB0aW1lLWNvbnN1bWluZyBjb2RlIGNodW5rcw0Ka25pdHJfY2FjaGVfZW5hYmxlZCA9IFRSVUUNCg0KDQojIExvYWQgcGFja2FnZXMNCmxpYnJhcnkoZHBseXIpICAgICAgIyBmb3IgZGF0YSB3cmFuZ2xpbmcNCmxpYnJhcnkoZ2dwbG90MikgICAgIyBmb3IgcGxvdHRpbmcNCmxpYnJhcnkoZ2dzaWduaWYpICAgIyBmb3IgYWRkaW5nIGFzdGVyaXNrcw0KbGlicmFyeShjb3dwbG90KSAgICAjIGZvciBhcnJhbmdpbmcgcGxvdHMNCmxpYnJhcnkocHVycnIpICAgICAgIyBmb3IgY2FsY3VsYXRpbmcgd2l0aGluLXBhcnRpY2lwYW50IENJcw0KbGlicmFyeShlZWdVdGlscykgICAjIGZvciBwbG90dGluZyBFRUcgdG9wb2dyYXBoaWVzDQpsaWJyYXJ5KHRpZHlyKSAgICAgICMgZm9yIGdhdGhlciBmdW5jdGlvbg0KbGlicmFyeShzalBsb3QpICAgICAjIGZvciBwbG90X21vZGVsIGZ1bmN0aW9uDQpsaWJyYXJ5KGdnZWZmZWN0cykgICMgZm9yIGV4dHJhY3RpbmcgY2VydGFpbiBlZmZlY3RzIGZyb20gbW9kZWwNCg0KDQojIExvYWQgZnVuY3Rpb25zDQpzb3VyY2UoIi4vZnVuY3Rpb25zL3N1bW1hcnlTRXdpdGhpbk8uUiIpICAjIEZ1bmN0aW9uIHByb3ZpZGVkIGJ5IFItY29va2Jvb2s6IGh0dHA6Ly93d3cuY29va2Jvb2stci5jb20vR3JhcGhzL1Bsb3R0aW5nX21lYW5zX2FuZF9lcnJvcl9iYXJzXyhnZ3Bsb3QyKS8NCnNvdXJjZSgiLi9mdW5jdGlvbnMvUl9yYWluY2xvdWRzLlIiKSAgICAgICMgRnVuY3Rpb24gdG8gY3JlYXRlIHJhaW5jbG91ZCBwbG90cw0KDQoNCiMgRGVmaW5lIGZ1bmN0aW9uIHRvIGNyZWF0ZSBjb21tb24gbGVnZW5kIChmcm9tIGh0dHA6Ly93d3cuc3RoZGEuY29tL2VuZ2xpc2gvd2lraS93aWtpLnBocD9pZF9jb250ZW50cz03OTMwI2FkZC1hLWNvbW1vbi1sZWdlbmQtZm9yLW11bHRpcGxlLWdncGxvdDItZ3JhcGhzKQ0KZ2V0X2xlZ2VuZCA8LSBmdW5jdGlvbihteWdncGxvdCkgew0KICB0bXAgICAgICA8LSBnZ3Bsb3RfZ3RhYmxlKGdncGxvdF9idWlsZChteWdncGxvdCkpDQogIGxlZyAgICAgIDwtIHdoaWNoKHNhcHBseSh0bXAkZ3JvYnMsIGZ1bmN0aW9uKHgpIHgkbmFtZSkgPT0gImd1aWRlLWJveCIpDQogIGxlZ2VuZCAgIDwtIHRtcCRncm9ic1tbbGVnXV0NCiAgcmV0dXJuKGxlZ2VuZCl9DQoNCg0KIyBTZXQgZmlndXJlIHRoZW1lDQpteV9maWd1cmVfdGhlbWUgPC0gdGhlbWVfY2xhc3NpYyhiYXNlX3NpemUgPSAxMSkgKw0KICB0aGVtZShsZWdlbmQucG9zaXRpb24gID0gImJvdHRvbSIsDQogICAgICAgIGF4aXMudGlja3MueCAgICAgPSBlbGVtZW50X2JsYW5rKCksDQogICAgICAgIHBsb3QudGl0bGUgICAgICAgPSBlbGVtZW50X3RleHQoaGp1c3QgPSAwLjUpLA0KICAgICAgICBheGlzLnRpdGxlLnggICAgID0gZWxlbWVudF90ZXh0KHZqdXN0ID0gLTEpLA0KICAgICAgICBzdHJpcC5iYWNrZ3JvdW5kID0gZWxlbWVudF9yZWN0KGNvbG9yID0gImdyYXk4NCIsIGZpbGwgPSAiZ3JheTk0Iiwgc2l6ZSA9IDAuMykpDQoNCg0KIyBTZXQgZmlndXJlIGNvbG9ycw0KY29sb3JzIDwtIGMoIiMyZDVhN2QiLCAidGFuMSIpDQpjb2xvcnNfZXJwIDwtIGMoInJveWFsYmx1ZTEiLCAibmF2eSIsICJ0YW4xIiwgInNpZW5uYTMiKQ0KYGBgDQo8YnI+DQoNCiMjIFBsb3QgQmVoYXZpb3JhbCBEYXRhIChPYnNlcnZlZCkNCioqKg0KDQpUaGlzIGZpZ3VyZSBjb3JyZXNwb25kcyB0byBGaWd1cmUgMiBpbiB0aGUgbWFudXNjcmlwdC4NCg0KYGBge3IgY3JlYXRlLW9icy12YWx1ZS1wbG90LCBmaWcud2lkdGggPSA4LCBmaWcuaGVpZ2h0ID0gMTAsIGRwaSA9IDYwMCwgZmlnLmNhcCA9ICI8YnI+IE5vdGUuIChBKSBPYnNlcnZlZCB3b3JkIGNhdGVnb3JpemF0aW9uIFJUIHBlciBwcmVjZWRpbmcgcmVzcG9uc2UgdHlwZSBpbiB0aGUgZ28vbm8tZ28gdGFzaywgd29yZCB2YWxlbmNlLCBhbmQgZ3JvdXAuIChCKSBPYnNlcnZlZCB3b3JkIGNhdGVnb3JpemF0aW9uIGFjY3VyYWN5IHBlciBwcmVjZWRpbmcgcmVzcG9uc2UgdHlwZSBpbiB0aGUgZ28vbm8tZ28gdGFzaywgd29yZCB2YWxlbmNlLCBhbmQgZ3JvdXAuIChB4oCTQikgVGhlIHBsb3RzIHNob3cgaW5kaXZpZHVhbCBkYXRhIHBvaW50cywgYm94cGxvdHMsIGFuZCBwcm9iYWJpbGl0eSBkZW5zaXR5IHBsb3RzIGJhc2VkIG9uIHJhdyBkYXRhIHRoYXQgd2VyZSBhZ2dyZWdhdGVkIGJ5IHBhcnRpY2lwYW50LiBBc3Rlcmlza3MgaW5kaWNhdGUgc2lnbmlmaWNhbnQgZGlmZmVyZW5jZXMgeWllbGRlZCBieSB0aGUgKGdlbmVyYWxpemVkKSBsaW5lYXIgbWl4ZWQgbW9kZWwgYW5hbHlzaXMuICogcCA8IC4wNSwgKiogcCA8IC4wMSwgKioqIHAgPCAuMDAxLiJ9DQoNCg0KIyBMb2FkIGFnZ3JlZ2F0ZWQgZGF0YSBwZXIgcGFydGljaXBhbnQNCmxvYWQoZmlsZSA9ICIuL3NhdmVkX29iamVjdHNfZm9yX3Bsb3RzL2RhdGFfYWdncmVnYXRlZF9ydC5SZGEiKQ0KbG9hZChmaWxlID0gIi4vc2F2ZWRfb2JqZWN0c19mb3JfcGxvdHMvZGF0YV9hZ2dyZWdhdGVkX2FjYy5SZGEiKQ0KDQoNCiMgRGVmaW5lIGZhY2V0IGxhYmVscw0KZ3JvdXAubGFicyA8LSBjKCJIZWFsdGh5IENvbnRyb2wgUGFydGljaXBhbnRzIiwgIlBhdGllbnRzIFdpdGggT0NEIikNCm5hbWVzKGdyb3VwLmxhYnMpIDwtIGMoIkhDIiwgIk9DRCIpDQoNCg0KIyMjIyBDcmVhdGUgUlQgcGxvdCAjIyMjDQoNCiMgQ3JlYXRlIHJhaW5jbG91ZCBwbG90DQpwbG90X3J0IDwtIGdncGxvdCgpICsNCiAgZ2VvbV9mbGF0X3Zpb2xpbihkYXRhID0gZGF0YV9hZ2dyZWdhdGVkX3J0LCBhZXMoeCA9IGduZ19yZXNwb25zZV90eXBlLCB5ID0gd29yZF9ydCwgZmlsbCA9IHdvcmRfdmFsZW5jZSksDQogICAgcG9zaXRpb24gPSBwb3NpdGlvbl9udWRnZSh4ID0gLjE2LCB5ID0gMCksIGFkanVzdCA9IDEuNSwgdHJpbSA9IEZBTFNFLCBhbHBoYSA9IC43LCBjb2xvciA9IE5BKSArDQogIGdlb21fcG9pbnQoZGF0YSA9IGRhdGFfYWdncmVnYXRlZF9ydCwgYWVzKHggPSBhcy5udW1lcmljKGduZ19yZXNwb25zZV90eXBlKSAtIC4yMywgeSA9IHdvcmRfcnQsIGNvbG9yID0gd29yZF92YWxlbmNlKSwNCiAgICBwb3NpdGlvbiA9IHBvc2l0aW9uX2ppdHRlcih3aWR0aCA9IC4wNSksIHNpemUgPSAxLCBzaGFwZSA9IDIwLCBhbHBoYSA9IDAuOCkgKw0KICBnZW9tX2JveHBsb3QoZGF0YSA9IGRhdGFfYWdncmVnYXRlZF9ydCwgYWVzKHggPSBnbmdfcmVzcG9uc2VfdHlwZSwgeSA9IHdvcmRfcnQsIGZpbGwgPSB3b3JkX3ZhbGVuY2UpLA0KICAgIG91dGxpZXIuc2hhcGUgPSBOQSwgYWxwaGEgPSAwLjksIHdpZHRoID0gLjMsIGNvbG9yID0gImJsYWNrIikgKw0KICBsYWJzKHggPSAiUmVzcG9uc2UgaW4gdGhlIEdvL05vLUdvIFRhc2siLCB5ID0gIldvcmQgQ2F0ZWdvcml6YXRpb24gUlQgKG1zKSIpICsNCiAgY29vcmRfY2FydGVzaWFuKHlsaW0gPSBjKDIwMCwgMTYwMCkpICsNCiAgc2NhbGVfeV9jb250aW51b3VzKGJyZWFrcyA9IHNlcSgyMDAsIDE2MDAsIDIwMCksIGV4cGFuZCA9IGMoMCwgMCkpICsNCiAgc2NhbGVfeF9kaXNjcmV0ZShsYWJlbHMgPSBjKCJTSCIgPSAiU2xvdyBIaXQiLCAiRkgiID0gIkZhc3QgSGl0IiwgIkZBIiA9ICJGYWxzZSBBbGFybSIsICJJUiIgPSAiSW5oaWJpdGlvbiIpKSArDQogIHNjYWxlX2NvbG9yX21hbnVhbChuYW1lID0gIldvcmQgVmFsZW5jZToiLCBsYWJlbHMgPSBjKCJOZWdhdGl2ZSIsICJQb3NpdGl2ZSIpLCB2YWx1ZXMgPSBjb2xvcnMsDQogICAgZ3VpZGUgPSBndWlkZV9sZWdlbmQob3ZlcnJpZGUuYWVzID0gbGlzdChzaXplID0gNiwgc2hhcGUgPSAxNSwgYWxwaGEgPSAxKSwgbGFiZWwuaGp1c3QgPSAtMikpICsNCiAgc2NhbGVfZmlsbF9tYW51YWwobmFtZSAgPSAiV29yZCBWYWxlbmNlOiIsIGxhYmVscyA9IGMoIk5lZ2F0aXZlIiwgIlBvc2l0aXZlIiksIHZhbHVlcyA9IGNvbG9ycywgZ3VpZGUgPSAibm9uZSIpICsNCiAgZmFjZXRfd3JhcCh+Z3JvdXAsIGxhYmVsbGVyID0gbGFiZWxsZXIoZ3JvdXAgPSBncm91cC5sYWJzKSkgKw0KICBteV9maWd1cmVfdGhlbWUNCg0KDQojIFNhdmUgYW5kIHJlbW92ZSBsZWdlbmQNCmxlZ2VuZCA8LSBnZXRfbGVnZW5kKHBsb3RfcnQpDQpwbG90X3J0IDwtIHBsb3RfcnQgKyB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIpDQoNCg0KIyBBZGQgcG9zaXRpb24gb2YgYXN0ZXJpc2tzDQphc3Rlcmlrc19ydCA8LSBkYXRhLmZyYW1lKA0KICB4MSAgICA9IGMoMS44NSwgMi44NSwgMS44NSwgMi44NSksDQogIHgyICAgID0gYygyLjE1LCAzLjE1LCAyLjE1LCAzLjE1KSwNCiAgeTEgICAgPSBjKDEzMjAsIDEzMjAsIDEzMjAsIDEzMjApLA0KICB4c3RhciA9IGMoMiwgICAgMywgICAgMiwgICAgMyksDQogIHlzdGFyID0gYygxMzMwLCAxMzMwLCAxMzMwLCAxMzMwKSwNCiAgbGFiICAgPSBjKCIqIiwgIioqKiIsICIqKiIsICIqIiksDQogIGdyb3VwID0gYygiSEMiLCAiSEMiLCAgIk9DRCIsICJPQ0QiKSkNCg0KDQojIEFkZCBwb3NpdGlvbiBvZiBhc3Rlcmlza3MgYWNyb3NzIGdyb3Vwcw0KYXN0ZXJpa3NfcnQyIDwtIGRhdGEuZnJhbWUoDQogIHgxICAgID0gLjM3MCwNCiAgeDIgICAgPSAuODIwLA0KICB5MSAgICA9IC44MjAsDQogIHhzdGFyID0gLjU5NSwNCiAgeXN0YXIgPSAuODMwLA0KICBsYWIgICA9ICIqKiIpDQoNCg0KIyBBZGQgYSBuZXcgbGF5ZXIgb24tdG9wIHRvIGFkZCBhc3Rlcmlza3MNCnBsb3RfcnQgPC0gcGxvdF9ydCArDQogIGdlb21fdGV4dChkYXRhID0gYXN0ZXJpa3NfcnQsICAgIGFlcyh4ID0geHN0YXIsIHkgPSB5c3RhciwgbGFiZWwgPSBsYWIsIHNpemUgPSAyLjUpLCAgICBjb2xvciA9ICJncmF5MzAiKSArDQogIGdlb21fc2VnbWVudChkYXRhID0gYXN0ZXJpa3NfcnQsIGFlcyh4ID0geDEsIHhlbmQgPSB4MiwgeSA9IHkxLCB5ZW5kID0geTEpLCBzaXplID0gMC4zLCBjb2xvciA9ICJncmF5MzAiKSArDQogIGZhY2V0X2dyaWQoLiB+IGdyb3VwLCBsYWJlbGxlciA9IGxhYmVsbGVyKGdyb3VwID0gZ3JvdXAubGFicykpDQoNCg0KIyBBZGQgYSBuZXcgbGF5ZXIgb24tdG9wIHRvIGFkZCBhc3Rlcmlza3MgYWNyb3NzIGdyb3Vwcw0KcGxvdF9ydCA8LSBnZ2RyYXcocGxvdF9ydCkgKw0KICBnZW9tX3RleHQoZGF0YSA9IGFzdGVyaWtzX3J0MiwgICAgYWVzKHggPSB4c3RhciwgeSA9IHlzdGFyLCBsYWJlbCA9IGxhYiwgc2l6ZSA9IDIuNSksICAgIGNvbG9yID0gImdyYXkzMCIpICsNCiAgZ2VvbV9zZWdtZW50KGRhdGEgPSBhc3Rlcmlrc19ydDIsIGFlcyh4ID0geDEsIHhlbmQgPSB4MiwgeSA9IHkxLCB5ZW5kID0geTEpLCBzaXplID0gMC4zLCBjb2xvciA9ICJncmF5MzAiKQ0KDQoNCiMjIyMgQ3JlYXRlIGFjY3VyYWN5IHBsb3QgIyMjIw0KDQojIENyZWF0ZSByYWluY2xvdWQgcGxvdA0KcGxvdF9hY2MgPC0gZ2dwbG90KCkgKw0KICBnZW9tX2ZsYXRfdmlvbGluKGRhdGEgPSBkYXRhX2FnZ3JlZ2F0ZWRfYWNjLCBhZXMoeCA9IGduZ19yZXNwb25zZV90eXBlLCB5ID0gYWNjdXJhY3ksIGZpbGwgPSB3b3JkX3ZhbGVuY2UpLA0KICAgIHBvc2l0aW9uID0gcG9zaXRpb25fbnVkZ2UoeCA9IC4xNiwgeSA9IDApLCBhZGp1c3QgPSAxLjUsIHRyaW0gPSBGQUxTRSwgYWxwaGEgPSAuNywgY29sb3IgPSBOQSkgKw0KICBnZW9tX3BvaW50KGRhdGEgPSBkYXRhX2FnZ3JlZ2F0ZWRfYWNjLCBhZXMoeCA9IGFzLm51bWVyaWMoZ25nX3Jlc3BvbnNlX3R5cGUpIC0gLjIzLCB5ID0gYWNjdXJhY3ksIGNvbG9yID0gd29yZF92YWxlbmNlKSwNCiAgICBwb3NpdGlvbiA9IHBvc2l0aW9uX2ppdHRlcih3aWR0aCA9IC4wNSksIHNpemUgPSAxLCBzaGFwZSA9IDIwLCBhbHBoYSA9IDAuOCkgKw0KICBnZW9tX2JveHBsb3QoZGF0YSA9IGRhdGFfYWdncmVnYXRlZF9hY2MsIGFlcyh4ID0gZ25nX3Jlc3BvbnNlX3R5cGUsIHkgPSBhY2N1cmFjeSwgZmlsbCA9IHdvcmRfdmFsZW5jZSksDQogICAgb3V0bGllci5zaGFwZSA9IE5BLCBhbHBoYSA9IDAuOSwgd2lkdGggPSAuMywgY29sb3IgPSAiYmxhY2siKSArDQogIGxhYnMoeCA9ICJSZXNwb25zZSBpbiB0aGUgR28vTm8tR28gVGFzayIsIHkgPSAiV29yZCBDYXRlZ29yaXphdGlvbiBBY2N1cmFjeSAoJSkiKSArDQogIGNvb3JkX2NhcnRlc2lhbih5bGltID0gYygwLCAxMDEpKSArDQogIHNjYWxlX3lfY29udGludW91cyhicmVha3MgPSBzZXEoMCwgMTAwLCAxMCksIGV4cGFuZCA9IGMoMCwgMCkpICsNCiAgc2NhbGVfeF9kaXNjcmV0ZShsYWJlbHMgPSBjKCJTSCIgPSAiU2xvdyBIaXQiLCAiRkgiID0gIkZhc3QgSGl0IiwgIkZBIiA9ICJGYWxzZSBBbGFybSIsICJJUiIgPSAiSW5oaWJpdGlvbiIpKSArDQogIHNjYWxlX2NvbG9yX21hbnVhbChuYW1lID0gIldvcmQgVmFsZW5jZToiLCBsYWJlbHMgPSBjKCJOZWdhdGl2ZSIsICJQb3NpdGl2ZSIpLCB2YWx1ZXMgPSBjb2xvcnMpICsNCiAgc2NhbGVfZmlsbF9tYW51YWwobmFtZSAgPSAiV29yZCBWYWxlbmNlOiIsIGxhYmVscyA9IGMoIk5lZ2F0aXZlIiwgIlBvc2l0aXZlIiksIHZhbHVlcyA9IGNvbG9ycykgKw0KICBmYWNldF93cmFwKH5ncm91cCwgbGFiZWxsZXIgPSBsYWJlbGxlcihncm91cCA9IGdyb3VwLmxhYnMpKSArDQogIG15X2ZpZ3VyZV90aGVtZSArIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJub25lIikNCg0KDQojIEFkZCBwb3NpdGlvbiBvZiBhc3Rlcmlza3MNCmFzdGVyaWtzX2FjYyA8LSBkYXRhLmZyYW1lKA0KICB4MSAgICA9IGMoMi44NSwgMi44NSksDQogIHgyICAgID0gYygzLjE1LCAzLjE1KSwNCiAgeTEgICAgPSBjKDE5LCAgIDE5KSwNCiAgeHN0YXIgPSBjKDMsICAgIDMpLA0KICB5c3RhciA9IGMoMTUsICAgMTUpLA0KICBsYWIgICA9IGMoIioqKiIsICIqKioiKSwNCiAgZ3JvdXAgPSBjKCJIQyIsICJPQ0QiKSkNCg0KDQojIEFkZCBhIG5ldyBsYXllciBvbi10b3AgdG8gYWRkIGFzdGVyaXNrcw0KcGxvdF9hY2MgPC0gcGxvdF9hY2MgKw0KICBnZW9tX3RleHQoZGF0YSA9IGFzdGVyaWtzX2FjYywgICAgYWVzKHggPSB4c3RhciwgeSA9IHlzdGFyLCBsYWJlbCA9IGxhYiwgc2l6ZSA9IDIuNSksICAgIGNvbG9yID0gImdyYXkzMCIpICsNCiAgZ2VvbV9zZWdtZW50KGRhdGEgPSBhc3Rlcmlrc19hY2MsIGFlcyh4ID0geDEsIHhlbmQgPSB4MiwgeSA9IHkxLCB5ZW5kID0geTEpLCBzaXplID0gMC4zLCBjb2xvciA9ICJncmF5MzAiKSArDQogIGZhY2V0X2dyaWQoLiB+IGdyb3VwLCBsYWJlbGxlciA9IGxhYmVsbGVyKGdyb3VwID0gZ3JvdXAubGFicykpDQoNCg0KIyBBcnJhbmdlIHBsb3RzDQpmaWd1cmVfb2JzX3ZhbCA8LSBnZ2RyYXcoKSArDQogIGRyYXdfcGxvdChwbG90X3J0LCAgeCA9IC4wMCwgeSA9IC40NTAsIHdpZHRoID0gMSwgIGhlaWdodCA9IC41NSkgKw0KICBkcmF3X3Bsb3QocGxvdF9hY2MsIHggPSAuMDAsIHkgPSAuMDUwLCB3aWR0aCA9IDEsICBoZWlnaHQgPSAuMzgpICsNCiAgZHJhd19wbG90KGxlZ2VuZCwgICB4ID0gLjI4LCB5ID0gLjAxNSwgd2lkdGggPSAuNSwgaGVpZ2h0ID0gLjAwKSArDQogIGRyYXdfcGxvdF9sYWJlbChjKCJBIiwgIkIiKSwgYygwLCAwKSwgYygxLCAwLjQzKSwgc2l6ZSA9IDE1KQ0KZmlndXJlX29ic192YWwNCg0KDQojIFNhdmUgcGxvdA0KZ2dzYXZlKHBsb3QgPSBmaWd1cmVfb2JzX3ZhbCwgIi4vZmlndXJlcy9maWd1cmVfMi50aWZmIiwgd2lkdGggPSAxNiwgaGVpZ2h0ID0gMjMsDQogIHVuaXRzID0gImNtIiwgZHBpID0gNjAwLCBjb21wcmVzc2lvbiA9ICJsenciKQ0KYGBgDQo8YnI+PGJyPg0KDQojIyBQbG90IEJlaGF2aW9yYWwgRGF0YSAoUHJlZGljdGVkKQ0KKioqDQoNClRoaXMgZmlndXJlIGNvcnJlc3BvbmRzIHRvIEZpZ3VyZSAzIGluIHRoZSBtYW51c2NyaXB0Lg0KDQpgYGB7ciBjcmVhdGUtcHJlZC12YWx1ZS1wbG90LCBmaWcud2lkdGggPSA4LCBmaWcuaGVpZ2h0ID0gNSwgZHBpID0gNjAwLCBmaWcuY2FwID0gIjxicj4gTm90ZS4gKEEpIE1vZGVsLXByZWRpY3RlZCBtZWFuIHdvcmQgY2F0ZWdvcml6YXRpb24gUlQgcGVyIHByZWNlZGluZyByZXNwb25zZSB0eXBlIChmYXN0IGhpdCwgZmFsc2UgYWxhcm0pIGluIHRoZSBnby9uby1nbyB0YXNrLCB3b3JkIHZhbGVuY2UsIGFuZCBncm91cCwgY29tcHV0ZWQgYXMgcGFydGlhbCBlZmZlY3RzIGZyb20gdGhlIGxpbmVhciBtaXhlZCBtb2RlbCAoTE1NKS4gUlQgZGF0YSB3ZXJlIGxvZy10cmFuc2Zvcm1lZCBmb3IgYW5hbHlzaXMgYnV0IGJhY2stdHJhbnNmb3JtZWQgdG8gbXMgZm9yIHZpc3VhbGl6YXRpb24uIChCKSBNb2RlbC1wcmVkaWN0ZWQgbWVhbiB3b3JkIGNhdGVnb3JpemF0aW9uIGFjY3VyYWN5IHBlciBwcmVjZWRpbmcgcmVzcG9uc2UgdHlwZSAoZmFzdCBoaXQsIGZhbHNlIGFsYXJtKSBpbiB0aGUgZ28vbm8tZ28gdGFzaywgd29yZCB2YWxlbmNlLCBhbmQgZ3JvdXAsIGNvbXB1dGVkIGFzIHBhcnRpYWwgZWZmZWN0cyBmcm9tIHRoZSBnZW5lcmFsaXplZCBsaW5lYXIgbWl4ZWQgbW9kZWwgKEdMTU0pLiAoQeKAk0IpIEVycm9yIGJhcnMgaW5kaWNhdGUgOTUlIGNvbmZpZGVuY2UgaW50ZXJ2YWxzLiBBc3Rlcmlza3MgaW5kaWNhdGUgc2lnbmlmaWNhbnQgZGlmZmVyZW5jZXMgeWllbGRlZCBieSB0aGUgKEcpTE1NIGFuYWx5c2lzLiAqIHAgPCAuMDUsICoqIHAgPCAuMDEsICoqKiBwIDwgLjAwMS4ifQ0KDQojIExvYWQgKEcpTE1NIG91dHB1dA0KTE1NX3J0X2ZpbmFsICAgPC0gcmVhZFJEUyhmaWxlID0gIi4vc2F2ZWRfb2JqZWN0c19mb3JfcGxvdHMvTE1NX3J0X2ZpbmFsLnJkcyIpDQpHTE1NX2FjY19maW5hbCA8LSByZWFkUkRTKGZpbGUgPSAiLi9zYXZlZF9vYmplY3RzX2Zvcl9wbG90cy9HTE1NX2FjY19maW5hbC5yZHMiKQ0KDQoNCiMgRGVmaW5lIGZhY2V0IGxhYmVscw0KZ3JvdXAubGFicyA8LSBjKCJIZWFsdGh5IENvbnRyb2wgUGFydGljaXBhbnRzIiwgIlBhdGllbnRzIFdpdGggT0NEIikNCm5hbWVzKGdyb3VwLmxhYnMpIDwtIGMoIkhDIiwgIk9DRCIpDQoNCg0KIyMjIyBDcmVhdGUgUlQgcGxvdCAjIyMjDQoNCiMgRXh0cmFjdCBvbmx5IEZBIGFuZCBGSCBmcm9tIExNTQ0KTE1NX3J0ICAgICAgICA8LSBnZ3ByZWRpY3QoTE1NX3J0X2ZpbmFsLCB0ZXJtcyA9IGMoImduZ19yZXNwb25zZV90eXBlIiwgIndvcmRfdmFsZW5jZSIsICJncm91cCIpKQ0KTE1NX3J0X3Bsb3QgICA8LSBMTU1fcnRbTE1NX3J0JHggJWluJSBjKCJGSCIsICJGQSIpLCBdDQpMTU1fcnRfcGxvdCR4IDwtIGRyb3BsZXZlbHMoTE1NX3J0X3Bsb3QkeCkNCg0KDQojIFBsb3QgcHJlZGljdGVkIG1lYW5zDQpwbG90X0xNTV9ydCA8LSBnZ3Bsb3QoKSArDQogIGdlb21fcG9pbnQoZGF0YSA9IExNTV9ydF9wbG90LCBhZXMoeCA9IHgsIHkgPSBwcmVkaWN0ZWQsIGNvbG9yID0gZ3JvdXApLA0KICAgIHBvc2l0aW9uID0gcG9zaXRpb25fZG9kZ2Uod2lkdGggPSAuMjUpLCBzaXplID0gMi41KSArDQogIGdlb21fZXJyb3JiYXIoZGF0YSA9IExNTV9ydF9wbG90LCBhZXMoeCA9IHgsIHltYXggPSBjb25mLmxvdywgeW1pbiA9IGNvbmYuaGlnaCwgIGNvbG9yID0gZ3JvdXApLA0KICAgIHBvc2l0aW9uID0gcG9zaXRpb25fZG9kZ2Uod2lkdGggPSAuMjUpLCBzaXplID0gLjcsIHdpZHRoID0gLjIpICsNCiAgbGFicyh4ID0gIlJlc3BvbnNlIGluIHRoZSBHby9Oby1HbyBUYXNrIiwgeSA9ICJQcmVkaWN0ZWQgV29yZCBDYXRlZ29yaXphdGlvbiBSVCAobXMpIikgKw0KICBjb29yZF9jYXJ0ZXNpYW4oeWxpbSA9IGMoNTAwLCA5NTApKSArDQogIHNjYWxlX3lfY29udGludW91cyhicmVha3MgPSBzZXEoNTAwLCA5NTAsIDUwKSwgZXhwYW5kID0gYygwLCAwKSkgKw0KICBzY2FsZV94X2Rpc2NyZXRlKGxhYmVscyA9IGMoIkZIIiA9ICJGYXN0IEhpdCIsICJGQSIgPSAiRmFsc2UgQWxhcm0iKSkgKw0KICBzY2FsZV9jb2xvcl9tYW51YWwobmFtZSA9ICJXb3JkIFZhbGVuY2U6IiwgbGFiZWxzID0gYygiTmVnYXRpdmUiLCAiUG9zaXRpdmUiKSwgdmFsdWVzID0gY29sb3JzKSArDQogIGZhY2V0X3dyYXAofmZhY2V0LCBsYWJlbGxlciA9IGxhYmVsbGVyKGZhY2V0ID0gZ3JvdXAubGFicykpICsNCiAgbXlfZmlndXJlX3RoZW1lDQoNCg0KIyBTYXZlIGFuZCByZW1vdmUgbGVnZW5kDQpsZWdlbmQgPC0gZ2V0X2xlZ2VuZChwbG90X0xNTV9ydCkNCnBsb3RfTE1NX3J0ICA8LSBwbG90X0xNTV9ydCArIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJub25lIikNCg0KDQojIEFkZCBwb3NpdGlvbiBvZiBhc3Rlcmlza3MNCmFzdGVyaWtzX3J0IDwtIGRhdGEuZnJhbWUoDQogIHgxICAgID0gYyguMjI1LCAuNDE1LCAuNjU1LCAuODQ1LCAuNDMwKSwNCiAgeDIgICAgPSBjKC4yNzUsIC40NjUsIC43MDUsIC44OTUsIC44ODApLA0KICB5MSAgICA9IGMoLjgwMCwgLjgwMCwgLjgwMCwgLjgwMCwgLjg2MCksDQogIHhzdGFyID0gYyguMjUwLCAuNDQwLCAuNjgwLCAuODcwLCAuNjU1KSwNCiAgeXN0YXIgPSBjKC44MTAsIC44MTAsIC44MTAsIC44MTAsIC44NzApLA0KICBsYWIgICA9IGMoIioiLCAgIioqKiIsICIqKiIsICIqIiwgICIqKiIpKQ0KDQoNCiMgQWRkIGEgbmV3IGxheWVyIG9uLXRvcCB0byBhZGQgYXN0ZXJpc2tzDQpwbG90X0xNTV9ydCA8LSBnZ2RyYXcocGxvdF9MTU1fcnQpICsNCiAgZ2VvbV90ZXh0KGRhdGEgPSBhc3Rlcmlrc19ydCwgICAgYWVzKHggPSB4c3RhciwgeSA9IHlzdGFyLCBsYWJlbCA9IGxhYiwgc2l6ZSA9IDIuNSksICAgIGNvbG9yID0gImdyYXkzMCIpICsNCiAgZ2VvbV9zZWdtZW50KGRhdGEgPSBhc3Rlcmlrc19ydCwgYWVzKHggPSB4MSwgeGVuZCA9IHgyLCB5ID0geTEsIHllbmQgPSB5MSksIHNpemUgPSAwLjMsIGNvbG9yID0gImdyYXkzMCIpDQoNCg0KIyMjIyBDcmVhdGUgYWNjdXJhY3kgcGxvdCAjIyMjDQoNCiMgRXh0cmFjdCBvbmx5IEZBIGFuZCBGSCBmcm9tIEdMTU0NCkdMTU1fYWNjICAgICAgICA8LSBnZ3ByZWRpY3QoR0xNTV9hY2NfZmluYWwsIHRlcm1zID0gYygiZ25nX3Jlc3BvbnNlX3R5cGUiLCAid29yZF92YWxlbmNlIiwgImdyb3VwIikpDQpHTE1NX2FjY19wbG90ICAgPC0gR0xNTV9hY2NbR0xNTV9hY2MkeCAlaW4lIGMoIkZIIiwgIkZBIiksIF0NCkdMTU1fYWNjX3Bsb3QkeCA8LSBkcm9wbGV2ZWxzKEdMTU1fYWNjX3Bsb3QkeCkNCg0KDQojIFBsb3QgcHJlZGljdGVkIG1lYW5zDQpwbG90X0dMTU1fYWNjIDwtIGdncGxvdCgpICsNCiAgZ2VvbV9wb2ludChkYXRhID0gR0xNTV9hY2NfcGxvdCwgYWVzKHggPSB4LCB5ID0gcHJlZGljdGVkICogMTAwLCBjb2xvciA9IGdyb3VwKSwNCiAgICBwb3NpdGlvbiA9IHBvc2l0aW9uX2RvZGdlKHdpZHRoID0gLjI1KSwgc2l6ZSA9IDIuNSkgKw0KICBnZW9tX2Vycm9yYmFyKGRhdGEgPSBHTE1NX2FjY19wbG90LCBhZXMoeCA9IHgsIHltYXggPSBjb25mLmxvdyAqIDEwMCwgeW1pbiA9IGNvbmYuaGlnaCAqIDEwMCwgY29sb3IgPSBncm91cCksDQogICAgcG9zaXRpb24gPSBwb3NpdGlvbl9kb2RnZSh3aWR0aCA9IC4yNSksIHNpemUgPSAuNywgd2lkdGggPSAuMikgKw0KICBsYWJzKHggPSAiUmVzcG9uc2UgaW4gdGhlIEdvL05vLUdvIFRhc2siLCB5ID0gIlByZWRpY3RlZCBXb3JkIENhdGVnb3JpemF0aW9uIEFjY3VyYWN5ICglKSIpICsNCiAgY29vcmRfY2FydGVzaWFuKHlsaW0gPSBjKDUwLCAxMTApKSArDQogIHNjYWxlX3lfY29udGludW91cyhicmVha3MgPSBzZXEoNTAsIDEwMCwgNSksIGV4cGFuZCA9IGMoMCwgMCkpICsNCiAgc2NhbGVfeF9kaXNjcmV0ZShsYWJlbHMgPSBjKCJGSCIgPSAiRmFzdCBIaXQiLCAiRkEiID0gIkZhbHNlIEFsYXJtIikpICsNCiAgc2NhbGVfY29sb3JfbWFudWFsKG5hbWUgPSAiV29yZCBWYWxlbmNlOiIsIGxhYmVscyA9IGMoIk5lZ2F0aXZlIiwgIlBvc2l0aXZlIiksIHZhbHVlcyA9IGNvbG9ycykgKw0KICBmYWNldF93cmFwKH5mYWNldCwgbGFiZWxsZXIgPSBsYWJlbGxlcihmYWNldCA9IGdyb3VwLmxhYnMpKSArDQogIG15X2ZpZ3VyZV90aGVtZSArDQogIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJub25lIikNCg0KDQojIEFkZCBwb3NpdGlvbiBvZiBhc3Rlcmlza3MNCmFzdGVyaWtzX2FjYyA8LSBkYXRhLmZyYW1lKA0KICB4MSAgICA9IGMoLjQxNSwgLjg0NSksDQogIHgyICAgID0gYyguNDY1LCAuODk1KSwNCiAgeTEgICAgPSBjKC44MDAsIC44MDApLA0KICB4c3RhciA9IGMoLjQ0MCwgLjg3MCksDQogIHlzdGFyID0gYyguODEwLCAuODEwKSwNCiAgbGFiICAgPSBjKCIqKioiLCAiKioqIikpDQoNCg0KIyBBZGQgYSBuZXcgbGF5ZXIgb24tdG9wIHdpdGggZ2dkcmF3IGluIG9yZGVyIHRvIGFkZCBhc3Rlcmlza3MNCnBsb3RfR0xNTV9hY2MgPC0gZ2dkcmF3KHBsb3RfR0xNTV9hY2MpICsNCiAgZ2VvbV90ZXh0KGRhdGEgPSBhc3Rlcmlrc19hY2MsICAgIGFlcyh4ID0geHN0YXIsICB5ID0geXN0YXIsIGxhYmVsID0gbGFiLCBzaXplID0gMi41KSwgICBjb2xvciA9ICJncmF5MzAiKSArDQogIGdlb21fc2VnbWVudChkYXRhID0gYXN0ZXJpa3NfYWNjLCBhZXMoeCA9IHgxLCB4ZW5kID0geDIsIHkgPSB5MSwgeWVuZCA9IHkxKSwgc2l6ZSA9IDAuMywgY29sb3IgPSAiZ3JheTMwIikNCg0KDQojIyMjIEFycmFuZ2UgcGxvdHMNCmZpZ3VyZV9wcmVkX3ZhbCA8LSBnZ2RyYXcoKSArDQogIGRyYXdfcGxvdChwbG90X0xNTV9ydCwgICB4ID0gLjAwLCB5ID0gLjA3MCwgd2lkdGggPSAuNDksIGhlaWdodCA9IC45MykgKw0KICBkcmF3X3Bsb3QocGxvdF9HTE1NX2FjYywgeCA9IC41MiwgeSA9IC4wNzAsIHdpZHRoID0gLjQ5LCBoZWlnaHQgPSAuOTMpICsNCiAgZHJhd19wbG90KGxlZ2VuZCwgICAgICAgIHggPSAuMjgsIHkgPSAuMDE1LCB3aWR0aCA9IC41MCwgaGVpZ2h0ID0gLjAwKSAgICsNCiAgZHJhd19wbG90X2xhYmVsKGMoIkEiLCAiQiIpLCBjKDAsIDAuNTIpLCBjKDEsIDEpLCBzaXplID0gMTUpDQpmaWd1cmVfcHJlZF92YWwNCg0KDQojIFNhdmUgcGxvdA0KZ2dzYXZlKHBsb3QgPSBmaWd1cmVfcHJlZF92YWwsICIuL2ZpZ3VyZXMvZmlndXJlXzMudGlmZiIsIHdpZHRoID0gMjAsIGhlaWdodCA9IDEyLA0KICB1bml0cyA9ICJjbSIsIGRwaSA9IDYwMCwgY29tcHJlc3Npb24gPSAibHp3IikNCmBgYA0KPGJyPjxicj4NCg0KIyMgUGxvdCBFUlAgRGF0YQ0KKioqDQoNClRoaXMgZmlndXJlIGNvcnJlc3BvbmRzIHRvIEZpZ3VyZSA0IGluIHRoZSBtYW51c2NyaXB0Lg0KDQo8IS0tIExvYWQgYW5kIGNsZWFuIGRhdGEgLS0+DQoNCmBgYHtyIGxvYWQtYW5kLWNsZWFuLWVycC1kYXRhLCBjYWNoZSA9IGtuaXRyX2NhY2hlX2VuYWJsZWR9DQoNCiMgTG9hZCBkYXRhDQpyZXNwX2xvY2tlZF9kYXRhIDwtIHJlYWQuY3N2KGZpbGUgPSAiLi9kYXRhL3Jlc3BvbnNlX2xvY2tlZF9kYXRhX2Zvcl9wbG90cy5jc3YiLCBoZWFkZXIgPSBUUlVFKQ0KDQoNCiMgQ3JlYXRlIHJlbGV2YW50IHZhcmlhYmxlcyBhbmQgZmlsdGVyIGRhdGENCnJlc3BfbG9ja2VkX2RhdGEgPC0gcmVzcF9sb2NrZWRfZGF0YSAlPiUNCiAgZHBseXI6Om11dGF0ZSgNCiAgICBzdGltdWxhdGlvbiA9IGZhY3RvcihpZmVsc2UoDQogICAgICBwYXJ0aWNpcGFudF9pZCA9PSAiQ18wMV9UMSIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiQ18wMl9UMSIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiQ18wM19UMiIgfA0KICAgICAgcGFydGljaXBhbnRfaWQgPT0gIkNfMDRfVDIiIHwgcGFydGljaXBhbnRfaWQgPT0gIkNfMDVfVDEiIHwgcGFydGljaXBhbnRfaWQgPT0gIkNfMDZfVDIiIHwNCiAgICAgIHBhcnRpY2lwYW50X2lkID09ICJDXzA3X1QxIiB8IHBhcnRpY2lwYW50X2lkID09ICJDXzA4X1QxIiB8IHBhcnRpY2lwYW50X2lkID09ICJDXzA5X1QyIiB8DQogICAgICBwYXJ0aWNpcGFudF9pZCA9PSAiQ18xMF9UMiIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiQ18xMV9UMiIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiQ18xMl9UMiIgfA0KICAgICAgcGFydGljaXBhbnRfaWQgPT0gIkNfMTNfVDEiIHwgcGFydGljaXBhbnRfaWQgPT0gIkNfMTVfVDIiIHwgcGFydGljaXBhbnRfaWQgPT0gIkNfMTZfVDEiIHwNCiAgICAgIHBhcnRpY2lwYW50X2lkID09ICJDXzE3X1QyIiB8IHBhcnRpY2lwYW50X2lkID09ICJDXzE4X1QyIiB8IHBhcnRpY2lwYW50X2lkID09ICJDXzE5X1QxIiB8DQogICAgICBwYXJ0aWNpcGFudF9pZCA9PSAiQ18yMF9UMSIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiQ18yMV9UMiIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiQ18yMl9UMiIgfA0KICAgICAgcGFydGljaXBhbnRfaWQgPT0gIkNfMjNfVDEiIHwgcGFydGljaXBhbnRfaWQgPT0gIkNfMjRfVDEiIHwgcGFydGljaXBhbnRfaWQgPT0gIkNfMjVfVDEiIHwNCiAgICAgIHBhcnRpY2lwYW50X2lkID09ICJDXzI2X1QxIiB8IHBhcnRpY2lwYW50X2lkID09ICJDXzI3X1QyIiB8IHBhcnRpY2lwYW50X2lkID09ICJDXzI4X1QyIiB8DQogICAgICBwYXJ0aWNpcGFudF9pZCA9PSAiQ18yOV9UMSIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiQ18zMF9UMiIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiUF8wMV9UMSIgfA0KICAgICAgcGFydGljaXBhbnRfaWQgPT0gIlBfMDJfVDIiIHwgcGFydGljaXBhbnRfaWQgPT0gIlBfMDNfVDIiIHwgcGFydGljaXBhbnRfaWQgPT0gIlBfMDRfVDEiIHwNCiAgICAgIHBhcnRpY2lwYW50X2lkID09ICJQXzA1X1QxIiB8IHBhcnRpY2lwYW50X2lkID09ICJQXzA2X1QxIiB8IHBhcnRpY2lwYW50X2lkID09ICJQXzA3X1QyIiB8DQogICAgICBwYXJ0aWNpcGFudF9pZCA9PSAiUF8wOF9UMiIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiUF8wOV9UMiIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiUF8xMF9UMSIgfA0KICAgICAgcGFydGljaXBhbnRfaWQgPT0gIlBfMTFfVDIiIHwgcGFydGljaXBhbnRfaWQgPT0gIlBfMTJfVDIiIHwgcGFydGljaXBhbnRfaWQgPT0gIlBfMTNfVDEiIHwNCiAgICAgIHBhcnRpY2lwYW50X2lkID09ICJQXzE1X1QxIiB8IHBhcnRpY2lwYW50X2lkID09ICJQXzE2X1QxIiB8IHBhcnRpY2lwYW50X2lkID09ICJQXzE3X1QyIiB8DQogICAgICBwYXJ0aWNpcGFudF9pZCA9PSAiUF8xOF9UMSIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiUF8xOV9UMSIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiUF8yMF9UMiIgfA0KICAgICAgcGFydGljaXBhbnRfaWQgPT0gIlBfMjFfVDIiIHwgcGFydGljaXBhbnRfaWQgPT0gIlBfMjJfVDEiIHwgcGFydGljaXBhbnRfaWQgPT0gIlBfMjNfVDEiIHwNCiAgICAgIHBhcnRpY2lwYW50X2lkID09ICJQXzI0X1QyIiB8IHBhcnRpY2lwYW50X2lkID09ICJQXzI1X1QxIiB8IHBhcnRpY2lwYW50X2lkID09ICJQXzI2X1QyIiB8DQogICAgICBwYXJ0aWNpcGFudF9pZCA9PSAiUF8yN19UMSIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiUF8yOF9UMiIgfCBwYXJ0aWNpcGFudF9pZCA9PSAiUF8yOV9UMiIgfA0KICAgICAgcGFydGljaXBhbnRfaWQgPT0gIlBfMzBfVDEiLCAic2hhbSIsICJ2ZXJ1bSIpKSwNCiAgICBjb25kaXRpb24gICAgICA9IGZhY3RvcihpZmVsc2UoY29uZGl0aW9uID09IDEsICJjb3JyZWN0IiwgImluY29ycmVjdCIpLCBsZXZlbHMgPSBjKCJpbmNvcnJlY3QiLCAiY29ycmVjdCIpKSwNCiAgICBncm91cCAgICAgICAgICA9IGZhY3RvcihpZmVsc2Uoc3Vic3RyKHBhcnRpY2lwYW50X2lkLCAxLCAxKSA9PSAiQyIsICJIQyIsICJPQ0QiKSksDQogICAgc2Vzc2lvbiAgICAgICAgPSBmYWN0b3IoaWZlbHNlKHN1YnN0cihwYXJ0aWNpcGFudF9pZCwgNiwgNykgPT0gIlQxIiwgIlQxIiwgIlQyIikpLA0KICAgIHBhcnRpY2lwYW50X2lkID0gZmFjdG9yKHN1YnN0cihwYXJ0aWNpcGFudF9pZCwgMSwgNCkpKSAlPiUgIyB0byBnZXQgY29ycmVjdCBuby4gb2YgZmFjdG9yIGxldmVscw0KICAjIE9ubHkga2VlcCBzaGFtIHNlc3Npb24gYW5kIGV4Y2x1ZGUgUF8wMiBhbmQgQ18wMg0KICBkcGx5cjo6ZmlsdGVyKHN0aW11bGF0aW9uID09ICJzaGFtIiAmIHBhcnRpY2lwYW50X2lkICE9ICJQXzAyIiAmIHBhcnRpY2lwYW50X2lkICE9ICJDXzAyIikNCg0KDQojIFVwZGF0ZSBmYWN0b3IgbGV2ZWxzDQpyZXNwX2xvY2tlZF9kYXRhJHBhcnRpY2lwYW50X2lkIDwtIGRyb3BsZXZlbHMocmVzcF9sb2NrZWRfZGF0YSRwYXJ0aWNpcGFudF9pZCkNCg0KDQojIENhbGN1bGF0ZSBydW5uaW5nIHdpdGhpbi1wYXJ0aWNpcGFudCBDSXMNCnJ1bm5pbmdfY2lfbWZuIDwtIHJlc3BfbG9ja2VkX2RhdGEgJT4lDQogIHNwbGl0KC4kdGltZSkgJT4lDQogIG1hcCh+IHN1bW1hcnlTRXdpdGhpbk8oDQogICAgZGF0YSA9IC4sDQogICAgbWVhc3VyZXZhciAgPSAiRkN6IiwNCiAgICB3aXRoaW52YXJzICA9ICJjb25kaXRpb24iLA0KICAgIGJldHdlZW52YXJzID0gImdyb3VwIiwNCiAgICBpZHZhciAgICAgICA9ICJwYXJ0aWNpcGFudF9pZCIpKQ0KDQoNCmNpX21mbiA8LSBwdXJycjo6bWFwX2RmKHJ1bm5pbmdfY2lfbWZuLCBtYWdyaXR0cjo6ZXh0cmFjdCkgJT4lDQogIGRwbHlyOjptdXRhdGUodGltZSA9IHJlcCh1bmlxdWUocmVzcF9sb2NrZWRfZGF0YSR0aW1lKSwgZWFjaCA9IDQpKQ0KIyBOb3RlLiA0IHJlZmVycyB0byAgbm8uIG9mIGNvbmRpdGlvbnMgKGdyb3VwIHggcmVzcG9uc2VfdHlwZSA9IDIgeCAyID0gNCkNCg0KDQojIENvbnZlcnQgdG8gbG9uZyBmb3JtYXQgZm9yIGVsZWN0cm9kZXMNCmRhdGFfdG9wb19tZm4gPC0gcmVzcF9sb2NrZWRfZGF0YSAlPiUNCiAgIyBSZW1vdmUgY2hhbm5lbHMgb2Ygbm8gaW50ZXJlc3QNCiAgZHBseXI6OnNlbGVjdCgtSU8xLCAtTTEsIC1GOSwgLUYxMCkgJT4lDQogICMgQ2hhbmdlIGZyb20gd2lkZSB0byBsb25nIGZvcm1hdCBmb3IgZWxlY3Ryb2Rlcw0KICB0aWR5cjo6Z2F0aGVyKC4sIGVsZWN0cm9kZSwgYW1wbGl0dWRlLCBGcDE6TzIsIGZhY3Rvcl9rZXkgPSBUUlVFKSAgJT4lDQogICMgU2VsZWN0IHRpbWUgd2luZG93cw0KICBkcGx5cjo6ZmlsdGVyKHRpbWUgPj0gMCAmIHRpbWUgPD0gMTAwKSAlPiUNCiAgIyBBZGQgZWxlY3Ryb2RlIGluZm9ybWF0aW9uDQogIGVsZWN0cm9kZV9sb2NhdGlvbnMoLiwgZWxlY3Ryb2RlID0gImVsZWN0cm9kZSIsIGRyb3AgPSBGQUxTRSwgbW9udGFnZSA9IE5VTEwpDQpgYGANCg0KPCEtLSBDcmVhdGUgcGxvdHMgLS0+DQoNCmBgYHtyIGNyZWF0ZS1lcnAtcGxvdCwgZmlnLndpZHRoID0gOCwgZmlnLmhlaWdodCA9IDUsIGNhY2hlID0ga25pdHJfY2FjaGVfZW5hYmxlZCwgZHBpID0gNjAwLCBmaWcuY2FwID0gIk5vdGUuIChBKSBHcmFuZCBhdmVyYWdlIHJlc3BvbnNlLWxvY2tlZCB3YXZlZm9ybXMgYXQgZWxlY3Ryb2RlIHNpdGUgRkN6IHdpdGggOTUlIGNvbmZpZGVuY2UgaW50ZXJ2YWxzIGluIHBhdGllbnRzIHdpdGggT0NEIGFuZCBIQyBwYXJ0aWNpcGFudHMgZm9yIGNvcnJlY3QgKGhpdCkgYW5kIGluY29ycmVjdCAoZmFsc2UgYWxhcm0pIHJlc3BvbnNlcyBpbiB0aGUgZ28vbm8tZ28gdGFzay4gVGhlIGdyYXkgc2hhZGVkIHRpbWUgaW50ZXJ2YWwgd2FzIHVzZWQgdG8gcXVhbnRpZnkgRVJOIGFuZCBDUk4gYW1wbGl0dWRlLiAoQikgU2NhbHAgdG9wb2dyYXBoaWVzIG9mIEVSTiBhbmQgQ1JOIGluIGJvdGggZ3JvdXBzIGluIHRoZSB0aW1lIHdpbmRvdyAw4oCTMTAwIG1zIGFmdGVyIGZhbHNlIGFsYXJtcyBvciBoaXRzLCByZXNwZWN0aXZlbHkuIn0NCg0KIyMjIyBDcmVhdGUgd2F2ZWZvcm0gcGxvdCAjIyMjDQoNCiMgRGVmaW5lIGVsZWN0cm9kZSBsYWJlbHMNCmxhYmVsX2ZjeiA8LSBkYXRhLmZyYW1lKHRpbWUgPSAtMzIwLCBGQ3ogPSAxNy41LCBsYWIgPSAiVGV4dCIpIA0KDQoNCiMgQ3JlYXRlIHdhdmVmb3JtIHBsb3QNCnBsb3Rfd2F2ZWZvcm1fbWZuIDwtIGdncGxvdChyZXNwX2xvY2tlZF9kYXRhLCBhZXModGltZSwgRkN6KSkgKw0KICBzdGF0X3N1bW1hcnkoZnVuID0gbWVhbiwgZ2VvbSA9ICJsaW5lIiwgc2l6ZSA9IDAuNSwgbGluZXR5cGUgPSAic29saWQiLCBhZXMoY29sb3IgPSBjb25kaXRpb246Z3JvdXApKSArDQogIGdlb21fcmliYm9uKGRhdGEgPSBjaV9tZm4sIGFlcyh5bWluID0gRkN6IC0gY2ksIHltYXggPSBGQ3ogKyBjaSwgZmlsbCA9IGNvbmRpdGlvbjpncm91cCksIGFscGhhID0gMC4yKSArDQogIGd1aWRlcyhmaWxsID0gIm5vbmUiKSArDQogIGdlb21fc2VnbWVudChhZXMoeCA9IDAsICAgIHhlbmQgPSAwLCAgIHkgPSAtOCwgeWVuZCA9IDE4KSwgbGluZXR5cGUgPSAiZGFzaGVkIiwgY29sb3IgPSAiZ3JheTYwIiwgc2l6ZSA9IDAuMikgKw0KICBnZW9tX3NlZ21lbnQoYWVzKHggPSAtNDAwLCB4ZW5kID0gODAwLCB5ID0gIDAsIHllbmQgPSAwKSwgIGxpbmV0eXBlID0gImRhc2hlZCIsIGNvbG9yID0gImdyYXk2MCIsIHNpemUgPSAwLjIpICsNCiAgZ2VvbV90ZXh0KGRhdGEgPSBsYWJlbF9mY3osIGxhYmVsID0gIkZDeiIpICsNCiAgYW5ub3RhdGUoInJlY3QiLCB4bWluID0gMCwgeG1heCA9IDEwMCwgeW1pbiA9IC04LCB5bWF4ID0gMTgsIGFscGhhID0gLjIsIGZpbGwgPSAiZ3JheTUwIikgKyAjIFNoYWRlZCB0aW1lIGFyZWENCiAgbGFicyh4ID0gIlRpbWUgKG1zKSIsIHkgPSBleHByZXNzaW9uKHBhc3RlKCJBbXBsaXR1ZGUgKCIsIG11LCAiVikiKSkpICsNCiAgY29vcmRfY2FydGVzaWFuKHlsaW0gPSBjKC04LCAxOCksIHhsaW0gPSBjKC00MDAsIDgwMCkpICsNCiAgc2NhbGVfeV9jb250aW51b3VzKGJyZWFrcyA9IHNlcSgtOCwgMTgsIDIpLCBleHBhbmQgPSBjKDAsIDApKSArDQogIHNjYWxlX3hfY29udGludW91cyhicmVha3MgPSBzZXEoLTQwMCwgODAwLCAyMDApLCBleHBhbmQgPSBjKDAsIDApKSArDQogIHNjYWxlX2NvbG9yX21hbnVhbCh2YWx1ZXMgPSBjb2xvcnNfZXJwLCBsYWJlbHMgPSBjKCJIQzogRmFsc2UgQWxhcm0iLCAiT0NEOiBGYWxzZSBBbGFybSIsICJIQzogSGl0IiwgIk9DRDogSGl0IiksDQogICAgZ3VpZGUgPSBndWlkZV9sZWdlbmQob3ZlcnJpZGUuYWVzID0gbGlzdChzaXplID0gMS4zKSkpICsgIyBUaGlja25lc3MgbGVnZW5kIGxpbmVzDQogIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9IGNvbG9yc19lcnApICsNCiAgbXlfZmlndXJlX3RoZW1lICsgDQogIHRoZW1lKGF4aXMudGlja3MueCA9IE5VTEwsIGxlZ2VuZC50aXRsZSA9IGVsZW1lbnRfYmxhbmsoKSwgbGVnZW5kLnRleHQgPSBlbGVtZW50X3RleHQoc2l6ZSA9IDkpKQ0KDQoNCiMjIyMgQ3JlYXRlIHRvcG9ncmFwaHkgcGxvdHMgIyMjIw0KDQojIERlZmluZSBmYWNldCBsYWJlbHMNCmxhYnNfaW5jb3JyIDwtIGMoIkhDOiBGYWxzZSBBbGFybSIsICJPQ0Q6IEZhbHNlIEFsYXJtIikNCm5hbWVzKGxhYnNfaW5jb3JyKSA8LSBjKCJIQyIsICJPQ0QiKQ0KDQpsYWJzX2NvcnIgPC0gYygiSEM6IEhpdCIsICJPQ0Q6IEhpdCIpDQpuYW1lcyhsYWJzX2NvcnIpIDwtIGMoIkhDIiwgIk9DRCIpDQoNCg0KIyBFUk4NCnBsb3RfdG9wb19lcm4gPC0gZ2dwbG90KGRhdGFfdG9wb19tZm5bZGF0YV90b3BvX21mbiRjb25kaXRpb24gPT0gImluY29ycmVjdCIsIF0sDQogIGFlcyh4ID0geCwgeSA9IHksIGZpbGwgPSBhbXBsaXR1ZGUsIGxhYmVsID0gZWxlY3Ryb2RlKSkgKw0KICBnZW9tX3RvcG8oZ3JpZF9yZXMgPSAzMDAsIGludGVycF9saW1pdCA9ICJoZWFkIiwgY2hhbl9tYXJrZXJzID0gInBvaW50IiwgY2hhbl9zaXplID0gMC4xLCBoZWFkX3NpemUgPSAwLjIpICsNCiAgc2NhbGVfZmlsbF9kaXN0aWxsZXIocGFsZXR0ZSA9ICJSZEJ1IiwgbGltaXRzID0gYygtNCwgNCksIGJyZWFrcyA9IGMoLTQsIDAsIDQpKSArDQogIHRoZW1lX3ZvaWQoKSArDQogIGNvb3JkX2VxdWFsKCkgKw0KICBsYWJzKGZpbGwgPSBleHByZXNzaW9uKHBhc3RlKG11LCAiViIpKSkgKw0KICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAicmlnaHQiLCBsZWdlbmQudGV4dCA9IGVsZW1lbnRfdGV4dChzaXplID0gNi41LCBjb2xvciA9ICJncmF5MzAiKSwNCiAgICBsZWdlbmQudGl0bGUgPSBlbGVtZW50X3RleHQoc2l6ZSA9IDYuNSwgY29sb3IgPSAiZ3JheTMwIiksIGxlZ2VuZC5rZXkuaGVpZ2h0ID0gdW5pdCgwLjI1LCAnY20nKSwNCiAgICBsZWdlbmQua2V5LndpZHRoID0gdW5pdCgwLjI1LCAnY20nKSwgc3RyaXAudGV4dC54ID0gZWxlbWVudF90ZXh0KHNpemUgPSA2LjUpKSArDQogIGZhY2V0X3dyYXAoLiB+Z3JvdXAsIG5jb2wgPSAxLCBsYWJlbGxlciA9IGxhYmVsbGVyKGdyb3VwID0gbGFic19pbmNvcnIpKQ0KDQoNCiMgQ1JODQpwbG90X3RvcG9fY3JuIDwtIGdncGxvdChkYXRhX3RvcG9fbWZuW2RhdGFfdG9wb19tZm4kY29uZGl0aW9uID09ICJjb3JyZWN0IiwgXSwNCiAgYWVzKHggPSB4LCB5ID0geSwgZmlsbCA9IGFtcGxpdHVkZSwgbGFiZWwgPSBlbGVjdHJvZGUpKSArDQogIGdlb21fdG9wbyhncmlkX3JlcyA9IDMwMCwgaW50ZXJwX2xpbWl0ID0gImhlYWQiLCBjaGFuX21hcmtlcnMgPSAicG9pbnQiLCBjaGFuX3NpemUgPSAwLjEsIGhlYWRfc2l6ZSA9IDAuMikgKw0KICBzY2FsZV9maWxsX2Rpc3RpbGxlcihwYWxldHRlID0gIlJkQnUiLCBsaW1pdHMgPSBjKC00LCA4LjQpLCBicmVha3MgPSBjKC00LCAwLCA0LCA4KSkgKw0KICB0aGVtZV92b2lkKCkgKw0KICBjb29yZF9lcXVhbCgpICsNCiAgbGFicyhmaWxsID0gZXhwcmVzc2lvbihwYXN0ZShtdSwgIlYiKSkpICsNCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gInJpZ2h0IiwgbGVnZW5kLnRleHQgPSBlbGVtZW50X3RleHQoc2l6ZSA9IDYuNSwgY29sb3IgPSAiZ3JheTMwIiksDQogICAgbGVnZW5kLnRpdGxlID0gZWxlbWVudF90ZXh0KHNpemUgPSA2LjUsIGNvbG9yID0gImdyYXkzMCIpLCBsZWdlbmQua2V5LmhlaWdodCA9IHVuaXQoMC4yNSwgJ2NtJyksDQogICAgbGVnZW5kLmtleS53aWR0aCA9IHVuaXQoMC4yNSwgJ2NtJyksIHN0cmlwLnRleHQueCA9IGVsZW1lbnRfdGV4dChzaXplID0gNi41KSkgKw0KICBmYWNldF93cmFwKC4gfmdyb3VwLCBuY29sID0gMSwgbGFiZWxsZXIgPSBsYWJlbGxlcihncm91cCA9IGxhYnNfY29ycikpDQoNCg0KIyBPdmVybGF5IHdhdmVmb3JtIGFuZCB0b3BvcGdyYXBoeSBwbG90cw0KYWxpZ25lZF9wbG90czFfbWZuIDwtIGFsaWduX3Bsb3RzKHBsb3Rfd2F2ZWZvcm1fbWZuLCBwbG90X3RvcG9fZXJuLCBheGlzID0gInRyIikNCmFsaWduZWRfcGxvdHMyX21mbiA8LSBhbGlnbl9wbG90cyhwbG90X3dhdmVmb3JtX21mbiwgcGxvdF90b3BvX2NybiwgYXhpcyA9ICJ0ciIpDQoNCg0KIyBBcnJhbmdlIHBsb3RzDQpmaWd1cmVfZXJuX2NybiA8LSBnZ2RyYXcoKSArDQogIGRyYXdfcGxvdChhbGlnbmVkX3Bsb3RzMV9tZm5bWzFdXSwgIHggPSAgMCwgIHkgPSAwLCAgICB3aWR0aCA9IC43NywgaGVpZ2h0ID0gLjk5KSArDQogIGRyYXdfcGxvdChhbGlnbmVkX3Bsb3RzMV9tZm5bWzJdXSwgIHggPSAuNzUsIHkgPSAuNTI1LCB3aWR0aCA9IC4zLCAgaGVpZ2h0ID0gLjQ1KSArDQogIGRyYXdfcGxvdChhbGlnbmVkX3Bsb3RzMl9tZm5bWzJdXSwgIHggPSAuNzUsIHkgPSAuMDUsICB3aWR0aCA9IC4zLCAgaGVpZ2h0ID0gLjQ1KSArDQogIGRyYXdfcGxvdF9sYWJlbChjKCJBIiwgIkIiKSwgYygwLCAuNzUpLCBjKDEsIDEpLCBzaXplID0gMTUpDQpmaWd1cmVfZXJuX2Nybg0KDQoNCiMgU2F2ZSBwbG90DQpnZ3NhdmUocGxvdCA9IGZpZ3VyZV9lcm5fY3JuLCAiLi9maWd1cmVzL2ZpZ3VyZV80LnRpZmYiLCB3aWR0aCA9IDE2LCBoZWlnaHQgPSAxMCwNCiAgdW5pdHMgPSAiY20iLCBkcGkgPSA2MDAsIGNvbXByZXNzaW9uID0gImx6dyIpDQpgYGANCjxicj48YnI+DQoNCiMjIFBsb3QgRWZmZWN0cyBvZiBPQ0QgQ2hhcmFjdGVyaXN0aWNzDQoqKioNCg0KIyMjIE9DRCBTeW1wdG9tIFNldmVyaXR5IChPQ0ktUikNCjxicj4NClRoaXMgZmlndXJlIGNvcnJlc3BvbmRzIHRvIEZpZ3VyZSA1IGluIHRoZSBtYW51c2NyaXB0Lg0KDQpgYGB7ciBjcmVhdGUtcGxvdC1vY2ksIGZpZy53aWR0aCA9IDgsIGZpZy5oZWlnaHQgPSA1LCBkcGkgPSA2MDAsIGZpZy5jYXAgPSAiPGJyPiBOb3RlLiAoQSkgRXN0aW1hdGVkIGludGVyYWN0aW9uIGVmZmVjdCBiZXR3ZWVuIE9ic2Vzc2l2ZS1Db21wdWxzaXZlIEludmVudG9yeS1SZXZpc2VkIChPQ0ktUikgc2NvcmUsIHByZWNlZGluZyByZXNwb25zZSB0eXBlIChmYXN0IGhpdCwgZmFsc2UgYWxhcm0pIGluIHRoZSBnby9uby1nbyB0YXNrLCBhbmQgd29yZCB2YWxlbmNlIG9uIHdvcmQgY2F0ZWdvcml6YXRpb24gcmVzcG9uc2UgdGltZSAoUlQpIGluIHBhdGllbnRzIHdpdGggT0NELCBjb21wdXRlZCBhcyBwYXJ0aWFsIGVmZmVjdCBmcm9tIHRoZSBsaW5lYXIgbWl4ZWQgbW9kZWwuIFJUIGRhdGEgd2VyZSBsb2ctdHJhbnNmb3JtZWQgZm9yIGFuYWx5c2lzIGJ1dCB3ZXJlIGJhY2stdHJhbnNmb3JtZWQgdG8gbXMgZm9yIGRhdGEgdmlzdWFsaXphdGlvbi4gKEIpIE5lZ2F0aXZlIGNvcnJlbGF0aW9uIGJldHdlZW4gdGhlIE9DSS1SIHNjb3JlIGFuZCB0aGUgb3ZlcmFsbCBwcmltaW5nIGVmZmVjdCBhY3Jvc3MgcGFydGljaXBhbnRzLiBUaGUgb3ZlcmFsbCBwcmltaW5nIGVmZmVjdCByZWZlcnMgdG8gdGhlIHByaW1pbmcgZWZmZWN0IGFmdGVyIGZhbHNlIGFsYXJtcyBhbmQgZmFzdCBoaXRzIGFuZCB3YXMgY2FsY3VsYXRlZCBieSBzdWJ0cmFjdGluZyB0aGUgUlQgaW4gY29uZ3J1ZW50IGNvbmRpdGlvbnMgKHBvc2l0aXZlIHdvcmRzIGFmdGVyIGZhc3QgaGl0cyBhbmQgbmVnYXRpdmUgd29yZHMgYWZ0ZXIgZmFsc2UgYWxhcm1zKSBmcm9tIHRoZSBSVCBpbiBpbmNvbmdydWVudCBjb25kaXRpb25zIChwb3NpdGl2ZSB3b3JkcyBhZnRlciBmYWxzZSBhbGFybXMgYW5kIG5lZ2F0aXZlIHdvcmRzIGFmdGVyIGZhc3QgaGl0cykgZm9yIGVhY2ggcGFydGljaXBhbnQgKEFhcnRzIGV0IGFsLiwgMjAxMikuIChB4oCTQikgU2hhZGVkIGJhbmRzIHJlcHJlc2VudCA5NSUgY29uZmlkZW5jZSBpbnRlcnZhbHMuIn0NCg0KIyBMb2FkIExNTSBvdXRwdXQgYW5kIGNvcnJlbGF0aW9uIGRhdGENCkxNTV9ydF9vY2lfb2NkICA8LSByZWFkUkRTKGZpbGUgPSAiLi9zYXZlZF9vYmplY3RzX2Zvcl9wbG90cy9MTU1fcnRfb2NpX29jZC5yZHMiKQ0KbG9hZChmaWxlID0gIi4vc2F2ZWRfb2JqZWN0c19mb3JfcGxvdHMvZGZfY29yci5SZGEiKQ0KDQoNCiMgQ3JlYXRlIHBsb3Qgb2YgZXN0aW1hdGVkIGludGVyYWN0aW9uIGVmZmVjdHMNCnBsb3Rfb2NpXzEgPC0gcGxvdF9tb2RlbChMTU1fcnRfb2NpX29jZCwNCiAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlICAgPSAicHJlZCIsDQogICAgICAgICAgICAgICAgICAgICAgICAgdGVybXMgID0gYygib2NpX2NlbnRlcmVkIiwgInBvc19uZWciLCAiRkFfRkgiKSwNCiAgICAgICAgICAgICAgICAgICAgICAgICBjaS5sdmwgPSAuOTUsDQogICAgICAgICAgICAgICAgICAgICAgICAgdHJhbnNmb3JtID0gImV4cCIsDQogICAgICAgICAgICAgICAgICAgICAgICAgbGluZS5zaXplID0gMSkgKw0KICBsYWJzKHRpdGxlID0gTlVMTCwgeSA9ICJXb3JkIENhdGVnb3JpemF0aW9uIFJUIChtcykiLCB4ID0gIk9DSS1SIFNjb3JlIChHcm91cC1NZWFuIENlbnRlcmVkKSIpICsNCiAgY29vcmRfY2FydGVzaWFuKHlsaW0gPSBjKDUwMCwgOTAwKSwgeGxpbSA9IGMoLTEzLCAyMCkpICsNCiAgc2NhbGVfeV9jb250aW51b3VzKGJyZWFrcyA9IHNlcSg1MDAsIDkwMCwgNTApLCBleHBhbmQgPSBjKDAsIDApKSArDQogIHNjYWxlX3hfY29udGludW91cyhicmVha3MgPSBzZXEoLTEwLCAyMCwgNSksIGV4cGFuZCA9IGMoMCwgMCkpICsNCiAgc2NhbGVfY29sb3JfbWFudWFsKG5hbWUgPSAiV29yZCBWYWxlbmNlOiIsIHZhbHVlcyA9IGNvbG9ycywgbGFiZWxzID0gYygiTmVnYXRpdmUiLCAiUG9zaXRpdmUiKSkgKw0KICBzY2FsZV9maWxsX21hbnVhbChuYW1lICA9ICJXb3JkIFZhbGVuY2U6IiwgdmFsdWVzID0gY29sb3JzLCBsYWJlbHMgPSBjKCJOZWdhdGl2ZSIsICJQb3NpdGl2ZSIpKSArDQogIG15X2ZpZ3VyZV90aGVtZSArDQogIHRoZW1lKHN0cmlwLnRleHQueCA9IGVsZW1lbnRfdGV4dChzaXplID0gMTEpLCBheGlzLnRpY2tzLnggPSBOVUxMKSArDQogIGd1aWRlcyhmaWxsID0gZ3VpZGVfbGVnZW5kKG92ZXJyaWRlLmFlcyA9IGxpc3QoY29sb3IgPSBjb2xvcnMsIHNpemUgPSAwLjY1KSkpDQoNCg0KIyBDaGFuZ2UgZmFjZXQgbGFiZWxzDQpwbG90X29jaV8xJGRhdGEkZmFjZXQgPC0gaWZlbHNlKHBsb3Rfb2NpXzEkZGF0YSRmYWNldCA9PSAiRkFfRkggPSAtMC41IiwgIkZhc3QgSGl0cyIsICJGYWxzZSBBbGFybXMiKQ0KDQoNCiMgQ3JlYXRlIHNjYXR0ZXJwbG90DQpwbG90X29jaV8yIDwtIGdncGxvdChkYXRhID0gZGZfY29ycltkZl9jb3JyJGdyb3VwID09ICJPQ0QiLCBdLCBhZXMoeCA9IG9jaSwgeSA9IHByaW1pbmcsIGZpbGwgPSBncm91cCkpICsNCiAgZ2VvbV9wb2ludChjb2xvciA9ICIjMDAzMTkyIiwgc2l6ZSA9IDEpICsNCiAgZ2VvbV9zbW9vdGgobWV0aG9kID0gJ2xtJywgY29sb3IgPSAiIzAwMzE5MiIpICsNCiAgbGFicyh0aXRsZSA9IE5VTEwsIHggPSAiT0NJLVIgU2NvcmUiLCB5ID0gIk92ZXJhbGwgUHJpbWluZyBFZmZlY3QgKG1zKSIpICsNCiAgY29vcmRfY2FydGVzaWFuKHlsaW0gPSBjKC0xNTAsIDQwMCksIHhsaW0gPSBjKDEyLjksIDQ1LjUpKSArDQogIHNjYWxlX3lfY29udGludW91cyhicmVha3MgPSBzZXEoLTE1MCwgNDAwLCA1MCksIGV4cGFuZCA9IGMoMCwgMCkpICsNCiAgc2NhbGVfeF9jb250aW51b3VzKGJyZWFrcyA9IHNlcSgxNSwgNDUsIDUpLCBleHBhbmQgPSBjKDAsIDApKSArDQogIHNjYWxlX2ZpbGxfbWFudWFsKHZhbHVlcyA9ICIjMDAzMTkyIikgKw0KICBteV9maWd1cmVfdGhlbWUgKw0KICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAibm9uZSIsIGF4aXMudGlja3MueCA9IE5VTEwpICsNCiAgYW5ub3RhdGUoInRleHQiLCB4ID0gNDUsIHkgPSAtMTIwLCBsYWJlbCA9IHBhc3RlKCJsaXN0KGl0YWxpYyhyKSgyNikgPT0iLCAtLjQxLCAiLCBpdGFsaWMocCkgPT0gLjAyOSkiKSwNCiAgICBwYXJzZSA9IFRSVUUsIGhqdXN0ID0gMSwgc2l6ZSA9IDMsIGNvbG9yID0gImdyYXkyMCIpDQoNCg0KIyBBcnJhbmdlIHBsb3RzDQpmaWd1cmVfb2NpIDwtIGdnZHJhdygpICsNCiAgZHJhd19wbG90KHBsb3Rfb2NpXzEsIHggPSAuMDAsIHkgPSAuMDAwLCB3aWR0aCA9IC42MCwgaGVpZ2h0ID0gMSkgKw0KICBkcmF3X3Bsb3QocGxvdF9vY2lfMiwgeCA9IC42MSwgeSA9IC4xMTUsIHdpZHRoID0gLjM5LCBoZWlnaHQgPSAuODMpICsNCiAgZHJhd19wbG90X2xhYmVsKGMoIkEiLCAiQiIpLCBjKDAsIC42MSksIGMoMSwgMSksIHNpemUgPSAxNSkNCmZpZ3VyZV9vY2kNCg0KDQojIFNhdmUgcGxvdA0KZ2dzYXZlKHBsb3QgPSBmaWd1cmVfb2NpLCAiLi9maWd1cmVzL2ZpZ3VyZV81LnRpZmYiLCB3aWR0aCA9IDIwLCBoZWlnaHQgPSAxMiwNCiAgdW5pdHMgPSAiY20iLCBkcGkgPSA2MDAsIGNvbXByZXNzaW9uID0gImx6dyIpDQpgYGANCjxicj48YnI+DQoNCiMjIyBUcmFpdCBBbnhpZXR5IChTVEFJKQ0KPGJyPg0KVGhpcyBmaWd1cmUgY29ycmVzcG9uZHMgdG8gRmlndXJlIFMxIGluIHRoZSBzdXBwbGVtZW50YWwgbWF0ZXJpYWwuDQoNCmBgYHtyIGNyZWF0ZS1wbG90LXN0YWksIGZpZy53aWR0aCA9IDgsIGZpZy5oZWlnaHQgPSA1LCBkcGkgPSA2MDAsIGZpZy5jYXAgPSAiPGJyPiBOb3RlLiAoQSkgRXN0aW1hdGVkIGludGVyYWN0aW9uIGVmZmVjdCBiZXR3ZWVuIFN0YXRlLVRyYWl0IEFueGlldHkgSW52ZW50b3J5IChTVEFJKSB0cmFpdCBzY29yZSwgcHJlY2VkaW5nIHJlc3BvbnNlIHR5cGUgKGZhc3QgaGl0LCBmYWxzZSBhbGFybSkgaW4gdGhlIGdvL25vLWdvIHRhc2ssIGFuZCB3b3JkIHZhbGVuY2Ugb24gd29yZCBjYXRlZ29yaXphdGlvbiByZXNwb25zZSB0aW1lIChSVCkgaW4gcGF0aWVudHMgd2l0aCBPQ0QsIGNvbXB1dGVkIGFzIHBhcnRpYWwgZWZmZWN0IGZyb20gdGhlIGxpbmVhciBtaXhlZCBtb2RlbC4gUlQgZGF0YSB3ZXJlIGxvZy10cmFuc2Zvcm1lZCBmb3IgYW5hbHlzaXMgYnV0IHdlcmUgYmFjay10cmFuc2Zvcm1lZCB0byBtcyBmb3IgZGF0YSB2aXN1YWxpemF0aW9uLiAoQikgTmVnYXRpdmUgY29ycmVsYXRpb24gYmV0d2VlbiB0aGUgU1RBSSB0cmFpdCBzY29yZSBhbmQgdGhlIG92ZXJhbGwgcHJpbWluZyBlZmZlY3QgYWNyb3NzIHBhcnRpY2lwYW50cy4gVGhlIG92ZXJhbGwgcHJpbWluZyBlZmZlY3QgcmVmZXJzIHRvIHRoZSBwcmltaW5nIGVmZmVjdCBhZnRlciBmYWxzZSBhbGFybXMgYW5kIGZhc3QgaGl0cyBhbmQgd2FzIGNhbGN1bGF0ZWQgYnkgc3VidHJhY3RpbmcgdGhlIFJUIGluIGNvbmdydWVudCBjb25kaXRpb25zIChwb3NpdGl2ZSB3b3JkcyBhZnRlciBmYXN0IGhpdHMgYW5kIG5lZ2F0aXZlIHdvcmRzIGFmdGVyIGZhbHNlIGFsYXJtcykgZnJvbSB0aGUgUlQgaW4gaW5jb25ncnVlbnQgY29uZGl0aW9ucyAocG9zaXRpdmUgd29yZHMgYWZ0ZXIgZmFsc2UgYWxhcm1zIGFuZCBuZWdhdGl2ZSB3b3JkcyBhZnRlciBmYXN0IGhpdHMpIGZvciBlYWNoIHBhcnRpY2lwYW50IChBYXJ0cyBldCBhbC4sIDIwMTIpLiAoQeKAk0IpIFNoYWRlZCBiYW5kcyByZXByZXNlbnQgOTUlIGNvbmZpZGVuY2UgaW50ZXJ2YWxzLiJ9DQoNCiMgTG9hZCBMTU0gb3V0cHV0DQpMTU1fcnRfc3RhaV9vY2QgPC0gcmVhZFJEUyhmaWxlID0gIi4vc2F2ZWRfb2JqZWN0c19mb3JfcGxvdHMvTE1NX3J0X3N0YWlfb2NkLnJkcyIpDQoNCg0KIyBDcmVhdGUgcGxvdCBvZiBlc3RpbWF0ZWQgaW50ZXJhY3Rpb24gZWZmZWN0cw0KcGxvdF9zdGFpXzEgPC0gcGxvdF9tb2RlbChMTU1fcnRfc3RhaV9vY2QsDQogICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGUgICA9ICJwcmVkIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgdGVybXMgID0gYygic3RhaV9jZW50ZXJlZCIsICJwb3NfbmVnIiwgIkZBX0ZIIiksDQogICAgICAgICAgICAgICAgICAgICAgICAgIGNpLmx2bCA9IC45NSwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgdHJhbnNmb3JtID0gImV4cCIsDQogICAgICAgICAgICAgICAgICAgICAgICAgIGxpbmUuc2l6ZSA9IDEpICsNCiAgbGFicyh0aXRsZSA9IE5VTEwsIHkgPSAiV29yZCBDYXRlZ29yaXphdGlvbiBSVCAobXMpIiwgeCA9ICJTVEFJIFRyYWl0IFNjb3JlIChHcm91cC1NZWFuIENlbnRlcmVkKSIpICsNCiAgY29vcmRfY2FydGVzaWFuKHlsaW0gPSBjKDQ1MCwgOTAwKSwgeGxpbSA9IGMoLTE4LCAyNSkpICsNCiAgc2NhbGVfeV9jb250aW51b3VzKGJyZWFrcyA9IHNlcSg0NTAsIDkwMCwgNTApLCBleHBhbmQgPSBjKDAsIDApKSArDQogIHNjYWxlX3hfY29udGludW91cyhicmVha3MgPSBzZXEoLTE1LCAyNSwgNSksIGV4cGFuZCA9IGMoMCwgMCkpICsNCiAgc2NhbGVfY29sb3JfbWFudWFsKG5hbWUgPSAiV29yZCBWYWxlbmNlOiIsIHZhbHVlcyA9IGNvbG9ycywgbGFiZWxzID0gYygiTmVnYXRpdmUiLCAiUG9zaXRpdmUiKSkgKw0KICBzY2FsZV9maWxsX21hbnVhbChuYW1lICA9ICJXb3JkIFZhbGVuY2U6IiwgdmFsdWVzID0gY29sb3JzLCBsYWJlbHMgPSBjKCJOZWdhdGl2ZSIsICJQb3NpdGl2ZSIpKSArDQogIG15X2ZpZ3VyZV90aGVtZSArDQogIHRoZW1lKHN0cmlwLnRleHQueCA9IGVsZW1lbnRfdGV4dChzaXplID0gMTEpLCBheGlzLnRpY2tzLnggPSBOVUxMKSArDQogIGd1aWRlcyhmaWxsID0gZ3VpZGVfbGVnZW5kKG92ZXJyaWRlLmFlcyA9IGxpc3QoY29sb3IgPSBjb2xvcnMsIHNpemUgPSAwLjY1KSkpDQoNCg0KIyBDaGFuZ2UgZmFjZXQgbGFiZWxzDQpwbG90X3N0YWlfMSRkYXRhJGZhY2V0IDwtIGlmZWxzZShwbG90X3N0YWlfMSRkYXRhJGZhY2V0ID09ICJGQV9GSCA9IC0wLjUiLCAiRmFzdCBIaXRzIiwgIkZhbHNlIEFsYXJtcyIpDQoNCg0KIyBDcmVhdGUgc2NhdHRlcnBsb3QNCnBsb3Rfc3RhaV8yIDwtIGdncGxvdChkYXRhID0gZGZfY29ycltkZl9jb3JyJGdyb3VwID09ICJPQ0QiLCBdLCBhZXMoeCA9IHN0YWksIHkgPSBwcmltaW5nLCBmaWxsID0gZ3JvdXApKSArDQogIGdlb21fcG9pbnQoY29sb3IgPSAiIzAwMzE5MiIsIHNpemUgPSAxKSArDQogIGdlb21fc21vb3RoKG1ldGhvZCA9ICdsbScsIGNvbG9yID0gIiMwMDMxOTIiKSArDQogIGxhYnModGl0bGUgPSBOVUxMLCB4ID0gIlNUQUkgVHJhaXQgU2NvcmUiLCB5ID0gIk92ZXJhbGwgUHJpbWluZyBFZmZlY3QgKG1zKSIpICsNCiAgY29vcmRfY2FydGVzaWFuKHlsaW0gPSBjKC0xNTAsIDQwMCksIHhsaW0gPSBjKDM1LjgsIDgwKSkgKw0KICBzY2FsZV95X2NvbnRpbnVvdXMoYnJlYWtzID0gc2VxKC0xNTAsIDQwMCwgNTApLCBleHBhbmQgPSBjKDAsIDApKSArDQogIHNjYWxlX3hfY29udGludW91cyhicmVha3MgPSBzZXEoNDAsIDgwLCAxMCksIGV4cGFuZCA9IGMoMCwgMCkpICsNCiAgc2NhbGVfZmlsbF9tYW51YWwodmFsdWVzID0gIiMwMDMxOTIiKSArDQogIG15X2ZpZ3VyZV90aGVtZSArDQogIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJub25lIiwgYXhpcy50aWNrcy54ID0gTlVMTCkgKw0KICBhbm5vdGF0ZSgidGV4dCIsIHggPSA4MCwgeSA9IC0xMTUsIGxhYmVsID0gcGFzdGUoImxpc3QoaXRhbGljKHIpKDI2KSA9PSIsIC0uMzQsICIsIGl0YWxpYyhwKSA9PSAuMDc4KSIpLA0KICAgIHBhcnNlID0gVFJVRSwgaGp1c3QgPSAxLCBzaXplID0gMywgY29sb3IgPSAiZ3JheTIwIikNCg0KDQojIEFycmFuZ2UgcGxvdHMNCmZpZ3VyZV9zdGFpIDwtIGdnZHJhdygpICsNCiAgZHJhd19wbG90KHBsb3Rfc3RhaV8xLCB4ID0gLjAwLCB5ID0gLjAwMCwgd2lkdGggPSAuNjAsIGhlaWdodCA9IDEpICsNCiAgZHJhd19wbG90KHBsb3Rfc3RhaV8yLCB4ID0gLjYxLCB5ID0gLjExNSwgd2lkdGggPSAuMzksIGhlaWdodCA9IDAuODMpICsNCiAgZHJhd19wbG90X2xhYmVsKGMoIkEiLCAiQiIpLCBjKDAsIC42MSksIGMoMSwgMSksIHNpemUgPSAxNSkNCmZpZ3VyZV9zdGFpDQoNCg0KIyBTYXZlIHBsb3QNCmdnc2F2ZShwbG90ID0gZmlndXJlX3N0YWksICIuL2ZpZ3VyZXMvZmlndXJlX1MxLnRpZmYiLCB3aWR0aCA9IDIwLCBoZWlnaHQgPSAxMiwNCiAgdW5pdHMgPSAiY20iLCBkcGkgPSA2MDAsIGNvbXByZXNzaW9uID0gImx6dyIpDQpgYGANCjxicj48YnI+DQoNCiMjIFJlZmVyZW5jZXMNCioqKg0KQWFydHMsIEsuLCBEZSBIb3V3ZXIsIEouLCAmIFBvdXJ0b2lzLCBHLiAoMjAxMikuIEV2aWRlbmNlIGZvciB0aGUgYXV0b21hdGljIGV2YWx1YXRpb24gb2Ygc2VsZi1nZW5lcmF0ZWQgYWN0aW9ucy4gKkNvZ25pdGlvbiwgMTI0KigyKSwgMTE34oCTMTI3LiBodHRwczovL2RvaS5vcmcvMTAuMTAxNi9qLmNvZ25pdGlvbi4yMDEyLjA1LjAwOQ0KPGJyPjxicj48YnI+DQoNCiMjIFNlc3Npb24gSW5mbw0KKioqDQpgYGB7ciBzZXNzaW9uLWluZm99DQoNCnNlc3Npb25JbmZvKCkNCmBgYA0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("5_Plots.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

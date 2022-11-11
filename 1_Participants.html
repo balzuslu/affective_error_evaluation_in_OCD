@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Participants</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="web_style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Affective Error Evaluation in OCD</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="0_Project_and_Data_Description.html">
+    <span class="glyphicon glyphicon-info-sign"></span>
+     
+    Project &amp; Data
+  </a>
+</li>
+<li>
+  <a href="1_Participants.html">
+    <span class="glyphicon glyphicon-info-sign"></span>
+     
+    Participants
+  </a>
+</li>
+<li>
+  <a href="2_Go_No-Go.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-hand-up"></span>
+     
+    Go/No-Go Data
+  </a>
+</li>
+<li>
+  <a href="3_Word_Categorization.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-hand-up"></span>
+     
+    Word Categorization Data (&amp; ERPs)
+  </a>
+</li>
+<li>
+  <a href="4_ERP.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-flash"></span>
+     
+    ERP Data
+  </a>
+</li>
+<li>
+  <a href="5_Plots.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-stats"></span>
+     
+    Plots
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:luisa.balzus@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Participants</h1>
+
+</div>
+
+
+<!-- Set general settings -->
+<pre class="r"><code># Set general settings for markdown file
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE)
+
+
+# Clear environment
+rm(list = ls())
+
+
+# Load packages
+library(dplyr)      # for data wrangling
+library(knitr)      # for integrating computing and reporting in markdown
+library(kableExtra) # for customizing appearance of tables
+library(foreign)    # for reading in SPSS file
+library(psych)      # for describeBy function
+library(tidyr)      # for gather and spread function
+
+
+# Load functions
+source(&quot;./functions/my_table_template.R&quot;)
+
+
+# Turn off scientific notation
+options(scipen = 999)</code></pre>
+<p><br></p>
+<div id="sample-description" class="section level2">
+<h2>Sample Description</h2>
+<hr />
+<ul>
+<li><p>The final sample consisted of 28 patients with OCD and 28 healthy control (HC) participants.</p></li>
+<li><p>Patients with OCD and healthy control participants were individually matched for age, gender, and educational level.</p></li>
+<li><p>Patients were diagnosed using the Structured Clinical Interview for DSM-IV (SCID-I; Wittchen et al., 1997) and were recruited from the outpatient clinic for OCD at Humboldt-Universität zu Berlin.</p></li>
+<li><p>All participants were native German speakers and had normal or corrected-to-normal vision.</p></li>
+<li><p>Exclusion criteria were lifetime diagnosis of bipolar, psychotic, or substance-related disorders; neurological diseases; and use of neuroleptic medication in the last 3 months or benzodiazepines in the last week.</p></li>
+<li><p>Additional exclusion criteria for control participants were any current or past psychiatric disorder or psychotherapeutic treatment.<br />
+<br><br></p></li>
+</ul>
+</div>
+<div id="sample-characteristics" class="section level2">
+<h2>Sample Characteristics</h2>
+<hr />
+<p>This table corresponds to Table 1 in the manuscript.</p>
+<pre class="r"><code># Load data
+participant_data &lt;- read.spss(&quot;./data/Probandendaten.sav&quot;, to.data.frame = TRUE)
+load(file = &quot;./data/Trait_Data.rda&quot;)
+
+
+# Prepare dataframe
+demographics &lt;- participant_data %&gt;%
+  # Prepare id variable for merging and add group variable
+  dplyr::mutate(participant_id = as.factor(paste0(substr(Code, 13, 13), &quot;_&quot;, substr(Code, 14, 15))),
+                group = as.factor(ifelse(substr(participant_id, 1, 1) == &quot;C&quot;, &quot;HC&quot;, &quot;OCD&quot;))) %&gt;%
+  # Exclude P_02 and C_02 and row with NA
+  dplyr::filter(participant_id != &quot;P_02&quot; &amp; participant_id != &quot;C_02&quot; &amp; !is.na(Alter)) %&gt;%
+  # Rename columns
+  dplyr::rename(
+    &quot;Age (years)&quot;                = Alter,
+    &quot;Gender&quot;                     = Geschlecht,
+    &quot;Years of education&quot;         = Schuljahre,
+    &quot;Y-BOCS total score&quot;         = YBOCS_gesamt,
+    &quot;Y-BOCS obsessions&quot;          = YBOCS_Gedanken,
+    &quot;Y-BOCS compulsions&quot;         = YBOCS_Handlungen,
+    &quot;Verbal intelligence (WST)&quot;  = WST) %&gt;%
+  # Merge trait data
+  dplyr::left_join(., traits, by = &quot;participant_id&quot;) %&gt;%
+  # Select and reorder columns
+  dplyr::select(c(&quot;group&quot;, &quot;Age (years)&quot;, &quot;Gender&quot;, &quot;Years of education&quot;, &quot;Verbal intelligence (WST)&quot;,
+    &quot;BDI-II&quot;,  &quot;OCI-R&quot;, &quot;PSWQ&quot;, &quot;STAI trait&quot;, &quot;Y-BOCS total score&quot;,  &quot;Y-BOCS obsessions&quot;, &quot;Y-BOCS compulsions&quot;))
+
+
+# Transform WST scores (range 24-37) to IQ scores (according to WST manual)
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 24, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 89
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 25, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 90
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 27, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 93
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 28, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 95
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 29, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 97
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 30, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 99
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 31, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 101
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 32, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 104
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 33, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 107
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 34, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 110
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 35, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 114
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 36, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 118
+demographics[demographics$&quot;Verbal intelligence (WST)&quot; == 37, ]$&quot;Verbal intelligence (WST)&quot; &lt;- 122
+
+
+
+### Numeric variables
+
+# Extract demographics per group
+demographics_groups &lt;- list()
+demographics_groups &lt;- describeBy(demographics %&gt;% dplyr::select(-c(&quot;Gender&quot;, &quot;group&quot;)), demographics$group)
+ocd &lt;- as.data.frame(demographics_groups$`OCD`)
+hc  &lt;- as.data.frame(demographics_groups$`HC`)
+
+
+# Create table with demographics formatted as &quot;M (SD)&quot;
+demographics_groups &lt;- as.data.frame(cbind(
+  Characteristic = rownames(ocd),
+  ocd = paste0(format(round(ocd$mean, 2), nsmall = 2), &quot; (&quot;, format(round(ocd$sd, 2), nsmall = 2), &quot;)&quot;),
+  hc  = paste0(format(round(hc$mean,  2), nsmall = 2), &quot; (&quot;, format(round(hc$sd,  2), nsmall = 2), &quot;)&quot;)))
+
+
+# Calculate t tests
+t_tests &lt;- demographics %&gt;%
+  dplyr::select(&quot;Age (years)&quot;, &quot;Years of education&quot;, &quot;Verbal intelligence (WST)&quot;, &quot;BDI-II&quot;, &quot;OCI-R&quot;,
+    &quot;PSWQ&quot;, &quot;STAI trait&quot;, &quot;group&quot;) %&gt;%
+  tidyr::gather(key = Characteristic, value = value, -group) %&gt;%
+  dplyr::group_by(group, Characteristic) %&gt;%
+  dplyr::summarise(value = list(value)) %&gt;%
+  tidyr::spread(group, value) %&gt;%
+  dplyr::ungroup() %&gt;%
+  dplyr::group_by(Characteristic) %&gt;%
+  dplyr::mutate(&quot;Test statistic&quot; = t.test(unlist(HC), unlist(OCD))$statistic,
+                              df = t.test(unlist(HC), unlist(OCD))$parameter,
+                              p  = t.test(unlist(HC), unlist(OCD))$p.value) %&gt;%
+  dplyr::select(-c(HC, OCD))  %&gt;%
+  dplyr::ungroup()
+
+
+# Combine demographics and t test results
+demographics_numeric &lt;- left_join(demographics_groups, t_tests, by = &quot;Characteristic&quot;)
+
+
+
+### Count variables (gender)
+
+# Calculate chi-squared test and extract counts formatted as &quot;female:male&quot;
+gender_test &lt;- chisq.test(demographics$Gender, demographics$group)
+gender      &lt;- demographics %&gt;% dplyr::group_by(group) %&gt;% dplyr::count(Gender)
+gender_ocd  &lt;- paste0(gender[gender$group == &quot;OCD&quot; &amp; gender$Gender == &quot;weiblich&quot;, ]$n, &quot;:&quot;,
+                      gender[gender$group == &quot;OCD&quot; &amp; gender$Gender == &quot;männlich&quot;, ]$n)
+gender_hc   &lt;- paste0(gender[gender$group == &quot;HC&quot;  &amp; gender$Gender == &quot;weiblich&quot;, ]$n, &quot;:&quot;,
+                      gender[gender$group == &quot;HC&quot;  &amp; gender$Gender == &quot;männlich&quot;, ]$n)
+
+
+# Combine demographics and chi-squared test
+demographics_factorial &lt;- as.data.frame(cbind(
+  Characteristic = &quot;Gender (n female:male)&quot;,
+  ocd = gender_ocd,
+  hc  = gender_hc,
+  &quot;Test statistic&quot; = gender_test$statistic,
+  df = gender_test$parameter,
+  p = gender_test$p.value))
+
+
+
+### Create and display table
+
+# Re-order rows and format p values
+table &lt;- rbind(demographics_numeric[c(1), ], demographics_factorial,
+               demographics_numeric[c(2:nrow(demographics_numeric)), ])
+table[, c(&quot;df&quot;, &quot;Test statistic&quot;, &quot;p&quot;)] &lt;- as.numeric(unlist(table[, c(&quot;df&quot;, &quot;Test statistic&quot;, &quot;p&quot;)]))
+table[, c(&quot;p&quot;)] &lt;- format.pval(table[, c(&quot;p&quot;)], eps = 0.001, digits = 3)
+table &lt;- table %&gt;% dplyr::rename(&quot;Patients with OCD&quot; = ocd, &quot;Healthy control participants&quot; = hc)
+
+
+# Display table
+my_table_template(table, 
+  caption = &quot;Demographic and Clinical Characteristics&quot;) %&gt;%
+  add_footnote(
+  &quot;\n Note. Means are reported with standard deviations in parentheses (except for gender). Welch’s t test was used for 
+  continuous variables. Age range was 18 to 54 years. Years of education include primary and secondary education.
+  WST = Wortschatztest; BDI-II = Beck Depression Inventory-II; OCI-R = Obsessive-Compulsive Inventory-Revised; 
+  PSWQ = Penn State Worry Questionnaire; STAI = State-Trait Anxiety Inventory; Y-BOCS = Yale-Brown Obsessive 
+  Compulsive Scale.&quot;, notation = &quot;none&quot;)</code></pre>
+<table class="table table-striped table-condensed" style="font-size: 12px; width: auto !important; ">
+<caption style="font-size: initial !important;">
+Demographic and Clinical Characteristics
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Characteristic
+</th>
+<th style="text-align:left;">
+Patients with OCD
+</th>
+<th style="text-align:left;">
+Healthy control participants
+</th>
+<th style="text-align:right;">
+Test statistic
+</th>
+<th style="text-align:right;">
+df
+</th>
+<th style="text-align:left;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Age (years)
+</td>
+<td style="text-align:left;">
+33.29 ( 8.57)
+</td>
+<td style="text-align:left;">
+33.07 (8.20)
+</td>
+<td style="text-align:right;">
+-0.10
+</td>
+<td style="text-align:right;">
+53.90
+</td>
+<td style="text-align:left;">
+0.924
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gender (n female:male)
+</td>
+<td style="text-align:left;">
+17:11
+</td>
+<td style="text-align:left;">
+17:11
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:left;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Years of education
+</td>
+<td style="text-align:left;">
+12.14 ( 1.46)
+</td>
+<td style="text-align:left;">
+12.14 (1.08)
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+49.74
+</td>
+<td style="text-align:left;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Verbal intelligence (WST)
+</td>
+<td style="text-align:left;">
+104.93 ( 7.14)
+</td>
+<td style="text-align:left;">
+105.71 (8.30)
+</td>
+<td style="text-align:right;">
+0.38
+</td>
+<td style="text-align:right;">
+52.81
+</td>
+<td style="text-align:left;">
+0.706
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BDI-II
+</td>
+<td style="text-align:left;">
+14.14 (11.34)
+</td>
+<td style="text-align:left;">
+1.86 (2.69)
+</td>
+<td style="text-align:right;">
+-5.58
+</td>
+<td style="text-align:right;">
+30.03
+</td>
+<td style="text-align:left;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OCI-R
+</td>
+<td style="text-align:left;">
+25.75 ( 9.95)
+</td>
+<td style="text-align:left;">
+6.25 (5.65)
+</td>
+<td style="text-align:right;">
+-9.02
+</td>
+<td style="text-align:right;">
+42.75
+</td>
+<td style="text-align:left;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PSWQ
+</td>
+<td style="text-align:left;">
+61.21 (10.82)
+</td>
+<td style="text-align:left;">
+37.07 (9.86)
+</td>
+<td style="text-align:right;">
+-8.73
+</td>
+<td style="text-align:right;">
+53.54
+</td>
+<td style="text-align:left;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+STAI trait
+</td>
+<td style="text-align:left;">
+53.29 (10.08)
+</td>
+<td style="text-align:left;">
+32.29 (7.22)
+</td>
+<td style="text-align:right;">
+-8.96
+</td>
+<td style="text-align:right;">
+48.92
+</td>
+<td style="text-align:left;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Y-BOCS total score
+</td>
+<td style="text-align:left;">
+23.36 ( 3.84)
+</td>
+<td style="text-align:left;">
+NaN ( NA)
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Y-BOCS obsessions
+</td>
+<td style="text-align:left;">
+11.43 ( 1.81)
+</td>
+<td style="text-align:left;">
+NaN ( NA)
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Y-BOCS compulsions
+</td>
+<td style="text-align:left;">
+11.86 ( 2.53)
+</td>
+<td style="text-align:left;">
+NaN ( NA)
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> <br /> Note. Means are reported with standard deviations in parentheses (except for gender). Welch’s t test was used for <br /> continuous variables. Age range was 18 to 54 years. Years of education include primary and secondary education.<br /> WST = Wortschatztest; BDI-II = Beck Depression Inventory-II; OCI-R = Obsessive-Compulsive Inventory-Revised; <br /> PSWQ = Penn State Worry Questionnaire; STAI = State-Trait Anxiety Inventory; Y-BOCS = Yale-Brown Obsessive <br /> Compulsive Scale.
+</td>
+</tr>
+</tfoot>
+</table>
+<p><br><br></p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<hr />
+<p>Wittchen, H., Zaudig, M., &amp; Fydrich, T. (1997). <em>Strukturiertes klinisches Interview für DSM-IV (SKID).</em> Hogrefe.<br />
+<br><br><br></p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<hr />
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.6.1 (2019-07-05)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=German_Germany.1252  LC_CTYPE=German_Germany.1252   
+## [3] LC_MONETARY=German_Germany.1252 LC_NUMERIC=C                   
+## [5] LC_TIME=German_Germany.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## other attached packages:
+## [1] tidyr_1.2.1      psych_2.2.9      foreign_0.8-71   kableExtra_1.3.4
+## [5] knitr_1.40       dplyr_1.0.10    
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_1.2.0  xfun_0.33         bslib_0.4.0       purrr_0.3.5      
+##  [5] lattice_0.20-45   colorspace_2.0-3  vctrs_0.5.0       generics_0.1.3   
+##  [9] htmltools_0.5.3   viridisLite_0.4.1 yaml_2.2.1        utf8_1.2.2       
+## [13] rlang_1.0.6       jquerylib_0.1.4   pillar_1.8.1      glue_1.6.2       
+## [17] withr_2.5.0       DBI_1.1.3         lifecycle_1.0.3   stringr_1.4.1    
+## [21] munsell_0.5.0     rvest_1.0.3       evaluate_0.16     fastmap_1.1.0    
+## [25] parallel_3.6.1    fansi_1.0.3       highr_0.9         renv_0.12.0      
+## [29] scales_1.2.1      cachem_1.0.4      webshot_0.5.4     jsonlite_1.8.3   
+## [33] systemfonts_1.0.4 mnormt_2.1.1      digest_0.6.30     stringi_1.6.1    
+## [37] grid_3.6.1        cli_3.4.1         tools_3.6.1       magrittr_2.0.3   
+## [41] sass_0.4.0        tibble_3.1.8      pkgconfig_2.0.3   ellipsis_0.3.2   
+## [45] xml2_1.3.3        assertthat_0.2.1  rmarkdown_2.16    svglite_2.1.0    
+## [49] httr_1.4.4        rstudioapi_0.14   R6_2.5.1          nlme_3.1-140     
+## [53] compiler_3.6.1</code></pre>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBhcnRpY2lwYW50cyINCm91dHB1dDogDQogIGh0bWxfZG9jdW1lbnQNCi0tLQ0KDQo8IS0tIFNldCBnZW5lcmFsIHNldHRpbmdzIC0tPg0KDQpgYGB7ciBzZXR1cCwgbWVzc2FnZSA9IEZBTFNFLCB3YXJuaW5nID0gRkFMU0V9DQoNCiMgU2V0IGdlbmVyYWwgc2V0dGluZ3MgZm9yIG1hcmtkb3duIGZpbGUNCmtuaXRyOjpvcHRzX2NodW5rJHNldCgNCiAgbWVzc2FnZSA9IEZBTFNFLA0KICB3YXJuaW5nID0gRkFMU0UpDQoNCg0KIyBDbGVhciBlbnZpcm9ubWVudA0Kcm0obGlzdCA9IGxzKCkpDQoNCg0KIyBMb2FkIHBhY2thZ2VzDQpsaWJyYXJ5KGRwbHlyKSAgICAgICMgZm9yIGRhdGEgd3JhbmdsaW5nDQpsaWJyYXJ5KGtuaXRyKSAgICAgICMgZm9yIGludGVncmF0aW5nIGNvbXB1dGluZyBhbmQgcmVwb3J0aW5nIGluIG1hcmtkb3duDQpsaWJyYXJ5KGthYmxlRXh0cmEpICMgZm9yIGN1c3RvbWl6aW5nIGFwcGVhcmFuY2Ugb2YgdGFibGVzDQpsaWJyYXJ5KGZvcmVpZ24pICAgICMgZm9yIHJlYWRpbmcgaW4gU1BTUyBmaWxlDQpsaWJyYXJ5KHBzeWNoKSAgICAgICMgZm9yIGRlc2NyaWJlQnkgZnVuY3Rpb24NCmxpYnJhcnkodGlkeXIpICAgICAgIyBmb3IgZ2F0aGVyIGFuZCBzcHJlYWQgZnVuY3Rpb24NCg0KDQojIExvYWQgZnVuY3Rpb25zDQpzb3VyY2UoIi4vZnVuY3Rpb25zL215X3RhYmxlX3RlbXBsYXRlLlIiKQ0KDQoNCiMgVHVybiBvZmYgc2NpZW50aWZpYyBub3RhdGlvbg0Kb3B0aW9ucyhzY2lwZW4gPSA5OTkpDQpgYGANCjxicj4NCg0KIyMgU2FtcGxlIERlc2NyaXB0aW9uDQoqKioNCg0KKiBUaGUgZmluYWwgc2FtcGxlIGNvbnNpc3RlZCBvZiAyOCBwYXRpZW50cyB3aXRoIE9DRCBhbmQgMjggaGVhbHRoeSBjb250cm9sIChIQykgcGFydGljaXBhbnRzLiANCg0KKiBQYXRpZW50cyB3aXRoIE9DRCBhbmQgaGVhbHRoeSBjb250cm9sIHBhcnRpY2lwYW50cyB3ZXJlIGluZGl2aWR1YWxseSBtYXRjaGVkIGZvciBhZ2UsIGdlbmRlciwgYW5kIGVkdWNhdGlvbmFsIGxldmVsLg0KDQoqIFBhdGllbnRzIHdlcmUgZGlhZ25vc2VkIHVzaW5nIHRoZSBTdHJ1Y3R1cmVkIENsaW5pY2FsIEludGVydmlldyBmb3IgRFNNLUlWIChTQ0lELUk7IFdpdHRjaGVuIGV0IGFsLiwgMTk5NykgYW5kIHdlcmUgcmVjcnVpdGVkIGZyb20gdGhlIG91dHBhdGllbnQgY2xpbmljIGZvciBPQ0QgYXQgSHVtYm9sZHQtVW5pdmVyc2l0w6R0IHp1IEJlcmxpbi4gDQoNCiogQWxsIHBhcnRpY2lwYW50cyB3ZXJlIG5hdGl2ZSBHZXJtYW4gc3BlYWtlcnMgYW5kIGhhZCBub3JtYWwgb3IgY29ycmVjdGVkLXRvLW5vcm1hbCB2aXNpb24uIA0KDQoqIEV4Y2x1c2lvbiBjcml0ZXJpYSB3ZXJlIGxpZmV0aW1lIGRpYWdub3NpcyBvZiBiaXBvbGFyLCBwc3ljaG90aWMsIG9yIHN1YnN0YW5jZS1yZWxhdGVkIGRpc29yZGVyczsgbmV1cm9sb2dpY2FsIGRpc2Vhc2VzOyBhbmQgdXNlIG9mIG5ldXJvbGVwdGljIG1lZGljYXRpb24gaW4gdGhlIGxhc3QgMyBtb250aHMgb3IgYmVuem9kaWF6ZXBpbmVzIGluIHRoZSBsYXN0IHdlZWsuIA0KDQoqIEFkZGl0aW9uYWwgZXhjbHVzaW9uIGNyaXRlcmlhIGZvciBjb250cm9sIHBhcnRpY2lwYW50cyB3ZXJlIGFueSBjdXJyZW50IG9yIHBhc3QgcHN5Y2hpYXRyaWMgZGlzb3JkZXIgb3IgcHN5Y2hvdGhlcmFwZXV0aWMgdHJlYXRtZW50LiAgDQo8YnI+PGJyPg0KDQojIyBTYW1wbGUgQ2hhcmFjdGVyaXN0aWNzDQoqKioNCg0KVGhpcyB0YWJsZSBjb3JyZXNwb25kcyB0byBUYWJsZSAxIGluIHRoZSBtYW51c2NyaXB0Lg0KDQpgYGB7ciBkZW1vZ3JhcGhpY3N9DQoNCiMgTG9hZCBkYXRhDQpwYXJ0aWNpcGFudF9kYXRhIDwtIHJlYWQuc3BzcygiLi9kYXRhL1Byb2JhbmRlbmRhdGVuLnNhdiIsIHRvLmRhdGEuZnJhbWUgPSBUUlVFKQ0KbG9hZChmaWxlID0gIi4vZGF0YS9UcmFpdF9EYXRhLnJkYSIpDQoNCg0KIyBQcmVwYXJlIGRhdGFmcmFtZQ0KZGVtb2dyYXBoaWNzIDwtIHBhcnRpY2lwYW50X2RhdGEgJT4lDQogICMgUHJlcGFyZSBpZCB2YXJpYWJsZSBmb3IgbWVyZ2luZyBhbmQgYWRkIGdyb3VwIHZhcmlhYmxlDQogIGRwbHlyOjptdXRhdGUocGFydGljaXBhbnRfaWQgPSBhcy5mYWN0b3IocGFzdGUwKHN1YnN0cihDb2RlLCAxMywgMTMpLCAiXyIsIHN1YnN0cihDb2RlLCAxNCwgMTUpKSksDQogICAgICAgICAgICAgICAgZ3JvdXAgPSBhcy5mYWN0b3IoaWZlbHNlKHN1YnN0cihwYXJ0aWNpcGFudF9pZCwgMSwgMSkgPT0gIkMiLCAiSEMiLCAiT0NEIikpKSAlPiUNCiAgIyBFeGNsdWRlIFBfMDIgYW5kIENfMDIgYW5kIHJvdyB3aXRoIE5BDQogIGRwbHlyOjpmaWx0ZXIocGFydGljaXBhbnRfaWQgIT0gIlBfMDIiICYgcGFydGljaXBhbnRfaWQgIT0gIkNfMDIiICYgIWlzLm5hKEFsdGVyKSkgJT4lDQogICMgUmVuYW1lIGNvbHVtbnMNCiAgZHBseXI6OnJlbmFtZSgNCiAgICAiQWdlICh5ZWFycykiICAgICAgICAgICAgICAgID0gQWx0ZXIsDQogICAgIkdlbmRlciIgICAgICAgICAgICAgICAgICAgICA9IEdlc2NobGVjaHQsDQogICAgIlllYXJzIG9mIGVkdWNhdGlvbiIgICAgICAgICA9IFNjaHVsamFocmUsDQogICAgIlktQk9DUyB0b3RhbCBzY29yZSIgICAgICAgICA9IFlCT0NTX2dlc2FtdCwNCiAgICAiWS1CT0NTIG9ic2Vzc2lvbnMiICAgICAgICAgID0gWUJPQ1NfR2VkYW5rZW4sDQogICAgIlktQk9DUyBjb21wdWxzaW9ucyIgICAgICAgICA9IFlCT0NTX0hhbmRsdW5nZW4sDQogICAgIlZlcmJhbCBpbnRlbGxpZ2VuY2UgKFdTVCkiICA9IFdTVCkgJT4lDQogICMgTWVyZ2UgdHJhaXQgZGF0YQ0KICBkcGx5cjo6bGVmdF9qb2luKC4sIHRyYWl0cywgYnkgPSAicGFydGljaXBhbnRfaWQiKSAlPiUNCiAgIyBTZWxlY3QgYW5kIHJlb3JkZXIgY29sdW1ucw0KICBkcGx5cjo6c2VsZWN0KGMoImdyb3VwIiwgIkFnZSAoeWVhcnMpIiwgIkdlbmRlciIsICJZZWFycyBvZiBlZHVjYXRpb24iLCAiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIsDQogICAgIkJESS1JSSIsICAiT0NJLVIiLCAiUFNXUSIsICJTVEFJIHRyYWl0IiwgIlktQk9DUyB0b3RhbCBzY29yZSIsICAiWS1CT0NTIG9ic2Vzc2lvbnMiLCAiWS1CT0NTIGNvbXB1bHNpb25zIikpDQoNCg0KIyBUcmFuc2Zvcm0gV1NUIHNjb3JlcyAocmFuZ2UgMjQtMzcpIHRvIElRIHNjb3JlcyAoYWNjb3JkaW5nIHRvIFdTVCBtYW51YWwpDQpkZW1vZ3JhcGhpY3NbZGVtb2dyYXBoaWNzJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA9PSAyNCwgXSQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPC0gODkNCmRlbW9ncmFwaGljc1tkZW1vZ3JhcGhpY3MkIlZlcmJhbCBpbnRlbGxpZ2VuY2UgKFdTVCkiID09IDI1LCBdJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA8LSA5MA0KZGVtb2dyYXBoaWNzW2RlbW9ncmFwaGljcyQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPT0gMjcsIF0kIlZlcmJhbCBpbnRlbGxpZ2VuY2UgKFdTVCkiIDwtIDkzDQpkZW1vZ3JhcGhpY3NbZGVtb2dyYXBoaWNzJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA9PSAyOCwgXSQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPC0gOTUNCmRlbW9ncmFwaGljc1tkZW1vZ3JhcGhpY3MkIlZlcmJhbCBpbnRlbGxpZ2VuY2UgKFdTVCkiID09IDI5LCBdJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA8LSA5Nw0KZGVtb2dyYXBoaWNzW2RlbW9ncmFwaGljcyQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPT0gMzAsIF0kIlZlcmJhbCBpbnRlbGxpZ2VuY2UgKFdTVCkiIDwtIDk5DQpkZW1vZ3JhcGhpY3NbZGVtb2dyYXBoaWNzJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA9PSAzMSwgXSQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPC0gMTAxDQpkZW1vZ3JhcGhpY3NbZGVtb2dyYXBoaWNzJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA9PSAzMiwgXSQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPC0gMTA0DQpkZW1vZ3JhcGhpY3NbZGVtb2dyYXBoaWNzJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA9PSAzMywgXSQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPC0gMTA3DQpkZW1vZ3JhcGhpY3NbZGVtb2dyYXBoaWNzJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA9PSAzNCwgXSQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPC0gMTEwDQpkZW1vZ3JhcGhpY3NbZGVtb2dyYXBoaWNzJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA9PSAzNSwgXSQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPC0gMTE0DQpkZW1vZ3JhcGhpY3NbZGVtb2dyYXBoaWNzJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA9PSAzNiwgXSQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPC0gMTE4DQpkZW1vZ3JhcGhpY3NbZGVtb2dyYXBoaWNzJCJWZXJiYWwgaW50ZWxsaWdlbmNlIChXU1QpIiA9PSAzNywgXSQiVmVyYmFsIGludGVsbGlnZW5jZSAoV1NUKSIgPC0gMTIyDQoNCg0KDQojIyMgTnVtZXJpYyB2YXJpYWJsZXMNCg0KIyBFeHRyYWN0IGRlbW9ncmFwaGljcyBwZXIgZ3JvdXANCmRlbW9ncmFwaGljc19ncm91cHMgPC0gbGlzdCgpDQpkZW1vZ3JhcGhpY3NfZ3JvdXBzIDwtIGRlc2NyaWJlQnkoZGVtb2dyYXBoaWNzICU+JSBkcGx5cjo6c2VsZWN0KC1jKCJHZW5kZXIiLCAiZ3JvdXAiKSksIGRlbW9ncmFwaGljcyRncm91cCkNCm9jZCA8LSBhcy5kYXRhLmZyYW1lKGRlbW9ncmFwaGljc19ncm91cHMkYE9DRGApDQpoYyAgPC0gYXMuZGF0YS5mcmFtZShkZW1vZ3JhcGhpY3NfZ3JvdXBzJGBIQ2ApDQoNCg0KIyBDcmVhdGUgdGFibGUgd2l0aCBkZW1vZ3JhcGhpY3MgZm9ybWF0dGVkIGFzICJNIChTRCkiDQpkZW1vZ3JhcGhpY3NfZ3JvdXBzIDwtIGFzLmRhdGEuZnJhbWUoY2JpbmQoDQogIENoYXJhY3RlcmlzdGljID0gcm93bmFtZXMob2NkKSwNCiAgb2NkID0gcGFzdGUwKGZvcm1hdChyb3VuZChvY2QkbWVhbiwgMiksIG5zbWFsbCA9IDIpLCAiICgiLCBmb3JtYXQocm91bmQob2NkJHNkLCAyKSwgbnNtYWxsID0gMiksICIpIiksDQogIGhjICA9IHBhc3RlMChmb3JtYXQocm91bmQoaGMkbWVhbiwgIDIpLCBuc21hbGwgPSAyKSwgIiAoIiwgZm9ybWF0KHJvdW5kKGhjJHNkLCAgMiksIG5zbWFsbCA9IDIpLCAiKSIpKSkNCg0KDQojIENhbGN1bGF0ZSB0IHRlc3RzDQp0X3Rlc3RzIDwtIGRlbW9ncmFwaGljcyAlPiUNCiAgZHBseXI6OnNlbGVjdCgiQWdlICh5ZWFycykiLCAiWWVhcnMgb2YgZWR1Y2F0aW9uIiwgIlZlcmJhbCBpbnRlbGxpZ2VuY2UgKFdTVCkiLCAiQkRJLUlJIiwgIk9DSS1SIiwNCiAgICAiUFNXUSIsICJTVEFJIHRyYWl0IiwgImdyb3VwIikgJT4lDQogIHRpZHlyOjpnYXRoZXIoa2V5ID0gQ2hhcmFjdGVyaXN0aWMsIHZhbHVlID0gdmFsdWUsIC1ncm91cCkgJT4lDQogIGRwbHlyOjpncm91cF9ieShncm91cCwgQ2hhcmFjdGVyaXN0aWMpICU+JQ0KICBkcGx5cjo6c3VtbWFyaXNlKHZhbHVlID0gbGlzdCh2YWx1ZSkpICU+JQ0KICB0aWR5cjo6c3ByZWFkKGdyb3VwLCB2YWx1ZSkgJT4lDQogIGRwbHlyOjp1bmdyb3VwKCkgJT4lDQogIGRwbHlyOjpncm91cF9ieShDaGFyYWN0ZXJpc3RpYykgJT4lDQogIGRwbHlyOjptdXRhdGUoIlRlc3Qgc3RhdGlzdGljIiA9IHQudGVzdCh1bmxpc3QoSEMpLCB1bmxpc3QoT0NEKSkkc3RhdGlzdGljLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGYgPSB0LnRlc3QodW5saXN0KEhDKSwgdW5saXN0KE9DRCkpJHBhcmFtZXRlciwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHAgID0gdC50ZXN0KHVubGlzdChIQyksIHVubGlzdChPQ0QpKSRwLnZhbHVlKSAlPiUNCiAgZHBseXI6OnNlbGVjdCgtYyhIQywgT0NEKSkgICU+JQ0KICBkcGx5cjo6dW5ncm91cCgpDQoNCg0KIyBDb21iaW5lIGRlbW9ncmFwaGljcyBhbmQgdCB0ZXN0IHJlc3VsdHMNCmRlbW9ncmFwaGljc19udW1lcmljIDwtIGxlZnRfam9pbihkZW1vZ3JhcGhpY3NfZ3JvdXBzLCB0X3Rlc3RzLCBieSA9ICJDaGFyYWN0ZXJpc3RpYyIpDQoNCg0KDQojIyMgQ291bnQgdmFyaWFibGVzIChnZW5kZXIpDQoNCiMgQ2FsY3VsYXRlIGNoaS1zcXVhcmVkIHRlc3QgYW5kIGV4dHJhY3QgY291bnRzIGZvcm1hdHRlZCBhcyAiZmVtYWxlOm1hbGUiDQpnZW5kZXJfdGVzdCA8LSBjaGlzcS50ZXN0KGRlbW9ncmFwaGljcyRHZW5kZXIsIGRlbW9ncmFwaGljcyRncm91cCkNCmdlbmRlciAgICAgIDwtIGRlbW9ncmFwaGljcyAlPiUgZHBseXI6Omdyb3VwX2J5KGdyb3VwKSAlPiUgZHBseXI6OmNvdW50KEdlbmRlcikNCmdlbmRlcl9vY2QgIDwtIHBhc3RlMChnZW5kZXJbZ2VuZGVyJGdyb3VwID09ICJPQ0QiICYgZ2VuZGVyJEdlbmRlciA9PSAid2VpYmxpY2giLCBdJG4sICI6IiwNCiAgICAgICAgICAgICAgICAgICAgICBnZW5kZXJbZ2VuZGVyJGdyb3VwID09ICJPQ0QiICYgZ2VuZGVyJEdlbmRlciA9PSAibcOkbm5saWNoIiwgXSRuKQ0KZ2VuZGVyX2hjICAgPC0gcGFzdGUwKGdlbmRlcltnZW5kZXIkZ3JvdXAgPT0gIkhDIiAgJiBnZW5kZXIkR2VuZGVyID09ICJ3ZWlibGljaCIsIF0kbiwgIjoiLA0KICAgICAgICAgICAgICAgICAgICAgIGdlbmRlcltnZW5kZXIkZ3JvdXAgPT0gIkhDIiAgJiBnZW5kZXIkR2VuZGVyID09ICJtw6RubmxpY2giLCBdJG4pDQoNCg0KIyBDb21iaW5lIGRlbW9ncmFwaGljcyBhbmQgY2hpLXNxdWFyZWQgdGVzdA0KZGVtb2dyYXBoaWNzX2ZhY3RvcmlhbCA8LSBhcy5kYXRhLmZyYW1lKGNiaW5kKA0KICBDaGFyYWN0ZXJpc3RpYyA9ICJHZW5kZXIgKG4gZmVtYWxlOm1hbGUpIiwNCiAgb2NkID0gZ2VuZGVyX29jZCwNCiAgaGMgID0gZ2VuZGVyX2hjLA0KICAiVGVzdCBzdGF0aXN0aWMiID0gZ2VuZGVyX3Rlc3Qkc3RhdGlzdGljLA0KICBkZiA9IGdlbmRlcl90ZXN0JHBhcmFtZXRlciwNCiAgcCA9IGdlbmRlcl90ZXN0JHAudmFsdWUpKQ0KDQoNCg0KIyMjIENyZWF0ZSBhbmQgZGlzcGxheSB0YWJsZQ0KDQojIFJlLW9yZGVyIHJvd3MgYW5kIGZvcm1hdCBwIHZhbHVlcw0KdGFibGUgPC0gcmJpbmQoZGVtb2dyYXBoaWNzX251bWVyaWNbYygxKSwgXSwgZGVtb2dyYXBoaWNzX2ZhY3RvcmlhbCwNCiAgICAgICAgICAgICAgIGRlbW9ncmFwaGljc19udW1lcmljW2MoMjpucm93KGRlbW9ncmFwaGljc19udW1lcmljKSksIF0pDQp0YWJsZVssIGMoImRmIiwgIlRlc3Qgc3RhdGlzdGljIiwgInAiKV0gPC0gYXMubnVtZXJpYyh1bmxpc3QodGFibGVbLCBjKCJkZiIsICJUZXN0IHN0YXRpc3RpYyIsICJwIildKSkNCnRhYmxlWywgYygicCIpXSA8LSBmb3JtYXQucHZhbCh0YWJsZVssIGMoInAiKV0sIGVwcyA9IDAuMDAxLCBkaWdpdHMgPSAzKQ0KdGFibGUgPC0gdGFibGUgJT4lIGRwbHlyOjpyZW5hbWUoIlBhdGllbnRzIHdpdGggT0NEIiA9IG9jZCwgIkhlYWx0aHkgY29udHJvbCBwYXJ0aWNpcGFudHMiID0gaGMpDQoNCg0KIyBEaXNwbGF5IHRhYmxlDQpteV90YWJsZV90ZW1wbGF0ZSh0YWJsZSwgDQogIGNhcHRpb24gPSAiRGVtb2dyYXBoaWMgYW5kIENsaW5pY2FsIENoYXJhY3RlcmlzdGljcyIpICU+JQ0KICBhZGRfZm9vdG5vdGUoDQogICJcbiBOb3RlLiBNZWFucyBhcmUgcmVwb3J0ZWQgd2l0aCBzdGFuZGFyZCBkZXZpYXRpb25zIGluIHBhcmVudGhlc2VzIChleGNlcHQgZm9yIGdlbmRlcikuIFdlbGNo4oCZcyB0IHRlc3Qgd2FzIHVzZWQgZm9yIA0KICBjb250aW51b3VzIHZhcmlhYmxlcy4gQWdlIHJhbmdlIHdhcyAxOCB0byA1NCB5ZWFycy4gWWVhcnMgb2YgZWR1Y2F0aW9uIGluY2x1ZGUgcHJpbWFyeSBhbmQgc2Vjb25kYXJ5IGVkdWNhdGlvbi4NCiAgV1NUID0gV29ydHNjaGF0enRlc3Q7IEJESS1JSSA9IEJlY2sgRGVwcmVzc2lvbiBJbnZlbnRvcnktSUk7IE9DSS1SID0gT2JzZXNzaXZlLUNvbXB1bHNpdmUgSW52ZW50b3J5LVJldmlzZWQ7IA0KICBQU1dRID0gUGVubiBTdGF0ZSBXb3JyeSBRdWVzdGlvbm5haXJlOyBTVEFJID0gU3RhdGUtVHJhaXQgQW54aWV0eSBJbnZlbnRvcnk7IFktQk9DUyA9IFlhbGUtQnJvd24gT2JzZXNzaXZlIA0KICBDb21wdWxzaXZlIFNjYWxlLiIsIG5vdGF0aW9uID0gIm5vbmUiKQ0KYGBgDQo8YnI+PGJyPg0KDQojIyBSZWZlcmVuY2VzDQoqKioNCldpdHRjaGVuLCBILiwgWmF1ZGlnLCBNLiwgJiBGeWRyaWNoLCBULiAoMTk5NykuICpTdHJ1a3R1cmllcnRlcyBrbGluaXNjaGVzIEludGVydmlldyBmw7xyIERTTS1JViAoU0tJRCkuKiBIb2dyZWZlLiAJDQo8YnI+PGJyPjxicj4NCg0KIyMgU2Vzc2lvbiBJbmZvDQoqKioNCmBgYHtyIHNlc3Npb24taW5mb30NCg0Kc2Vzc2lvbkluZm8oKQ0KYGBgDQo=</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("1_Participants.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

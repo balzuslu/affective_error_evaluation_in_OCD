@@ -1,0 +1,1271 @@
+---
+title: "Word Categorization Data (& ERPs)"
+output: 
+  html_document
+---
+
+<!-- Set general settings -->
+
+```{r setup, message = FALSE, warning = FALSE}
+
+# Set general settings for markdown file
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  comment = "",
+  results = "hold")
+
+
+# Clear environment
+rm(list = ls())
+
+
+# Enable/disable caching of time-consuming code chunks
+knitr_cache_enabled = TRUE
+
+
+# Load packages
+library(dplyr)      # for data wrangling
+library(knitr)      # for integrating computing and reporting in markdown
+library(kableExtra) # for customizing appearance of tables
+library(MASS)       # for boxcox function and contrast definition
+library(lme4)       # for (G)LMMs
+library(lmerTest)   # for LMM p values (Satterthwaite's method for approximating dfs for t and F tests)
+library(sjPlot)     # for tab_model function to display (G)LMM results
+library(emmeans)    # for pairwise comparisons
+
+
+# Load functions
+source("./functions/summarySEwithinO.R")  # Function provided by R-cookbook: http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+source("./functions/my_table_template.R") # Function to create table template
+
+
+# Turn off scientific notation
+options(scipen = 999)
+
+
+# Prepare labels for (G)LMM tables
+labels <- c(
+  "(Intercept)" = "Intercept",
+  "gng_response_type2-1" = "FH – SH",
+  "gng_response_type3-2" = "FA – FH",
+  "gng_response_type4-3" = "IR – FA",
+  "word_valence2-1" = "Valence (Pos – Neg)",
+  "group2-1" = "Group (OCD – HC)",
+  "gng_response_type2-1:word_valence2-1" = "FH – SH x Valence",
+  "gng_response_type3-2:word_valence2-1" = "FA – FH x Valence",
+  "gng_response_type4-3:word_valence2-1" = "IR – FA x Valence",
+  "gng_response_type2-1:group2-1" = "FH – SH x Group",
+  "gng_response_type3-2:group2-1" = "FA – FH x Group",
+  "gng_response_type4-3:group2-1" = "IR – FA x Group",
+  "word_valence2-1:group2-1" = "Valence x Group",
+  "gng_response_type2-1:word_valence2-1:group2-1" = "FH – SH x Valence x Group",
+  "gng_response_type3-2:word_valence2-1:group2-1" = "FA – FH x Valence x Group",
+  "gng_response_type4-3:word_valence2-1:group2-1" = "IR – FA x Valence x Group",
+  "MFN_standardized" = "ERP",
+  "word_valence2-1:MFN_standardized" = "Valence x ERP",
+  "group2-1:MFN_standardized" = "Group x ERP",
+  "word_valence2-1:group2-1:MFN_standardized" = "Valence x Group x ERP",
+  "FH_FH" = "FA – FH",
+  "pos_neg" = "Valence (Pos – Neg)",
+  "FA_FH:pos_neg" = "FA – FH x Valence",
+  "oci_centered" = "OCI-R",
+  "FA_FH:oci_centered" = "FA – FH x OCI-R",
+  "pos_neg:oci_centered" = "Valence x OCI-R",
+  "FA_FH:pos_neg:oci_centered" = "FA – FH x Valence x OCI-R",
+  "stai_centered" = "STAI",
+  "FA_FH:stai_centered" = "FA – FH x STAI",
+  "pos_neg:stai_centered" = "Valence x STAI",
+  "FA_FH:pos_neg:stai_centered" = "FA – FH x Valence x STAI",
+  "pswq_centered" = "PSWQ",
+  "FA_FH:pswq_centered" = "FA – FH x PSWQ",
+  "pos_neg:pswq_centered" = "Valence x PSWQ",
+  "FA_FH:pos_neg:pswq_centered" = "FA – FH x Valence x PSWQ",
+  "session2-1" = "Session (2 – 1)",
+  "gng_response_type2-1:session2-1" = "FH – SH x Session",
+  "gng_response_type3-2:session2-1" = "FA – FH x Session",
+  "gng_response_type4-3:session2-1" = "IR – FA x Session",
+  "word_valence2-1:session2-1" = "Valence x Session",
+  "group2-1:session2-1" = "Group x Session",
+  "gng_response_type2-1:word_valence2-1:session2-1" = "FH – SH x Valence x Session",
+  "gng_response_type3-2:word_valence2-1:session2-1" = "FA – FH x Valence x Session",
+  "gng_response_type4-3:word_valence2-1:session2-1" = "IR – FA x Valence x Session",
+  "gng_response_type2-1:group2-1:session2-1" = "FH – SH x Group x Session",
+  "gng_response_type3-2:group2-1:session2-1" = "FA – FH x Group x Session",
+  "gng_response_type4-3:group2-1:session2-1" = "IR – FA x Group x Session",
+  "word_valence2-1:group2-1:session2-1" = "Valence x Group x Session",
+  "gng_response_type2-1:word_valence2-1:group2-1:session2-1" = "FH – SH x Valence x Group x Session",
+  "gng_response_type3-2:word_valence2-1:group2-1:session2-1" = "FA – FH x Valence x Group x Session",
+  "gng_response_type4-3:word_valence2-1:group2-1:session2-1" = "IR – FA x Valence x Group x Session",
+  "MFN_standardized:session2-1" = "ERP x Session",
+  "word_valence2-1:MFN_standardized:session2-1" = "Valence x ERP x Session",
+  "group2-1:MFN_standardized:session2-1" = "Group x ERP x Session",
+  "word_valence2-1:group2-1:MFN_standardized:session2-1" = "Valence x Group x ERP x Session")
+```
+<br>
+
+## Data Cleaning
+***
+
+```{r load-and-clean-data}
+
+# Load data
+load(file = "./data/Single_Trial_Data.rda")
+load(file = "./data/Trait_Data.rda")
+
+
+# Create numeric accuracy variable (1 = correct, 0 = incorrect)
+single_trial_data <- single_trial_data %>%
+  dplyr::mutate(word_accuracy_numeric = ifelse(word_accuracy == "correct", 1, 0))
+
+
+# For RT analysis, exclude missing responses, responses with wrong key, RT outliers,
+# incorrect word categorizations, and trials with ERP artifacts
+single_trial_data_rt <- single_trial_data %>%
+  dplyr::filter(
+    gng_response_type != "miss" &
+    gng_response_type != "wrong_key" &
+    word_accuracy     == "correct" &
+    (is.na(gng_rt_invalid)  | gng_rt_invalid  == FALSE) &
+    (is.na(word_rt_outlier) | word_rt_outlier == FALSE) &
+    stimulation == "sham" &
+    MFN_artifact == FALSE)
+
+
+# Calculate standardized MFN (based on trials with correct word categorization, as only
+# these  will be used in the LMMs with ERP as predictor)
+single_trial_data_rt <- single_trial_data_rt %>%
+  dplyr::group_by(participant_id) %>%
+  dplyr::mutate(MFN_standardized = scale(MFN_0_100_FCz, center = TRUE, scale = TRUE)) %>%
+  dplyr::ungroup()
+
+
+# Center trait variables within groups (will be used as predictors)
+traits <- traits %>%
+  dplyr::rename(oci = "OCI-R", pswq = "PSWQ", stai = "STAI trait") %>%  
+  dplyr::mutate(group = as.factor(ifelse(substr(participant_id, 1, 1) == "C", "HC", "OCD"))) %>%
+  dplyr::group_by(group) %>%
+  dplyr::mutate(
+    oci_centered  = scale(oci,  center = TRUE, scale = FALSE),
+    pswq_centered = scale(pswq, center = TRUE, scale = FALSE),
+    stai_centered = scale(stai, center = TRUE, scale = FALSE)) %>%
+  dplyr::ungroup()
+
+
+# Add trait variables to single trial data
+single_trial_data_rt <- single_trial_data_rt %>%
+  dplyr::left_join(., traits %>% dplyr::select(participant_id, oci_centered, pswq_centered,
+    stai_centered), by = "participant_id")
+
+
+# For accuracy analysis, exclude missing responses, responses with wrong key, RT outliers,
+# and trials with ERP artifacts
+single_trial_data_acc <- single_trial_data %>%
+  dplyr::filter(
+    gng_response_type != "miss" &
+    gng_response_type != "wrong_key" &
+    word_accuracy     != "miss" &
+    word_accuracy     != "wrong_key" &
+    (is.na(gng_rt_invalid)  | gng_rt_invalid  == FALSE) &
+    (is.na(word_rt_outlier) | word_rt_outlier == FALSE) &
+    stimulation == "sham" &
+    MFN_artifact == FALSE)
+
+
+# Calculate % of excluded trials (missing responses, responses with wrong key, RT outliers)
+excluded_trials_per_participant <- single_trial_data %>%
+  dplyr::filter(stimulation == "sham") %>%
+  dplyr::group_by(participant_id) %>%
+  dplyr::summarize(excluded = sum(
+    gng_response_type == "miss" |
+    gng_response_type == "wrong_key" |
+    word_accuracy     == "miss" |
+    word_accuracy     == "wrong_key" |
+    (!is.na(gng_rt_invalid)  & gng_rt_invalid  != FALSE) |
+    (!is.na(word_rt_outlier) & word_rt_outlier != FALSE)) / length(participant_id) * 100) %>%
+  dplyr::ungroup() %>%
+  dplyr::summarize(across(-c(participant_id), list(mean, sd)))
+
+
+# Make categorical variables factors
+single_trial_data_rt$gng_response_type  <- factor(single_trial_data_rt$gng_response_type,
+  levels = c("SH", "FH", "FA", "IR"))
+single_trial_data_rt$word_valence       <- factor(single_trial_data_rt$word_valence)
+single_trial_data_rt$participant_id     <- factor(single_trial_data_rt$participant_id)
+single_trial_data_rt$group              <- factor(single_trial_data_rt$group)
+single_trial_data_rt$session            <- factor(single_trial_data_rt$session)
+single_trial_data_acc$gng_response_type <- factor(single_trial_data_acc$gng_response_type,
+  levels = c("SH", "FH", "FA", "IR"))
+single_trial_data_acc$word_valence      <- factor(single_trial_data_acc$word_valence)
+single_trial_data_acc$participant_id    <- factor(single_trial_data_acc$participant_id)
+single_trial_data_acc$group             <- factor(single_trial_data_acc$group)
+single_trial_data_acc$session           <- factor(single_trial_data_acc$session)
+
+
+# Aggregate data per participant for plots
+data_aggregated_rt <- single_trial_data_rt %>%
+  dplyr::group_by(participant_id, group, gng_response_type, word_valence) %>%
+  dplyr::summarize(word_rt = mean(word_rt, na.rm = TRUE)) %>%
+  dplyr::ungroup()
+
+data_aggregated_acc <- single_trial_data_acc %>%
+  dplyr::group_by(participant_id, group, gng_response_type, word_valence) %>%
+  dplyr::summarize(accuracy = mean(word_accuracy_numeric, na.rm = TRUE) * 100) %>%
+  dplyr::ungroup()
+
+
+# Save aggregated data for plots
+save(data_aggregated_rt,  file = "./saved_objects_for_plots/data_aggregated_rt.Rda")
+save(data_aggregated_acc, file = "./saved_objects_for_plots/data_aggregated_acc.Rda")
+```
+
+In the analysis of RT and accuracy in the word categorization task, trials were discarded (*M* = `r round(excluded_trials_per_participant$excluded_1, digits = 2)`%, *SD* = `r round(excluded_trials_per_participant$excluded_2, digits = 2)`) if RT in the go/no-go task was below 100 ms or above 800 ms, word categorization RT deviated more than three median absolute deviations from the individual condition-specific median, no response was made, or the response was made with a key not assigned to the current task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points. In the analysis of word categorization RT, we excluded incorrect categorizations.
+<br><br><br>
+
+## Descriptive Statistics
+***
+
+This table corresponds to Table S2 in the supplemental material.  
+
+```{r descriptive-statistics-table}
+
+# Calculate descriptive statistics for RT
+descriptive_statistics_rt <- summarySEwithinO(
+  data          = single_trial_data_rt,
+  measurevar    = "word_rt",
+  withinvars    = c("gng_response_type", "word_valence"),
+  betweenvars   = "group",
+  idvar         = "participant_id",
+  conf.interval = .95) %>%
+  # Rename variable and select variables for subsequent merging
+  dplyr::rename(mean = word_rt) %>%
+  dplyr::select("group", "gng_response_type", "word_valence", "mean", "ci")
+
+
+# Calculate descriptive statistics for accuracy
+descriptive_statistics_acc <- summarySEwithinO(
+  data          = single_trial_data_acc,
+  measurevar    = "word_accuracy_numeric",
+  withinvars    = c("gng_response_type", "word_valence"),
+  betweenvars   = "group",
+  idvar         = "participant_id",
+  conf.interval = .95) %>%
+  # Multiply numeric values by 100 to obtain values in percent
+  dplyr::mutate_if(is.numeric, list(~ . * 100)) %>%
+  # Rename variable and select variables for subsequent merging
+  dplyr::rename(mean = word_accuracy_numeric) %>%
+  dplyr::select("group", "gng_response_type", "word_valence", "mean", "ci")
+
+
+# Combine measures
+descriptive_statistics <- as.data.frame(rbind(descriptive_statistics_rt, descriptive_statistics_acc))
+
+
+# Create column with format "M [CI]" for RT (round to 0 decimals)
+descriptive_statistics$M_CI <- paste0(round(descriptive_statistics$mean, 0), " [",
+  round(descriptive_statistics$mean - descriptive_statistics$ci, 0), ", ",
+  round(descriptive_statistics$mean + descriptive_statistics$ci, 0), "]")
+
+
+# Create column with format "M [CI]" for accuracy (round to 2 decimals)
+descriptive_statistics[c(17:32), ]$M_CI <- paste0(
+  format(round(descriptive_statistics[c(17:32), ]$mean, 2), nsmall = 2), " [",
+  format(round(descriptive_statistics[c(17:32), ]$mean -
+               descriptive_statistics[c(17:32), ]$ci,   2), nsmall = 2), ", ",
+  format(round(descriptive_statistics[c(17:32), ]$mean +
+               descriptive_statistics[c(17:32), ]$ci,   2), nsmall = 2), "]")
+
+
+# Split and re-merge table to display both groups next to each other
+descriptive_statistics <- split(descriptive_statistics, descriptive_statistics$group)
+descriptive_statistics_display <- cbind(
+  paste(descriptive_statistics$OCD$word_valence, "word after", descriptive_statistics$OCD$gng_response_type),
+  descriptive_statistics$OCD[, "M_CI"], descriptive_statistics$HC[, "M_CI"])
+
+
+# Display table (and rearrange rows)
+my_table_template(descriptive_statistics_display[c(8, 7, 4, 3, 2, 1, 6, 5, 16, 15, 12, 11, 10, 9, 14, 13), ],
+  caption = "Descriptive Statistics for Behavioral Performance in the Word Categorization Task",
+  col_names = c("Measure", rep("M [95% CI]", 2)),
+  header_above_config = c("", "Patients with OCD", "Healthy control participants")) %>%
+  add_footnote("\n Note. CIs are adjusted for within-participant designs using the method described 
+  by Morey (2008).", notation = "none") %>%
+  pack_rows("Response time (ms)", 1, 8) %>%
+  pack_rows("Accuracy (%)", 9, 16)
+```
+<br><br>
+
+## Analysis of Response Time
+***
+
+We performed a linear mixed model (LMM) on single-trial data. Word categorization RT was modeled using type of the preceding go/no-go response (slow hit, fast hit, false alarm, inhibited response), word valence, and group as fixed effects. 
+
+We used sliding difference contrasts for categorical fixed effects and started with the maximal random-effects structure for each model. In case of non-convergence, random effects were specified as uncorrelated. Using principal component analysis, we identified random effects explaining zero variance and removed these, as recommended by Bates, Kliegl, et al. (2015). 
+<br><br>
+
+### Main Model {.tabset}
+
+#### Determine Data Transformation
+
+RT was log-transformed to normalize residuals. This was determined using the Box–Cox procedure (Box & Cox, 1964).
+
+```{r rt-determine-transformation, fig.width = 12, fig.height = 3}
+
+# Arrange plots
+par(mfrow = c(1, 5))
+
+
+# Determine transformation by estimating optimal lambda using Box–Cox procedure
+bc_rt <- boxcox(word_rt ~ 1, data = single_trial_data_rt)
+optlambda_rt <- bc_rt$x[which.max(bc_rt$y)]
+
+
+# Density plot for raw RT
+plot(density(single_trial_data_rt$word_rt), main = "Raw RT: Density Plot")
+
+
+# Q-q plot for raw RT
+qqnorm(single_trial_data_rt$word_rt, main = "Raw RT: Q-Q Plot", pch = 1)
+
+
+# Density plot for log RT
+plot(density(single_trial_data_rt$word_rt_log), main = "Log RT: Density Plot")
+
+
+# Q-q plot for log RT
+qqnorm(single_trial_data_rt$word_rt_log, main = "Log RT: Q-Q Plot", pch = 1)
+
+
+# Reset plot layout
+par(mfrow = c(1, 1))
+```
+The optimal lambda is `r round(optlambda_rt, digits = 2)`, suggesting that log transformation is appropriate. 
+<br><br><br>
+
+#### LMM {.active}
+
+<!-- Contrast coding -->
+
+```{r lmm-rt-contrast-coding}
+
+# Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_rt$gng_response_type) <- contr.sdif(4)
+contrasts(single_trial_data_rt$word_valence)      <- contr.sdif(2)
+contrasts(single_trial_data_rt$group)             <- contr.sdif(2)
+
+
+# Add contrasts as numerical covariates via model matrix*
+model_matrix <- model.matrix(~ gng_response_type * word_valence * group, single_trial_data_rt)
+
+
+# Attach the model matrix (16 columns) to the dataframe
+single_trial_data_rt[, (ncol(single_trial_data_rt) + 1):(ncol(single_trial_data_rt) + 16)] <- model_matrix
+
+
+# Assign descriptive names to the contrasts
+names(single_trial_data_rt)[(ncol(single_trial_data_rt) - 15):ncol(single_trial_data_rt)] <- c(
+  "Grand Mean", "FH_SH", "FA_FH", "IR_FA", "pos_neg", "OCD_HC", "FH_SH:pos_neg", "FA_FH:pos_neg",
+  "IR_FA:pos_neg", "FH_SH:OCD_HC", "FA_FH:OCD_HC", "IR_FA:OCD_HC", "pos_neg:OCD_HC",
+  "FH_SH:pos_neg:OCD_HC", "FA_FH:pos_neg:OCD_HC", "IR_FA:pos_neg:OCD_HC")
+
+
+# *Note: For the random effects, we needed to enter the separate random effect terms in the models to enable
+# double-bar notation (||). This allows fitting a model that sets correlations of the random terms to zero.
+```
+
+<!-- Model specification -->
+
+```{r lmm-rt-model-specification, eval = FALSE}
+
+# Run model with maximal random-effects structure
+LMM_rt_max <- lmer(word_rt_log ~ gng_response_type * word_valence * group +
+  (1 + FH_SH + FA_FH + IR_FA + pos_neg + FH_SH:pos_neg + FA_FH:pos_neg + IR_FA:pos_neg | participant_id) +
+  (1 + FH_SH + FA_FH + IR_FA + OCD_HC + FH_SH:OCD_HC + FA_FH:OCD_HC + IR_FA:OCD_HC | word),
+  data = single_trial_data_rt,
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output
+summary(LMM_rt_max)    # Model does not converge
+isSingular(LMM_rt_max) # Singular fit
+
+
+# Run zero-correlation parameter model by using || syntax to reduce model complexity
+LMM_rt_red1 <- lmer(word_rt_log ~ gng_response_type * word_valence * group +
+  (1 + FH_SH + FA_FH + IR_FA + pos_neg + FH_SH:pos_neg + FA_FH:pos_neg + IR_FA:pos_neg || participant_id) +
+  (1 + FH_SH + FA_FH + IR_FA + OCD_HC + FH_SH:OCD_HC + FA_FH:OCD_HC + IR_FA:OCD_HC || word),
+  data = single_trial_data_rt,
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+summary(LMM_rt_red1)        # Model does converge
+isSingular(LMM_rt_red1)     # Singular fit
+summary(rePCA(LMM_rt_red1)) # For words there are 3 terms that do not explain variance (< 0.5%)
+print(VarCorr(LMM_rt_red1), comp = "Variance") # It is IR_FA, FH_SH:OCD_HC, and FA_FH:OCD_HC for words
+```
+
+<!-- Final model -->
+
+This table corresponds to Table 3 in the manuscript. 
+
+```{r lmm-rt-final-model, cache = knitr_cache_enabled}
+
+# Run final model without random terms explaining zero variance (use log(word_rt) not word_rt_log for plotting)
+LMM_rt_final <- lmer(log(word_rt) ~ gng_response_type * word_valence * group + 
+  (1 + FH_SH + FA_FH + IR_FA + pos_neg + FH_SH:pos_neg + FA_FH:pos_neg + IR_FA:pos_neg || participant_id) +
+  (1 + FH_SH + FA_FH + OCD_HC + IR_FA:OCD_HC || word),
+  data = single_trial_data_rt,
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_final)        # Model does converge
+# isSingular(LMM_rt_final)     # No singular fit
+# summary(rePCA(LMM_rt_final)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(LMM_rt_final,
+  dv.labels = "RT", pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "b", string.stat = "t", string.ci = "95 % CI", p.val = "satterthwaite",
+  wrap.labels = 80, title = "LMM Results for Word Categorization RT")
+
+
+# Display random effects
+print("Random effects:")
+print(VarCorr(LMM_rt_final), digits = 1, comp = "Std.Dev.")
+
+
+# Save model output for plot
+saveRDS(LMM_rt_final, file = "./saved_objects_for_plots/LMM_rt_final.rds")
+```
+<br>
+RT analysis yielded a main effect of response type. Participants across groups categorized words slower after false alarms than after fast hits, indicating post-error slowing. Moreover, word categorization after fast hits was faster than after slow hits. The analysis further revealed significant two-way interactions between group and word valence and between each response type contrast and word valence. Crucially, the significant two-way interactions were qualified by a statistical trend for a three-way interaction between the response type contrast false alarms compared to fast hits, word valence, and group. 
+<br><br><br>
+
+#### Pairwise Comparisons
+
+Significant and hypothesis-relevant interactions were followed up with post hoc comparisons using false discovery rate adjustment. <br><br>
+These tables correspond to Table 4 in the manuscript. 
+
+```{r lmm-rt-pairwise-comparisons}
+
+# Set emmeans options
+emm_options(lmer.df = "Satterthwaite", lmerTest.limit = Inf)
+
+
+#### 1) Get contrasts for effect of word valence within each response type
+emms1 <- emmeans(LMM_rt_final, ~ word_valence | gng_response_type)
+contrast_1 <- contrast(emms1, interaction = "revpairwise")
+
+
+# Get CIs of estimates
+contrast_1_ci <- confint(contrast_1, adjust = "none", level = 0.95)[c("lower.CL", "upper.CL")]
+
+
+# Merge contrast and CI in one table
+follow_up_1 <- cbind(contrast_1, contrast_1_ci)
+
+
+# Add adjusted p values
+follow_up_1$p.value_adj_fdr <- p.adjust(follow_up_1$p.value, method = "fdr")
+
+
+# Display table
+my_table_template(follow_up_1[, c(2, 1, 3, 8, 9, 6, 7, 10)],
+  caption = "Follow-up effect of valence nested within response type",
+  digits = c(0, 0, 2, 2, 2, 2, 3, 3))
+
+
+#### 2) Get contrasts for resolving interaction group * valence nested within response type
+emms2 <- emmeans(LMM_rt_final, ~ word_valence * group | gng_response_type)
+contrast_2 <- contrast(emms2, interaction = "revpairwise")
+
+
+# Get CIs of estimates
+contrast_2_ci <- confint(contrast_2, adjust = "none", level = 0.95)[c("lower.CL", "upper.CL")]
+
+
+# Put contrast and CI in one table (only for FH and FA)
+follow_up_2 <- cbind(contrast_2[c(2, 3), ], contrast_2_ci[c(2, 3), ])
+
+
+# Get adjusted p values
+follow_up_2$p.value_adj_fdr <- p.adjust(follow_up_2$p.value, method = "fdr")
+
+
+# Display table
+my_table_template(follow_up_2[, c(3, 1, 2, 4, 9, 10, 7, 8, 11)],
+  caption = "Follow-up interaction group * valence nested within response type",
+  digits = c(0, 0, 0, 2, 2, 2, 2, 3, 3))
+
+
+#### 3) Get contrasts for resolving effect of valence nested within group and response type
+emms3 <- emmeans(LMM_rt_final, ~ word_valence | gng_response_type * group)
+contrast_3 <- contrast(emms3, interaction = "revpairwise")
+
+
+# Get CIs of estimates
+contrast_3_ci <- confint(contrast_3, adjust = "none", level = 0.95)[c("lower.CL", "upper.CL")]
+
+
+# Put contrast and CI in one table (only for FH and FA)
+follow_up_3 <- cbind(contrast_3[c(2, 3, 6, 7), ], contrast_3_ci[c(2, 3, 6, 7), ])
+
+
+# Get adjusted p values 
+follow_up_3$p.value_adj_fdr <- p.adjust(follow_up_3$p.value, method = "fdr")
+
+
+# Display table
+my_table_template(follow_up_3[c(1, 3, 2, 4), c(2, 3, 1, 4, 9, 10, 7, 8, 11)],
+  caption = "Follow-up effect of valence nested within group and response type",
+  digits = c(0, 0, 0, 2, 2, 2, 2, 3, 3))
+```
+<br>
+Post hoc comparisons indicated that after false alarms, participants across groups categorized negative words faster than positive words. After fast and slow hits, participants categorized positive words faster than negative words. <br><br>
+After false alarms, both groups categorized negative words faster than positive words, whereas after fast hits, they categorized positive words faster than negative words. Comparisons conducted to investigate hypothesized group differences yielded that this response facilitation to negative relative to positive words after false alarms was significantly smaller in patients with OCD than in the control group, indicating a reduced priming effect. 
+<br><br><br>
+
+### ERPs as Predictors {.tabset}
+
+For testing brain–behavior relations, the single-trial within-participant *z*-standardized ERP was added as predictor. ERN amplitude and CRN amplitude were entered as *z*-standardized continuous predictors in the models including only false alarm and fast hit trials, respectively. 
+<br><br>
+
+#### ERN 
+
+<!-- Model specification -->
+
+```{r lmm-rt-ern-model-specification, eval = FALSE}
+
+# Run model with maximal random-effects structure
+LMM_rt_ern_max <- lmer(word_rt_log ~ word_valence * group * MFN_standardized +
+  (1 + pos_neg + MFN_standardized + pos_neg:MFN_standardized | participant_id) +
+  (1 + OCD_HC + MFN_standardized + OCD_HC:MFN_standardized | word),
+  data = single_trial_data_rt[single_trial_data_rt$gng_response_type == "FA", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output
+summary(LMM_rt_ern_max)    # Model does converge
+isSingular(LMM_rt_ern_max) # Singular fit
+
+
+# Run zero-correlation parameter model by using || syntax to reduce model complexity
+LMM_rt_ern_red1 <- lmer(word_rt_log ~ word_valence * group * MFN_standardized +
+  (1 + pos_neg + MFN_standardized + pos_neg:MFN_standardized || participant_id) +
+  (1 + OCD_HC + MFN_standardized + OCD_HC:MFN_standardized || word),
+  data = single_trial_data_rt[single_trial_data_rt$gng_response_type == "FA", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+summary(LMM_rt_ern_red1)        # Model does converge
+isSingular(LMM_rt_ern_red1)     # Singular fit
+summary(rePCA(LMM_rt_ern_red1)) # For words there is 1 term, for participants 2 terms that do not explain variance (< 0.5%)
+print(VarCorr(LMM_rt_ern_red1), comp = "Variance") # It is OCD_HC:MFN for words; MFN and pos_neg:MFN for participants
+```
+
+<!-- Final model -->
+
+This table corresponds to Table 6 in the manuscript. 
+
+```{r lmm-rt-ern-final-model}
+
+# Run final model without random terms explaining zero variance
+LMM_rt_ern_final <- lmer(word_rt_log ~ word_valence * group * MFN_standardized +
+  (1 + pos_neg || participant_id) +
+  (1 + OCD_HC + MFN_standardized || word),
+  data = single_trial_data_rt[single_trial_data_rt$gng_response_type == "FA", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_ern_final)        # Model does converge
+# isSingular(LMM_rt_ern_final)     # No singular fit
+# summary(rePCA(LMM_rt_ern_final)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(LMM_rt_ern_final,
+  dv.labels = "RT", pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "b", string.stat = "t", string.ci = "95 % CI", p.val = "satterthwaite", 
+  wrap.labels = 80, title = "LMM Results for Word Categorization RT With ERN as Predictor")
+
+
+# Display random effects
+print("Random effects:")
+print(VarCorr(LMM_rt_ern_final), digits = 1, comp = "Std.Dev.")
+```
+<br>
+Analysis of word categorization RT in false alarm trials with ERN as predictor yielded a main effect of word valence, again revealing the priming effect after false alarms, with negative words being categorized faster than positive words. Contrary to our prediction, we found no significant interaction between ERN and word valence. Hence, there was no evidence for a relation between error evaluation (indexed by the RT priming effect) and ERN. Further, there was no difference in this relation between groups. 
+<br><br><br>
+
+#### CRN 
+
+<!-- Model specification -->
+
+```{r lmm-rt-crn-model-specification, eval = FALSE}
+
+# Run model with maximal random-effects structure
+LMM_rt_crn_max <- lmer(word_rt_log ~ word_valence * group * MFN_standardized +
+  (1 + pos_neg + MFN_standardized + pos_neg:MFN_standardized | participant_id) +
+  (1 + OCD_HC + MFN_standardized + OCD_HC:MFN_standardized | word),
+  data = single_trial_data_rt[single_trial_data_rt$gng_response_type == "FH", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output
+summary(LMM_rt_crn_max)    # Model does converge
+isSingular(LMM_rt_crn_max) # Singular fit
+
+
+# Run zero-correlation parameter model by using || syntax to reduce model complexity
+LMM_rt_crn_red1 <- lmer(word_rt_log ~ word_valence * group * MFN_standardized +
+  (1 + pos_neg + MFN_standardized + pos_neg:MFN_standardized || participant_id) +
+  (1 + OCD_HC + MFN_standardized + OCD_HC:MFN_standardized || word),
+  data = single_trial_data_rt[single_trial_data_rt$gng_response_type == "FH", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+summary(LMM_rt_crn_red1)        # Model does converge
+isSingular(LMM_rt_crn_red1)     # Singular fit
+summary(rePCA(LMM_rt_crn_red1)) # For words and participants there are each 2 terms that do not explain variance (< 0.5%)
+print(VarCorr(LMM_rt_crn_red1), comp = "Variance") # It is OCD_HC and OCD_HC:MFN for words and MFN and pos_neg:MFN for participants
+```
+
+<!-- Final model -->
+
+This table corresponds to Table 6 in the manuscript. 
+
+```{r lmm-rt-crn-final-model}
+
+# Run final model without random terms explaining zero variance
+LMM_rt_crn_final <- lmer(word_rt_log ~ word_valence * group * MFN_standardized +
+  (1 + pos_neg || participant_id) +
+  (1 + MFN_standardized || word),
+  data = single_trial_data_rt[single_trial_data_rt$gng_response_type == "FH", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_crn_final)        # Model does converge
+# isSingular(LMM_rt_crn_final)     # No singular fit
+# summary(rePCA(LMM_rt_crn_final)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(LMM_rt_crn_final,
+  dv.labels = "RT", pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "b", string.stat = "t", string.ci = "95 % CI", p.val = "satterthwaite", 
+  wrap.labels = 80, title = "LMM Results for Word Categorization RT With CRN as Predictor")
+
+
+# Display random effects
+print("Random effects:")
+print(VarCorr(LMM_rt_crn_final), digits = 1, comp = "Std.Dev.")
+```
+<br>
+Analysis of word categorization RT in fast hit trials including CRN as predictor indicated a main effect of word valence. This again demonstrated the priming effect after fast hits, with positive words being categorized faster than negative words. Moreover, a main effect for CRN was found, with faster RT being related to smaller CRN amplitude. There were no significant interactions between CRN, word valence, and group. Thus, we found no evidence for a relation between action evaluation and CRN and no group difference in this relation. 
+<br><br><br>
+
+### Traits as Predictors
+
+To explore effects of trait anxiety, worry, and OCD symptom severity on action evaluation, we included these OCD-related characteristics as predictors. Models were calculated separately for each group since otherwise scores on trait measures are confounded by group differences. Trait measures were group-mean centered. <br><br>
+This table corresponds to Table S5 in the supplemental material. 
+
+```{r lmm-rt-traits, cache = knitr_cache_enabled}
+
+# OCI in HC: Run reduced final model
+LMM_rt_oci_hc <- lmer(log(word_rt) ~ FA_FH * pos_neg * oci_centered +
+  (1 + FA_FH + pos_neg + FA_FH:pos_neg || participant_id) +
+  (1 + FA_FH || word),
+  data = single_trial_data_rt[(single_trial_data_rt$gng_response_type == "FA" |
+                               single_trial_data_rt$gng_response_type == "FH") &
+                               single_trial_data_rt$group == "HC", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_oci_hc)        # Model does converge
+# isSingular(LMM_rt_oci_hc)     # No singular fit
+# summary(rePCA(LMM_rt_oci_hc)) # All terms explain variance
+
+
+# OCI in OCD: Run reduced final model
+LMM_rt_oci_ocd <- lmer(log(word_rt) ~ FA_FH * pos_neg * oci_centered +
+  (1 + FA_FH + pos_neg + FA_FH:pos_neg || participant_id) +
+  (1 + FA_FH || word),
+  data = single_trial_data_rt[(single_trial_data_rt$gng_response_type == "FA" |
+                               single_trial_data_rt$gng_response_type == "FH") &
+                               single_trial_data_rt$group == "OCD", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_oci_ocd)        # Model does converge
+# isSingular(LMM_rt_oci_ocd)     # No singular fit
+# summary(rePCA(LMM_rt_oci_ocd)) # All terms explain variance
+
+
+# STAI in HC: Run reduced final model
+LMM_rt_stai_hc <- lmer(log(word_rt) ~ FA_FH * pos_neg * stai_centered +
+  (1 + FA_FH + pos_neg + FA_FH:pos_neg || participant_id) +
+  (1 + FA_FH || word),
+  data = single_trial_data_rt[(single_trial_data_rt$gng_response_type == "FA" |
+                               single_trial_data_rt$gng_response_type == "FH") &
+                               single_trial_data_rt$group == "HC", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_stai_hc)        # Model does converge
+# isSingular(LMM_rt_stai_hc)     # No singular fit
+# summary(rePCA(LMM_rt_stai_hc)) # All terms explain variance
+
+
+# STAI in OCD: Run reduced final model
+LMM_rt_stai_ocd <- lmer(log(word_rt) ~ FA_FH * pos_neg * stai_centered +
+  (1 + FA_FH + pos_neg + FA_FH:pos_neg || participant_id) +
+  (1 + FA_FH || word),
+  data = single_trial_data_rt[(single_trial_data_rt$gng_response_type == "FA" |
+                               single_trial_data_rt$gng_response_type == "FH") &
+                               single_trial_data_rt$group == "OCD", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_stai_ocd)        # Model does converge
+# isSingular(LMM_rt_stai_ocd)     # No singular fit
+# summary(rePCA(LMM_rt_stai_ocd)) # All terms explain variance
+
+
+# PSWQ in HC: Run reduced final model
+LMM_rt_pswq_hc <- lmer(log(word_rt) ~ FA_FH * pos_neg * pswq_centered +
+  (1 + FA_FH + pos_neg + FA_FH:pos_neg || participant_id) +
+  (1 + FA_FH || word),
+  data = single_trial_data_rt[(single_trial_data_rt$gng_response_type == "FA" |
+                               single_trial_data_rt$gng_response_type == "FH") &
+                               single_trial_data_rt$group == "HC", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_pswq_hc)        # Model does converge
+# isSingular(LMM_rt_pswq_hc)     # No singular fit
+# summary(rePCA(LMM_rt_pswq_hc)) # All terms explain variance
+
+
+# PSWQ in OCD: Run reduced final model
+LMM_rt_pswq_ocd <- lmer(log(word_rt) ~ FA_FH * pos_neg * pswq_centered +
+  (1 + FA_FH + pos_neg + FA_FH:pos_neg || participant_id) +
+  (1 + FA_FH || word),
+  data = single_trial_data_rt[(single_trial_data_rt$gng_response_type == "FA" |
+                               single_trial_data_rt$gng_response_type == "FH") &
+                               single_trial_data_rt$group == "OCD", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_pswq_ocd)        # Model does converge
+# isSingular(LMM_rt_pswq_ocd)     # No singular fit
+# summary(rePCA(LMM_rt_pswq_ocd)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(LMM_rt_oci_ocd, LMM_rt_oci_hc,
+  dv.labels = c("RT: OCI-R as predictor in patients with OCD", "RT: OCI-R as predictor in control participants"),
+  pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "b", string.stat = "t", string.ci = "95 % CI", p.val = "satterthwaite", wrap.labels = 80,
+  title = "LMM Results for Word Categorization RT With OCD Symptom Severity (OCI-R) as Predictor")
+
+
+tab_model(LMM_rt_stai_ocd, LMM_rt_stai_hc,
+  dv.labels = c("RT: STAI as predictor in patients with OCD", "RT: STAI as predictor in control participants"),
+  pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "b", string.stat = "t", string.ci = "95 % CI", p.val = "satterthwaite", wrap.labels = 80,
+  title = "LMM Results for Word Categorization RT With Trait Anxiety (STAI) as Predictor")
+
+
+tab_model(LMM_rt_pswq_ocd, LMM_rt_pswq_hc,
+  dv.labels = c("RT: PSWQ as predictor in patients with OCD", "RT: PSWQ as predictor in control participants"),
+  pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "b", string.stat = "t", string.ci = "95 % CI", p.val = "satterthwaite", wrap.labels = 80,
+  title = "LMM Results for Word Categorization RT With Trait Worry (PSWQ) as Predictor")
+
+
+# Save model output for plot
+saveRDS(LMM_rt_oci_ocd,  file = "./saved_objects_for_plots/LMM_rt_oci_ocd.rds")
+saveRDS(LMM_rt_stai_ocd, file = "./saved_objects_for_plots/LMM_rt_stai_ocd.rds")
+
+
+# Note: For all models with traits as predictors, the reduced models were run
+# (random effects were specified as uncorrelated due to non-convergence of the
+# models with the maximal random-effects structure; random effects explaining
+# zero variance [all random slopes of traits for words] were removed)
+```
+<br>
+Exploratory analyses on effects of trait anxiety, worry, and OCD symptom severity on action evaluation within both groups revealed an interaction between OCD symptom severity, word valence, and the response type contrast false alarms compared to fast hits in the patient group. Thus, higher symptom severity in patients was associated with a smaller overall priming effect after fast hits and false alarms. A trend for a similar relation was observed for trait anxiety. There was no significant effect of trait worry.
+<br><br><br>
+
+### Correlations
+
+The lower table corresponds to Table S6 in the supplemental material.  
+
+```{r correlations}
+
+# Calculate overall score for ERPs and priming
+df_corr <- single_trial_data_rt %>%
+  # Calculate mean per participant
+  dplyr::group_by(participant_id) %>%
+  dplyr::summarize(
+    ERN              = mean(MFN_0_100_FCz[gng_response_type == "FA"], na.rm = TRUE),
+    CRN              = mean(MFN_0_100_FCz[gng_response_type == "FH"], na.rm = TRUE),
+    pos_after_FA     = mean(word_rt[gng_response_type == "FA" & word_valence == "pos"], na.rm = TRUE),
+    neg_after_FA     = mean(word_rt[gng_response_type == "FA" & word_valence == "neg"], na.rm = TRUE),
+    pos_after_FH     = mean(word_rt[gng_response_type == "FH" & word_valence == "pos"], na.rm = TRUE),
+    neg_after_FH     = mean(word_rt[gng_response_type == "FH" & word_valence == "neg"], na.rm = TRUE),
+    priming_after_FA = pos_after_FA - neg_after_FA,
+    priming_after_FH = neg_after_FH - pos_after_FH,
+    priming          = (pos_after_FA + neg_after_FH) - (neg_after_FA + pos_after_FH)) %>%
+  dplyr::ungroup() %>%
+  # Merge trait variables
+  dplyr::left_join(., traits, by = "participant_id")
+
+
+# Calculate correlations
+corr_priming_FA_ERN   <- cor.test(df_corr$priming_after_FA, df_corr$ERN)
+corr_priming_FH_CRN   <- cor.test(df_corr$priming_after_FH, df_corr$CRN)
+corr_priming_oci_ocd  <- cor.test(df_corr[df_corr$group == "OCD",]$priming, df_corr[df_corr$group == "OCD",]$oci)
+corr_priming_oci_hc   <- cor.test(df_corr[df_corr$group == "HC", ]$priming, df_corr[df_corr$group == "HC", ]$oci)
+corr_priming_stai_ocd <- cor.test(df_corr[df_corr$group == "OCD",]$priming, df_corr[df_corr$group == "OCD",]$stai)
+corr_priming_stai_hc  <- cor.test(df_corr[df_corr$group == "HC", ]$priming, df_corr[df_corr$group == "HC", ]$stai)
+corr_priming_pswq_ocd <- cor.test(df_corr[df_corr$group == "OCD",]$priming, df_corr[df_corr$group == "OCD",]$pswq)
+corr_priming_pswq_hc  <- cor.test(df_corr[df_corr$group == "HC", ]$priming, df_corr[df_corr$group == "HC", ]$pswq)
+
+
+# Write correlations priming & ERPs in data frame
+corr_erp <- rbind(cbind(corr_priming_FA_ERN$estimate,    corr_priming_FA_ERN$conf.int[1], 
+                        corr_priming_FA_ERN$conf.int[2], corr_priming_FA_ERN$p.value),
+                  cbind(corr_priming_FH_CRN$estimate,    corr_priming_FH_CRN$conf.int[1], 
+                        corr_priming_FH_CRN$conf.int[2], corr_priming_FH_CRN$p.value))
+
+
+# Write correlations priming & traits in data frame
+corr_trait <- rbind(cbind(corr_priming_oci_ocd$estimate,     corr_priming_oci_ocd$conf.int[1], 
+                          corr_priming_oci_ocd$conf.int[2],  corr_priming_oci_ocd$p.value,
+                          corr_priming_oci_hc$estimate,      corr_priming_oci_hc$conf.int[1], 
+                          corr_priming_oci_hc$conf.int[2],   corr_priming_oci_hc$p.value),
+                    cbind(corr_priming_stai_ocd$estimate,    corr_priming_stai_ocd$conf.int[1], 
+                          corr_priming_stai_ocd$conf.int[2], corr_priming_stai_ocd$p.value,
+                          corr_priming_stai_hc$estimate,     corr_priming_stai_hc$conf.int[1], 
+                          corr_priming_stai_hc$conf.int[2],  corr_priming_stai_hc$p.value),
+                    cbind(corr_priming_pswq_ocd$estimate,    corr_priming_pswq_ocd$conf.int[1], 
+                          corr_priming_pswq_ocd$conf.int[2], corr_priming_pswq_ocd$p.value,
+                          corr_priming_pswq_hc$estimate,     corr_priming_pswq_hc$conf.int[1], 
+                          corr_priming_pswq_hc$conf.int[2],  corr_priming_pswq_hc$p.value))
+
+
+# Dispay correlations priming & ERPs
+my_table_template(data.frame(c("ERN & priming after false alarms", "CRN & priming after fast hits"), corr_erp),
+  col_names = c("", "r(54)", "LL", "UL", "p"),
+  digits = c(0, 2, 2, 2, 3),
+  header_above_config = c(" " = 2, "95% CI" = 2, " "),
+  caption = "Correlations Between ERPs and the Priming Effect")
+
+
+# Dispay correlations priming & traits
+my_table_template(data.frame(c("Obsessive-compulsive symptoms (OCI-R)", "Trait anxiety (STAI trait)",
+  "Trait worry (PSWQ)"), corr_trait),
+  col_names = c("Characteristic", rep(c("r(26)", "LL", "UL", "p"), 2)),
+  digits = c(0, 2, 2, 2, 3, 2, 2, 2, 3),
+  header_above_config = c(" " = 2, "95% CI" = 2, " " = 2, "95% CI" = 2, " "),
+  caption = "Correlations Between OCD-Related Characteristics and the Overall Priming Effect After False 
+  Alarms and Fast Hits") %>%
+  add_header_above(c("", "Patients with OCD" = 4, "Healthy control participants" = 4)) %>%
+  add_footnote("\n Note. Pearson correlation coefficients are reported.", notation = "none")
+
+
+# Save correlation dataframe for scatterplots
+save(df_corr, file = "./saved_objects_for_plots/df_corr.Rda")
+```
+<br>
+There was no correlation between the priming effect after false alarms and ERN across participants. Also no correlation was observed between the priming effect after fast hits and CRN across participants.
+
+The correlation analysis revealed a negative correlation between the overall priming effect and symptom severity in patients. A trend for a similar relation was observed for trait anxiety. 
+<br><br><br>
+
+## Analysis of Accuracy {.tabset}
+***
+
+We performed a binomial generalized linear mixed model (GLMM) on single-trial data. Word categorization accuracy was modeled using type of the preceding go/no-go response (slow hit, fast hit, false alarm, inhibited response), word valence, and group as fixed effects. 
+
+We used sliding difference contrasts for categorical fixed effects and started with the maximal random-effects structure for each model. In case of non-convergence, random effects were specified as uncorrelated. Using principal component analysis, we identified random effects explaining zero variance and removed these, as recommended by Bates, Kliegl, et al. (2015). 
+<br><br>
+
+### GLMM
+
+<!-- Contrast coding -->
+
+```{r glmm-accuracy-contrast-coding}
+
+# Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_acc$gng_response_type) <- contr.sdif(4)
+contrasts(single_trial_data_acc$word_valence)      <- contr.sdif(2)
+contrasts(single_trial_data_acc$group)             <- contr.sdif(2)
+
+
+# Add contrasts as numerical covariates via model matrix*
+model_matrix_2 <- model.matrix(~ gng_response_type * word_valence * group, single_trial_data_acc)
+
+
+# Attach the model matrix (16 columns) to the dataframe
+single_trial_data_acc[, (ncol(single_trial_data_acc) + 1):(ncol(single_trial_data_acc) + 16)] <- model_matrix_2
+
+
+# Assign descriptive names to the contrasts
+names(single_trial_data_acc)[(ncol(single_trial_data_acc) - 15):ncol(single_trial_data_acc)] <- c(
+  "Grand Mean", "FH_SH", "FA_FH", "IR_FA", "pos_neg", "OCD_HC", "FH_SH:pos_neg", "FA_FH:pos_neg",
+  "IR_FA:pos_neg", "FH_SH:OCD_HC", "FA_FH:OCD_HC", "IR_FA:OCD_HC", "pos_neg:OCD_HC",
+  "FH_SH:pos_neg:OCD_HC", "FA_FH:pos_neg:OCD_HC", "IR_FA:pos_neg:OCD_HC")
+
+
+# *Note: For the random effects, we needed to enter the separate random effect terms in the models to enable
+# double-bar notation (||). This allows fitting a model that sets correlations of the random terms to zero.
+```
+
+<!-- Model specification -->
+
+```{r glmm-accuracy-model-specification, eval = FALSE}
+
+# Run model with maximal random-effects structure
+GLMM_acc_max <- glmer(word_accuracy_numeric ~ gng_response_type * word_valence * group +
+  (1 + FH_SH + FA_FH + IR_FA + pos_neg + FH_SH:pos_neg + FA_FH:pos_neg + IR_FA:pos_neg | participant_id) +
+  (1 + FH_SH + FA_FH + IR_FA + OCD_HC + FH_SH:OCD_HC + FA_FH:OCD_HC + IR_FA:OCD_HC | word),
+  data = single_trial_data_acc,
+  family = binomial,
+  control = glmerControl(optimizer = "bobyqa"))
+
+
+# Check model output
+summary(GLMM_acc_max)    # Model does not converge
+isSingular(GLMM_acc_max) # Singular fit
+
+
+# Run zero-correlation parameter model by using || syntax to reduce model complexity
+GLMM_acc_red1 <- glmer(word_accuracy_numeric ~ gng_response_type * word_valence * group +
+  (1 + FH_SH + FA_FH + IR_FA + pos_neg + FH_SH:pos_neg + FA_FH:pos_neg + IR_FA:pos_neg || participant_id) +
+  (1 + FH_SH + FA_FH + IR_FA + OCD_HC + FH_SH:OCD_HC + FA_FH:OCD_HC + IR_FA:OCD_HC || word),
+  data = single_trial_data_acc,
+  family = binomial,
+  control = glmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+summary(GLMM_acc_red1)        # Model does converge
+isSingular(GLMM_acc_red1)     # Singular fit
+summary(rePCA(GLMM_acc_red1)) # For words there is 1 term, for participants 2 terms that do not explain variance (< 0.5%)
+print(VarCorr(GLMM_acc_red1), comp = "Variance") # It is FH_SH:OCD_HC for words and FH_SH, FH_SH:pos_neg for participants
+```
+
+<!-- Final model -->
+
+This table corresponds to Table 3 in the manuscript.
+
+```{r glmm-accuracy-final-model, cache = knitr_cache_enabled}
+
+# Run final model without random terms explaining zero variance
+GLMM_acc_final <- glmer(word_accuracy_numeric ~ gng_response_type * word_valence * group +
+  (1 + FA_FH + IR_FA + pos_neg + FA_FH:pos_neg + IR_FA:pos_neg || participant_id) +
+  (1 + FH_SH + FA_FH + IR_FA + OCD_HC + FA_FH:OCD_HC + IR_FA:OCD_HC || word),
+  data = single_trial_data_acc,
+  family = binomial,
+  control = glmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(GLMM_acc_final)        # Model does converge
+# isSingular(GLMM_acc_final)     # No singular fit
+# summary(rePCA(GLMM_acc_final)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(GLMM_acc_final,
+  dv.labels = "Accuracy", pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "Odds ratio", string.stat = "z", string.ci = "95 % CI", wrap.labels = 80,
+  title = "GLMM Results for Word Categorization Accuracy")
+
+
+# Display random effects
+print("Random effects:")
+print(VarCorr(GLMM_acc_final), digits = 1, comp = "Std.Dev.")
+
+
+# Save model output for plot
+saveRDS(GLMM_acc_final, file = "./saved_objects_for_plots/GLMM_acc_final.rds")
+```
+<br>
+Analysis of categorization accuracy revealed main effects of response type and word valence, which were qualified by significant interactions between response type and word valence and between group and word valence.
+<br><br><br>
+
+### Pairwise Comparisons
+
+Significant and hypothesis-relevant interactions were followed up with post hoc comparisons using false discovery rate adjustment. <br><br>
+These tables correspond to Table 4 in the manuscript.  
+
+```{r glmm-accuracy-pairwise-comparisons}
+
+#### 1) Get contrasts for effect of word valence within each response type
+emms1 <- emmeans(GLMM_acc_final, ~ word_valence | gng_response_type)
+contrast_1 <- contrast(emms1, interaction = "revpairwise")
+
+
+# Get CIs of estimates
+contrast_1_ci <- confint(contrast_1, adjust = "none", level = 0.95)[c("asymp.LCL", "asymp.UCL")]
+
+
+# Merge contrast and CI in one table
+follow_up_1 <- cbind(contrast_1, contrast_1_ci)
+
+
+# Add adjusted p values
+follow_up_1$p.value_adj_fdr <- p.adjust(follow_up_1$p.value, method = "fdr")
+
+
+# Here, estimates and CI are log odds ratios, not like in the other tables odds ratios.
+# To get the odds ratios from the log odds ratios, we have to transform the values by using the exp() function
+follow_up_1$estimate  <- exp(follow_up_1$estimate)
+follow_up_1$asymp.LCL <- exp(follow_up_1$asymp.LCL)
+follow_up_1$asymp.UCL <- exp(follow_up_1$asymp.UCL)
+
+
+# Display table
+my_table_template(follow_up_1[, c(2, 1, 3, 8, 9, 6, 7, 10)],
+  caption = "Follow-up effect of valence nested within response type",
+  digits = c(0, 0, 2, 2, 2, 2, 3, 3))
+
+
+#### 2) Get contrasts for resolving interaction group * valence nested within response type
+emms2 <- emmeans(GLMM_acc_final, ~ word_valence * group | gng_response_type)
+contrast_2 <- contrast(emms2, interaction = "revpairwise")
+
+
+# Get CIs of estimates
+contrast_2_ci <- confint(contrast_2, adjust = "none", level = 0.95)[c("asymp.LCL", "asymp.UCL")]
+
+
+# Put contrast and CI in one table (only for FH and FA)
+follow_up_2 <- cbind(contrast_2[c(2, 3), ], contrast_2_ci[c(2, 3), ])
+
+
+# Get adjusted p values
+follow_up_2$p.value_adj_fdr <- p.adjust(follow_up_2$p.value, method = "fdr")
+
+
+# Here, estimates and CI are log odds ratios, not like in the other tables odds ratios.
+# To get the odds ratios from the log odds ratios, we have to transform the values by using the exp() function
+follow_up_2$estimate  <- exp(follow_up_2$estimate)
+follow_up_2$asymp.LCL <- exp(follow_up_2$asymp.LCL)
+follow_up_2$asymp.UCL <- exp(follow_up_2$asymp.UCL)
+
+
+# Display table
+my_table_template(follow_up_2[, c(3, 1, 2, 4, 9, 10, 7, 8, 11)],
+  caption = "Follow-up interaction group * valence nested within response type",
+  digits = c(0, 0, 0, 2, 2, 2, 2, 3, 3))
+
+
+#### 3) Get contrasts for resolving effect of valence nested within group and response type
+emms3 <- emmeans(GLMM_acc_final, ~ word_valence | gng_response_type * group)
+contrast_3 <- contrast(emms3, interaction = "revpairwise")
+
+
+# Get CIs of estimates
+contrast_3_ci <- confint(contrast_3, adjust = "none", level = 0.95)[c("asymp.LCL", "asymp.UCL")]
+
+
+# Put contrast and CI in one table (only for FH and FA)
+follow_up_3 <- cbind(contrast_3[c(2, 3, 6, 7), ], contrast_3_ci[c(2, 3, 6, 7), ])
+
+
+# Get adjusted p values
+follow_up_3$p.value_adj_fdr <- p.adjust(follow_up_3$p.value, method = "fdr")
+
+
+# Here, estimates and CI are log odds ratios, not like in the other tables odds ratios.
+# To get the odds ratios from the log odds ratios, we have to transform the values by using the exp() function
+follow_up_3$estimate  <- exp(follow_up_3$estimate)
+follow_up_3$asymp.LCL <- exp(follow_up_3$asymp.LCL)
+follow_up_3$asymp.UCL <- exp(follow_up_3$asymp.UCL)
+
+
+# Display table
+my_table_template(follow_up_3[c(1, 3, 2, 4), c(2, 3, 1, 4, 9, 10, 7, 8, 11)],
+  caption = "Follow-up effect of valence nested within group and response type",
+  digits = c(0, 0, 0, 2, 2, 2, 2, 3, 3))
+```
+<br>
+Post hoc comparisons indicated that after false alarms, participants across and within groups categorized negative words more accurately than positive words. This response facilitation to negative relative to positive words after false alarms was smaller in patients with OCD compared to control participants at trend level. 
+<br><br><br>
+
+## Control Analysis {.tabset}
+***
+
+The study was part of a project comprising one session with active and one with placebo transcranial direct current stimulation in counterbalanced order, which preceded task performance. In the present study, data from the placebo session were analyzed. Thus, measurements of participants who completed the task for the first or second time were included. Importantly, control analyses indicated that task familiarity (i.e., session number) did not impact hypothesis-relevant results.
+<br><br>
+
+### RT: Session as Cov. 
+
+This table corresponds to Table S9 in the supplemental material. 
+
+```{r lmm-rt-session, cache = knitr_cache_enabled}
+
+# Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_rt$session) <- contr.sdif(2)
+
+
+# Run reduced final model (we get same model when starting with all random effects & correlation parameters)
+LMM_rt_session <- lmer(word_rt_log ~ gng_response_type * word_valence * group * session +
+  (1 + FH_SH + FA_FH + IR_FA + pos_neg + FH_SH:pos_neg + FA_FH:pos_neg + IR_FA:pos_neg || participant_id) +
+  (1 + FH_SH + FA_FH + OCD_HC + IR_FA:OCD_HC || word),
+  data = single_trial_data_rt,
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_session)        # Model does converge
+# isSingular(LMM_rt_session)     # No singular fit
+# summary(rePCA(LMM_rt_session)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(LMM_rt_session,
+  dv.labels = "RT", pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "b", string.stat = "t", string.ci = "95 % CI", p.val = "satterthwaite", wrap.labels = 80,
+  title = "LMM Results for Word Categorization RT With Session Number as Covariate")
+```
+<br><br><br>
+
+### RT with ERN & CRN: Session as Cov. 
+
+This table corresponds to Table S10 in the supplemental material. 
+
+``` {r lmm-rt-ern-crn-session}
+
+# Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_rt$session) <- contr.sdif(2)
+
+
+# Run reduced final model on ERN (we get same model when starting with all random effects & correlation parameters)
+LMM_rt_ern_session <- lmer(word_rt_log ~ word_valence * group * MFN_standardized * session +
+  (1 + pos_neg || participant_id) +
+  (1 + OCD_HC + MFN_standardized || word),
+  data = single_trial_data_rt[single_trial_data_rt$gng_response_type == "FA", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_ern_session)        # Model does converge
+# isSingular(LMM_rt_ern_session)     # No singular fit
+# summary(rePCA(LMM_rt_ern_session)) # All terms explain variance
+
+
+# Run reduced final model on CRN (we get same model when starting with all random effects & correlation parameters)
+LMM_rt_crn_session <- lmer(word_rt_log ~ word_valence * group * MFN_standardized * session +
+  (1 + pos_neg || participant_id) +
+  (1 + MFN_standardized || word),
+  data = single_trial_data_rt[single_trial_data_rt$gng_response_type == "FH", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_rt_crn_session)        # Model does converge
+# isSingular(LMM_rt_crn_session)     # No singular fit
+# summary(rePCA(LMM_rt_crn_session)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(LMM_rt_ern_session, LMM_rt_crn_session,
+  dv.labels = c("With ERN as predictor", "With CRN as predictor"), pred.labels = labels, show.stat = TRUE, 
+  show.icc = FALSE, show.r2 = FALSE, show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", 
+  string.pred = "Fixed effects", string.est = "b", string.stat = "t", string.ci = "95 % CI", p.val = "satterthwaite", 
+  wrap.labels = 80, title = "LMM Results for Word Categorization RT With ERN and CRN as Predictor and Session Number 
+  as Covariate")
+```
+<br><br><br>
+
+### Accuracy: Session as Cov. 
+
+This table corresponds to Table S9 in the supplemental material.
+
+```{r glmm-accuracy-session, cache = knitr_cache_enabled}
+
+# Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_acc$session) <- contr.sdif(2)
+
+
+# Run reduced final model (we get same model when starting with all random effects & correlation parameters)
+GLMM_acc_session <- glmer(word_accuracy_numeric ~ gng_response_type * word_valence * group * session +
+  (1 + FA_FH + IR_FA + pos_neg + FA_FH:pos_neg + IR_FA:pos_neg || participant_id) +
+  (1 + FH_SH + FA_FH + IR_FA + OCD_HC + FA_FH:OCD_HC + IR_FA:OCD_HC || word),
+  data = single_trial_data_acc,
+  family = binomial,
+  control = glmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(GLMM_acc_session)        # Model does converge
+# isSingular(GLMM_acc_session)     # No singular fit
+# summary(rePCA(GLMM_acc_session)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(GLMM_acc_session,
+  dv.labels = "Accuracy", pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "Odds ratio", string.stat = "z", string.ci = "95 % CI", wrap.labels = 80,
+  title = "GLMM Results for Word Categorization Accuracy With Session Number as Covariate")
+```
+<br><br><br>
+
+## References
+***
+Bates, D., Kliegl, R., Vasishth, S., & Baayen, H. (2015). *Parsimonious mixed models.* arXiv. https://arxiv.org/abs/1506.04967v2 <br><br>
+Box, G. E., & Cox, D. R. (1964). An analysis of transformations. *Journal of the Royal Statistical Society: Series B (Methodological), 26*(2), 211–243. https://doi.org/10.1111/j.2517-6161.1964.tb00553.x <br><br>
+Morey, R. (2008). Confidence intervals from normalized data: A correction to Cousineau (2005). *Tutorials in Quantitative Methods for Psychology, 4*(2), 61–64. https://doi.org/10.20982/tqmp.04.2.p061 
+<br><br><br>
+
+## Session Info
+***
+```{r session-info}
+
+sessionInfo()
+```

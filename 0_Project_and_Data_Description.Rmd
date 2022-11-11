@@ -1,0 +1,37 @@
+---
+title: "Project & Data Description"
+output: 
+  html_document
+---
+
+<!-- Set general settings -->
+
+```{r setup, include = FALSE}
+
+# Set general settings for markdown file
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE)
+
+
+# Clear environment
+rm(list = ls())
+```
+
+<!-- Load Project_and_Data_Description.md file containing project and data description -->
+
+```{r data-description} 
+
+# Load markdown file that contains the project and data description
+filename         <- "Project_and_Data_Description.md"
+data_description <- readChar(filename, file.info(filename)$size, )
+```
+`r data_description`
+<br><br>
+
+## Session Info
+
+```{r session-info}
+
+sessionInfo()
+```

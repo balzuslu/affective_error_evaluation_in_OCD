@@ -1,0 +1,332 @@
+---
+title: "Go/No-Go Data"
+output: 
+  html_document
+---
+
+<!-- Set general settings -->
+
+```{r setup, message = FALSE, warning = FALSE}
+
+# Set general settings for markdown file
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  comment = "",
+  results = "hold")
+
+
+# Clear environment
+rm(list = ls())
+
+
+# Load packages
+library(dplyr)      # for data wrangling
+library(knitr)      # for integrating computing and reporting in markdown
+library(pastecs)    # for descriptive statistics
+library(kableExtra) # for customizing appearance of tables
+library(MASS)       # for boxcox function and contrast definition
+library(lme4)       # for (G)LMMs
+library(lmerTest)   # for LMM p values (Satterthwaite's method for approximating dfs for t and F tests)
+library(sjPlot)     # for tab_model function to display (G)LMM results
+
+
+# Load functions
+source("./functions/summarySEwithinO.R")  # Function provided by R-cookbook: http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+source("./functions/my_table_template.R") # Function to create table template
+
+
+# Turn off scientific notation
+options(scipen = 999)
+
+
+# Prepare labels for (G)LMM tables
+labels <- c(
+  "(Intercept)"                   = "Intercept",
+  "gng_response_type2-1"          = "FH – SH",
+  "gng_response_type3-2"          = "FA – FH",
+  "group2-1"                      = "Group (OCD – HC)",
+  "gng_response_type2-1:group2-1" = "FH – SH x Group",
+  "gng_response_type3-2:group2-1" = "FA – FH x Group")
+```
+<br>
+
+## Data Cleaning
+***
+
+```{r load-and-clean-data}
+
+# Load data
+load(file = "./data/Single_Trial_Data.rda")
+
+
+# Create numeric accuracy variable (0 = FA; 1 = SH, FH, IR)
+single_trial_data <- single_trial_data %>%
+  dplyr::mutate(gng_accuracy_numeric = ifelse(gng_response_type == "FH" | gng_response_type == "SH" |
+      gng_response_type == "IR", 1, ifelse(gng_response_type == "FA", 0, NA)))
+
+
+# For RT analysis, exclude inhibited gng responses, missing gng responses, gng responses with
+# wrong key, gng RT outliers, and trials with ERP artifacts
+single_trial_data_gng_rt <- single_trial_data %>%
+  dplyr::filter(
+    gng_response_type != "IR" &
+    gng_response_type != "miss" &
+    gng_response_type != "wrong_key" &
+    (is.na(gng_rt_invalid) | gng_rt_invalid == FALSE) &
+    stimulation == "sham" &
+    MFN_artifact == FALSE)
+
+
+# For accuracy analysis, exclude missing gng responses, gng responses with wrong key, gng RT outliers,
+# and trials with ERP artifacts
+single_trial_data_gng_acc <- single_trial_data %>%
+  dplyr::filter(
+    gng_response_type != "miss" &
+    gng_response_type != "wrong_key" &
+    (is.na(gng_rt_invalid) | gng_rt_invalid == FALSE) &
+    stimulation == "sham" &
+    MFN_artifact == FALSE)
+
+
+# Make categorical variables factors
+single_trial_data_gng_rt$gng_response_type <- factor(single_trial_data_gng_rt$gng_response_type,
+  levels = c("SH", "FH", "FA"))
+single_trial_data_gng_rt$participant_id    <- factor(single_trial_data_gng_rt$participant_id)
+single_trial_data_gng_rt$group             <- factor(single_trial_data_gng_rt$group)
+single_trial_data_gng_acc$participant_id   <- factor(single_trial_data_gng_acc$participant_id)
+single_trial_data_gng_acc$group            <- factor(single_trial_data_gng_acc$group)
+```
+
+In the analysis of RT and accuracy in the go/no-go task, trials were discarded if RT in the go/no-go task was below 100 ms or above 800 ms, no response was made, or the response was made with a key not assigned to the go/no-go task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points. 
+<br><br><br>
+
+## Descriptive Statistics
+***
+
+This table corresponds to Table S2 in the supplemental material.  
+
+```{r descriptive-statistics-table}
+
+# Calculate descriptive statistics for RT
+descriptive_statistics_rt <- summarySEwithinO(
+  data          = single_trial_data_gng_rt,
+  measurevar    = "gng_rt",
+  withinvars    = "gng_response_type",
+  betweenvars   = "group",
+  idvar         = "participant_id",
+  conf.interval = .95) %>%
+  # Rename variable and select variables for subsequent merging
+  dplyr::rename(mean = gng_rt) %>%
+  dplyr::select("group", "gng_response_type", "mean", "ci")
+
+
+# Prepare calculation of descriptive statistics for proportion of response types (based on all trials)
+descriptive_statistics_proportion <- single_trial_data %>%
+  dplyr::filter(stimulation == "sham") %>%
+  dplyr::group_by(participant_id, group) %>%
+  dplyr::summarize(
+    SH         = sum(gng_response_type == "SH")        / length(participant_id) * 100,
+    FH         = sum(gng_response_type == "FH")        / length(participant_id) * 100,
+    FA         = sum(gng_response_type == "FA")        / length(participant_id) * 100,
+    IR         = sum(gng_response_type == "IR")        / length(participant_id) * 100,
+    misses     = sum(gng_response_type == "miss")      / length(participant_id) * 100,
+    wrong_key  = sum(gng_response_type == "wrong_key") / length(participant_id) * 100) %>%
+  dplyr::ungroup()
+
+
+# Calculate descriptive statistics for proportion (exclude first column containing participant ID)
+descriptive_statistics_proportion <- descriptive_statistics_proportion[, -c(1)] %>%
+  dplyr::group_by(group) %>%
+  do(data.frame(t(stat.desc(.)))) %>%
+  na.omit() %>%
+  dplyr::ungroup() %>%
+  # Create response type column, rename variable, and select variables for subsequent merging
+  dplyr::mutate(gng_response_type = rep(c("SH ","FH ","FA ","IR", "Missing response", "Wrong key response"),2)) %>%
+  dplyr::rename(ci = CI.mean) %>%
+  dplyr::select("group", "gng_response_type", "mean", "ci")
+
+
+# Combine measures
+descriptive_statistics <- as.data.frame(rbind(descriptive_statistics_rt, descriptive_statistics_proportion))
+
+
+# Create column with format "M [CI]" for RT (round to 0 decimals)
+descriptive_statistics$M_CI <- paste0(round(descriptive_statistics$mean, 0), " [",
+  round(descriptive_statistics$mean - descriptive_statistics$ci, 0), ", ",
+  round(descriptive_statistics$mean + descriptive_statistics$ci, 0), "]")
+
+
+# Create column with format "M [CI]" for accuracy (round to 2 decimals)
+descriptive_statistics[c(7:18), ]$M_CI <- paste0(
+  format(round(descriptive_statistics[c(7:18), ]$mean, 2), nsmall = 2), " [",
+  format(round(descriptive_statistics[c(7:18), ]$mean -
+               descriptive_statistics[c(7:18), ]$ci,   2), nsmall = 2), ", ",
+  format(round(descriptive_statistics[c(7:18), ]$mean +
+               descriptive_statistics[c(7:18), ]$ci,   2), nsmall = 2), "]")
+
+
+# Split and re-merge table to display both groups next to each other
+descriptive_statistics <- split(descriptive_statistics, descriptive_statistics$group)
+descriptive_statistics_display <- cbind(descriptive_statistics$OCD[, c("gng_response_type", "M_CI")],
+                                        descriptive_statistics$HC[, "M_CI"])
+
+
+# Display table (and rearrange rows)
+my_table_template(descriptive_statistics_display[c(3:1, 4:9), ],
+  caption = "Descriptive Statistics for Behavioral Performance in the Go/No-Go Task",
+  col_names = c("Measure", rep("M [95% CI]", 2)),
+  header_above_config = c("", "Patients with OCD", "Healthy control participants")) %>%
+  add_footnote("\n Note. CIs are adjusted for within-participant designs using the method described 
+  by Morey (2008).", notation = "none") %>%
+  pack_rows("Response time (ms)", 1, 3) %>%
+  pack_rows("Proportion of responses (%)", 4, 9)
+```
+<br><br>
+
+## Analysis of Response Time {.tabset}
+***
+
+We performed a linear mixed model (LMM) on single-trial data. Analysis of RT in the go/no-go task included group and response type (slow hit, fast hit, false alarm) as fixed effects. 
+
+We used sliding difference contrasts for categorical fixed effects and started with the maximal random-effects structure for each model. In case of non-convergence, random effects were specified as uncorrelated. Using principal component analysis, we identified random effects explaining zero variance and removed these, as recommended by Bates, Kliegl, et al. (2015). 
+<br><br>
+
+### Determine Data Transformation
+
+RT was log-transformed to normalize residuals. This was determined using the Box–Cox procedure (Box & Cox, 1964).
+
+```{r rt-determine-transformation, fig.width = 12, fig.height = 3}
+
+# Arrange plots
+par(mfrow = c(1, 5))
+
+
+# Determine transformation by estimating optimal lambda using Box–Cox procedure
+bc_rt <- boxcox(gng_rt ~ 1, data = single_trial_data_gng_rt)
+optlambda_rt <- bc_rt$x[which.max(bc_rt$y)]
+
+
+# Density plot for raw RT
+plot(density(single_trial_data_gng_rt$gng_rt), main = "Raw RT: Density Plot")
+
+
+# Q-q plot for raw RT
+qqnorm(single_trial_data_gng_rt$gng_rt, main = "Raw RT: Q-Q Plot", pch = 1)
+
+
+# Density plot for log RT
+plot(density(single_trial_data_gng_rt$gng_rt_log), main = "Log RT: Density Plot")
+
+
+# Q-q plot for log RT
+qqnorm(single_trial_data_gng_rt$gng_rt_log, main = "Log RT: Q-Q Plot", pch = 1)
+
+
+# Reset plot layout
+par(mfrow = c(1, 1))
+```
+The optimal lambda is `r round(optlambda_rt, digits = 2)`, suggesting that log transformation is appropriate. 
+<br><br><br>
+
+### LMM {.active}
+
+This table corresponds to Table 2 in the manuscript. 
+
+```{r lmm-rt}
+
+# Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_gng_rt$gng_response_type) <- contr.sdif(3)
+contrasts(single_trial_data_gng_rt$group)             <- contr.sdif(2)
+
+
+# Run model with maximal random-effects structure
+LMM_gng_rt <- lmer(gng_rt_log ~ gng_response_type * group +
+  (1 + gng_response_type | participant_id),
+  data = single_trial_data_gng_rt,
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_gng_rt)        # Model does converge
+# isSingular(LMM_gng_rt)     # No singular fit
+# summary(rePCA(LMM_gng_rt)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(LMM_gng_rt,
+  dv.labels = "RT", pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "b", string.stat = "t", string.ci = "95 % CI", p.val = "satterthwaite",
+  title = "LMM Results for RT in the Go/No-Go Task")
+
+
+# Display random effects
+print("Random effects:")
+print(VarCorr(LMM_gng_rt), digits = 1, comp = "Std.Dev.")
+```
+<br>
+RTs were shorter for fast hits than for slow hits and false alarms. There was no significant group difference in RT. 
+<br><br><br>
+
+## Analysis of Accuracy {.tabset}
+***
+
+We performed a binomial generalized linear mixed model (GLMM) on single-trial data. Analysis of accuracy in the go/no-go task included group as fixed effect. 
+
+We used sliding difference contrasts for categorical fixed effects and started with the maximal random-effects structure for each model. In case of non-convergence, random effects were specified as uncorrelated. Using principal component analysis, we identified random effects explaining zero variance and removed these, as recommended by Bates, Kliegl, et al. (2015). 
+<br><br>
+
+### GLMM
+
+This table corresponds to Table 2 in the manuscript.  
+
+```{r glmm-accuracy}
+
+# Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_gng_acc$group) <- contr.sdif(2)
+
+
+# Run model with maximal random-effects structure
+GLMM_gng_acc <- glmer(gng_accuracy_numeric ~ group + (1 | participant_id),
+  data = single_trial_data_gng_acc,
+  family = binomial,
+  control = glmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(GLMM_gng_acc)        # Model does converge
+# isSingular(GLMM_gng_acc)     # No singular fit
+# summary(rePCA(GLMM_gng_acc)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(GLMM_gng_acc,
+  dv.labels = "Accuracy", pred.labels = labels, show.stat = TRUE, show.icc = FALSE, show.r2 = FALSE,
+  show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-", string.pred = "Fixed effects",
+  string.est = "Odds ratio", string.stat = "z", string.ci = "95 % CI", 
+  title = "GLMM Results for Accuracy in the Go/No-Go Task")
+
+
+# Display random effects
+print("Random effects:")
+print(VarCorr(GLMM_gng_acc), digits = 2, comp = "Std.Dev.")
+```
+<br>
+There was no significant group difference in accuracy. 
+<br><br><br>
+
+## References
+***
+Bates, D., Kliegl, R., Vasishth, S., & Baayen, H. (2015). *Parsimonious mixed models.* arXiv. https://arxiv.org/abs/1506.04967v2 <br><br>
+Box, G. E., & Cox, D. R. (1964). An analysis of transformations. *Journal of the Royal Statistical Society: Series B (Methodological), 26*(2), 211–243. https://doi.org/10.1111/j.2517-6161.1964.tb00553.x <br><br>
+Morey, R. (2008). Confidence intervals from normalized data: A correction to Cousineau (2005). *Tutorials in Quantitative Methods for Psychology, 4*(2), 61–64. https://doi.org/10.20982/tqmp.04.2.p061 
+<br><br><br>
+
+## Session Info
+***
+```{r session-info}
+
+sessionInfo()
+```

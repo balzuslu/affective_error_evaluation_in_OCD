@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>ERP Data</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="web_style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Affective Error Evaluation in OCD</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="0_Project_and_Data_Description.html">
+    <span class="glyphicon glyphicon-info-sign"></span>
+     
+    Project &amp; Data
+  </a>
+</li>
+<li>
+  <a href="1_Participants.html">
+    <span class="glyphicon glyphicon-info-sign"></span>
+     
+    Participants
+  </a>
+</li>
+<li>
+  <a href="2_Go_No-Go.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-hand-up"></span>
+     
+    Go/No-Go Data
+  </a>
+</li>
+<li>
+  <a href="3_Word_Categorization.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-hand-up"></span>
+     
+    Word Categorization Data (&amp; ERPs)
+  </a>
+</li>
+<li>
+  <a href="4_ERP.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-flash"></span>
+     
+    ERP Data
+  </a>
+</li>
+<li>
+  <a href="5_Plots.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-stats"></span>
+     
+    Plots
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:luisa.balzus@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">ERP Data</h1>
+
+</div>
+
+
+<!-- Set general settings -->
+<pre class="r"><code># Set general settings for markdown file
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  comment = &quot;&quot;,
+  results = &quot;hold&quot;)
+
+
+# Clear environment
+rm(list = ls())
+
+
+# Load packages
+library(dplyr)      # for data wrangling
+library(knitr)      # for integrating computing and reporting in markdown
+library(kableExtra) # for customizing appearance of tables
+library(MASS)       # for boxcox function and contrast definition
+library(lme4)       # for (G)LMMs
+library(lmerTest)   # for LMM p values (Satterthwaite&#39;s method for approximating dfs for t and F tests)
+library(sjPlot)     # for tab_model function to display (G)LMM results
+library(splithalf)  # for permutation-based split-half reliability
+
+
+# Load functions
+source(&quot;./functions/summarySEwithinO.R&quot;)  # Function provided by R-cookbook: http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+source(&quot;./functions/my_table_template.R&quot;) # Function to create table template
+
+
+# Turn off scientific notation
+options(scipen = 999)
+
+
+# Prepare labels for LMM tables
+labels &lt;- c(
+  &quot;(Intercept)&quot; = &quot;Intercept&quot;,
+  &quot;group2-1&quot;    = &quot;Group (OCD – HC)&quot;)</code></pre>
+<p><br></p>
+<div id="data-cleaning" class="section level2">
+<h2>Data Cleaning</h2>
+<hr />
+<pre class="r"><code># Load data
+load(file = &quot;./data/Single_Trial_Data.rda&quot;)
+
+
+# For ERP analysis, exclude inhibited gng responses, missing gng responses, gng responses with
+# wrong key, gng RT outliers, and trials with ERP artifacts
+single_trial_data_erp &lt;- single_trial_data %&gt;%
+  dplyr::filter(
+    gng_response_type != &quot;IR&quot; &amp;
+    gng_response_type != &quot;miss&quot; &amp;
+    gng_response_type != &quot;wrong_key&quot; &amp;
+    (is.na(gng_rt_invalid) | gng_rt_invalid  == FALSE) &amp;
+    stimulation == &quot;sham&quot; &amp;
+    MFN_artifact == FALSE)
+
+
+# Create accuracy variable (&quot;incorrect&quot; = FA; &quot;correct&quot; = SH, FH)
+single_trial_data_erp &lt;- single_trial_data_erp %&gt;%
+  dplyr::mutate(gng_accuracy = ifelse(gng_response_type == &quot;FA&quot;, &quot;incorrect&quot;, &quot;correct&quot;))
+
+
+# Calculate % of excluded trials per participant
+excluded_trials_per_participant &lt;- single_trial_data %&gt;%
+  dplyr::filter(stimulation == &quot;sham&quot;) %&gt;%
+  dplyr::group_by(participant_id) %&gt;%
+  dplyr::summarize(EEG_artifact = sum(is.nan(MFN_0_100_FCz)) / length(participant_id) * 100) %&gt;%
+  dplyr::ungroup() %&gt;%
+  dplyr::summarize(across(-c(participant_id), list(mean, sd)))
+
+
+# Make categorical variables factors
+single_trial_data_erp$participant_id &lt;- factor(single_trial_data_erp$participant_id)
+single_trial_data_erp$group          &lt;- factor(single_trial_data_erp$group)</code></pre>
+<p>In the analysis of ERPs in the go/no-go task, trials were discarded if RT in the go/no-go task was below 100 ms or above 800 ms, no response was made, or the response was made with a key not assigned to the go/no-go task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points, resulting in rejection of 0.58% (<em>SD</em> = 1.21) of epochs on average. <br><br><br></p>
+</div>
+<div id="descriptive-statistics" class="section level2">
+<h2>Descriptive Statistics</h2>
+<hr />
+<p>This table corresponds to Table S2 in the supplemental material.</p>
+<pre class="r"><code># Calculate descriptive statistics for ERN/CRN
+descriptive_statistics &lt;- summarySEwithinO(
+  data          = single_trial_data_erp,
+  measurevar    = &quot;MFN_0_100_FCz&quot;,
+  withinvars    = &quot;gng_accuracy&quot;,
+  betweenvars   = &quot;group&quot;,
+  idvar         = &quot;participant_id&quot;,
+  conf.interval = .95) %&gt;%
+  # Rename variable and create measure variable
+  dplyr::rename(mean = MFN_0_100_FCz) %&gt;%
+  dplyr::mutate(measure = rep(c(&quot;CRN (µV)&quot;, &quot;ERN (µV)&quot;), 2))
+
+
+# Create column with format &quot;M [CI]&quot; (round to 2 decimals)
+descriptive_statistics$M_CI &lt;- paste0(
+  format(round(descriptive_statistics$mean, 2), nsmall = 2), &quot; [&quot;,
+  format(round(descriptive_statistics$mean -
+               descriptive_statistics$ci,   2), nsmall = 2), &quot;, &quot;,
+  format(round(descriptive_statistics$mean +
+               descriptive_statistics$ci,   2), nsmall = 2), &quot;]&quot;)
+
+
+# Split and re-merge table to display both groups next to each other
+descriptive_statistics &lt;- split(descriptive_statistics, descriptive_statistics$group)
+descriptive_statistics_display &lt;- cbind(descriptive_statistics$OCD[, c(&quot;measure&quot;, &quot;M_CI&quot;)],
+                                        descriptive_statistics$HC[, &quot;M_CI&quot;])
+
+
+# Display table (and rearrange rows)
+my_table_template(descriptive_statistics_display[c(2, 1), ],
+  caption = &quot;Descriptive Statistics for ERP Measures&quot;,
+  col_names = c(&quot;Measure&quot;, rep(&quot;M [95% CI]&quot;, 2)),
+  header_above_config = c(&quot;&quot;, &quot;Patients with OCD&quot;, &quot;Healthy control participants&quot;)) %&gt;%
+  add_footnote(&quot;\n Note. CIs are adjusted for within-participant designs using the method 
+  described by Morey (2008). ERN and CRN were measured as mean amplitude 
+  from 0 to 100 ms at electrode FCz after false alarms and hits, respectively.&quot;, notation = &quot;none&quot;) </code></pre>
+<table class="table table-striped table-condensed" style="font-size: 12px; width: auto !important; ">
+<caption style="font-size: initial !important;">
+Descriptive Statistics for ERP Measures
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="1">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Patients with OCD
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Healthy control participants
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+Measure
+</th>
+<th style="text-align:left;">
+M [95% CI]
+</th>
+<th style="text-align:left;">
+M [95% CI]
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ERN (µV)
+</td>
+<td style="text-align:left;">
+-2.21 [-2.89, -1.53]
+</td>
+<td style="text-align:left;">
+-2.15 [-2.90, -1.41]
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CRN (µV)
+</td>
+<td style="text-align:left;">
+2.38 [ 2.15, 2.61]
+</td>
+<td style="text-align:left;">
+2.33 [ 2.10, 2.55]
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> <br /> Note. CIs are adjusted for within-participant designs using the method <br /> described by Morey (2008). ERN and CRN were measured as mean amplitude <br /> from 0 to 100 ms at electrode FCz after false alarms and hits, respectively.
+</td>
+</tr>
+</tfoot>
+</table>
+<p><br><br></p>
+</div>
+<div id="split-half-reliability" class="section level2">
+<h2>Split-Half Reliability</h2>
+<hr />
+<pre class="r"><code># Calculate permutation-based split-half internal consistency for ERN/CRN
+invisible(capture.output(split_half_reliability &lt;- splithalf(
+  data = single_trial_data_erp,
+  outcome = &quot;RT&quot;,
+  score = &quot;average&quot;,
+  permutations = 5000,
+  halftype = &quot;random&quot;,
+  var.RT = &quot;MFN_0_100_FCz&quot;,
+  var.participant = &quot;participant_id&quot;,
+  var.condition = &quot;gng_accuracy&quot;,
+  conditionlist = c(&quot;correct&quot;, &quot;incorrect&quot;),
+  average = &quot;mean&quot;)))
+
+
+# Make nice table for display
+split_half_reliability &lt;- cbind(ERP = c(&quot;CRN&quot;, &quot;ERN&quot;), split_half_reliability$final_estimates) %&gt;%
+  dplyr::select(ERP, spearmanbrown, SB_low, SB_high) %&gt;%
+  dplyr::rename(r = spearmanbrown, CI_low = SB_low, CI_up = SB_high)
+
+
+# Display permutation-based split-half internal consistency
+my_table_template(split_half_reliability[c(2, 1), ],
+  caption = &quot;Permutation-based split-half reliability&quot;)</code></pre>
+<table class="table table-striped table-condensed" style="font-size: 12px; width: auto !important; ">
+<caption style="font-size: initial !important;">
+Permutation-based split-half reliability
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+ERP
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+CI_low
+</th>
+<th style="text-align:right;">
+CI_up
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ERN
+</td>
+<td style="text-align:right;">
+0.89
+</td>
+<td style="text-align:right;">
+0.82
+</td>
+<td style="text-align:right;">
+0.93
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CRN
+</td>
+<td style="text-align:right;">
+0.98
+</td>
+<td style="text-align:right;">
+0.98
+</td>
+<td style="text-align:right;">
+0.99
+</td>
+</tr>
+</tbody>
+</table>
+<p>Internal consistency was good for ERN (<em>r</em> = 0.89, 95% CI [0.82, 0.93]) and excellent for CRN (<em>r</em> = 0.98, 95% CI [0.98, 0.99]), as assessed with a permutation-based split-half method using 5,000 random splits and Spearman–Brown correction. <br><br><br></p>
+</div>
+<div id="analysis-of-ern-crn" class="section level2 tabset">
+<h2>Analysis of ERN &amp; CRN</h2>
+<hr />
+<p>We performed linear mixed models (LMMs) on single-trial data. Analysis of ERP amplitudes in the go/no-go task included group as fixed effect. Models on ERN and CRN were based on false alarm and hit trials, respectively.</p>
+<p>We used sliding difference contrasts for categorical fixed effects and started with the maximal random-effects structure for each model. In case of non-convergence, random effects were specified as uncorrelated. Using principal component analysis, we identified random effects explaining zero variance and removed these, as recommended by Bates, Kliegl, et al. (2015). <br><br></p>
+<div id="determine-data-transformation" class="section level3">
+<h3>Determine Data Transformation</h3>
+<p>No data transformation was required to meet the assumption of normally distributed residuals. This was determined using the Box–Cox procedure (Box &amp; Cox, 1964).</p>
+<pre class="r"><code># Arrange plots
+par(mfrow = c(2, 3))
+
+
+# Determine transformation of ERN by estimating optimal lambda using Box–Cox procedure
+bc_ern &lt;- boxcox(MFN_0_100_FCz + 50 ~ 1,
+  data = single_trial_data_erp[single_trial_data_erp$gng_accuracy == &quot;incorrect&quot;, ])
+optlambda_ern &lt;- bc_ern$x[which.max(bc_ern$y)]
+
+
+# Density plot for ERN values
+plot(density(single_trial_data_erp[single_trial_data_erp$gng_accuracy == &quot;incorrect&quot;, ]$MFN_0_100_FCz),
+  main = &quot;ERN: Density Plot&quot;)
+
+
+# Q-q plot for ERN values
+qqnorm(single_trial_data_erp[single_trial_data_erp$gng_accuracy == &quot;incorrect&quot;, ]$MFN_0_100_FCz,
+  main = &quot;ERN: Q-Q Plot&quot;, pch = 1)
+
+
+# Determine transformation of CRN by estimating optimal lambda using Box–Cox procedure
+bc_crn &lt;- boxcox(MFN_0_100_FCz + 50 ~ 1,
+  data = single_trial_data_erp[single_trial_data_erp$gng_accuracy == &quot;correct&quot;, ])
+optlambda_crn &lt;- bc_crn$x[which.max(bc_crn$y)]
+
+
+# Density plot for CRN values
+plot(density(single_trial_data_erp[single_trial_data_erp$gng_accuracy == &quot;correct&quot;, ]$MFN_0_100_FCz),
+  main = &quot;CRN: Density Plot&quot;)
+
+
+# Q-q plot for CRN values
+qqnorm(single_trial_data_erp[single_trial_data_erp$gng_accuracy == &quot;correct&quot;, ]$MFN_0_100_FCz,
+  main = &quot;CRN: Q-Q Plot&quot;, pch = 1)</code></pre>
+<p><img src="4_ERP_files/figure-html/erp-determine-transformation-1.png" width="768" /></p>
+<pre class="r"><code># Reset plot layout
+par(mfrow = c(1, 1))</code></pre>
+<p>For the ERN, the optimal lambda is 1.03 (upper left plot), suggesting that no transformation is needed. For the CRN, the optimal lambda is 0.99 (lower left plot), suggesting that no transformation is needed. <br><br><br></p>
+</div>
+<div id="lmm-on-ern-crn" class="section level3 active">
+<h3>LMM on ERN &amp; CRN</h3>
+<p>This table corresponds to Table 5 in the manuscript.</p>
+<pre class="r"><code># Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_erp$group) &lt;- contr.sdif(2)
+
+
+# Run model on ERN with maximal random-effects structure
+LMM_ern &lt;- lmer(MFN_0_100_FCz ~ group + (1 | participant_id),
+  data = single_trial_data_erp[single_trial_data_erp$gng_accuracy == &quot;incorrect&quot;, ],
+  REML = TRUE,
+  control = lmerControl(optimizer = &quot;bobyqa&quot;))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_ern)        # Model does converge
+# isSingular(LMM_ern)     # No singular fit
+# summary(rePCA(LMM_ern)) # All terms explain variance
+
+
+# Run model on CRN with maximal random-effects structure
+LMM_crn &lt;- lmer(MFN_0_100_FCz ~ group + (1 | participant_id),
+  data = single_trial_data_erp[single_trial_data_erp$gng_accuracy == &quot;correct&quot;, ],
+  REML = TRUE,
+  control = lmerControl(optimizer = &quot;bobyqa&quot;))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_crn)        # Model does converge
+# isSingular(LMM_crn)     # No singular fit
+# summary(rePCA(LMM_crn)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(LMM_ern, LMM_crn,
+  dv.labels = c(&quot;ERN&quot;, &quot;CRN&quot;), pred.labels = labels, show.stat = TRUE, show.icc = FALSE,
+  show.r2 = FALSE, show.re.var = FALSE, show.ngroups = FALSE, minus.sign = &quot;-&quot;,
+  string.pred = &quot;Fixed effects&quot;, string.est = &quot;b&quot;, string.stat = &quot;t&quot;, string.ci = &quot;95 % CI&quot;,
+  p.val = &quot;satterthwaite&quot;, title = &quot;LMM Results for ERN and CRN in the Go/No-Go Task&quot;)
+
+
+# Display random effects
+print(&quot;Random effects ERN:&quot;)
+print(VarCorr(LMM_ern), digits = 3, comp = &quot;Std.Dev.&quot;)
+
+
+# Display random effects
+print(&quot;Random effects CRN:&quot;)
+print(VarCorr(LMM_crn), digits = 3, comp = &quot;Std.Dev.&quot;)</code></pre>
+<table style="border-collapse:collapse; border:none;">
+<caption style="font-weight: bold; text-align:left;">
+LMM Results for ERN and CRN in the Go/No-Go Task
+</caption>
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="4" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+ERN
+</th>
+<th colspan="4" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+CRN
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Fixed effects
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+b
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+95 % CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+t
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+p
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+b
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  col7">
+95 % CI
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  col8">
+t
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  col9">
+p
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+Intercept
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-2.65
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-3.93 – -1.37
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-4.15
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+<strong>&lt;0.001</strong>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+2.33
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+1.41 – 3.25
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
+5.07
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
+<strong>&lt;0.001</strong>
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+Group (OCD – HC)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.52
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-2.04 – 3.09
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.41
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.684
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.05
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+-1.79 – 1.89
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
+0.05
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
+0.956
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="4">
+2504
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="4">
+18660
+</td>
+</tr>
+</table>
+<pre><code>[1] &quot;Random effects ERN:&quot;
+ Groups         Name        Std.Dev.
+ participant_id (Intercept) 4.55    
+ Residual                   8.50    
+[1] &quot;Random effects CRN:&quot;
+ Groups         Name        Std.Dev.
+ participant_id (Intercept) 3.41    
+ Residual                   7.98    </code></pre>
+<p><br> ERN and CRN amplitudes did not differ significantly between groups. <br><br><br></p>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<hr />
+<p>Bates, D., Kliegl, R., Vasishth, S., &amp; Baayen, H. (2015). <em>Parsimonious mixed models.</em> arXiv. <a href="https://arxiv.org/abs/1506.04967v2" class="uri">https://arxiv.org/abs/1506.04967v2</a> <br><br> Box, G. E., &amp; Cox, D. R. (1964). An analysis of transformations. <em>Journal of the Royal Statistical Society: Series B (Methodological), 26</em>(2), 211–243. <a href="https://doi.org/10.1111/j.2517-6161.1964.tb00553.x" class="uri">https://doi.org/10.1111/j.2517-6161.1964.tb00553.x</a> <br><br> Morey, R. (2008). Confidence intervals from normalized data: A correction to Cousineau (2005). <em>Tutorials in Quantitative Methods for Psychology, 4</em>(2), 61–64. <a href="https://doi.org/10.20982/tqmp.04.2.p061" class="uri">https://doi.org/10.20982/tqmp.04.2.p061</a> <br><br><br></p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<hr />
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19044)
+
+Matrix products: default
+
+locale:
+[1] LC_COLLATE=German_Germany.1252  LC_CTYPE=German_Germany.1252   
+[3] LC_MONETARY=German_Germany.1252 LC_NUMERIC=C                   
+[5] LC_TIME=German_Germany.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base     
+
+other attached packages:
+ [1] plyr_1.8.7       splithalf_0.8.2  sjPlot_2.8.11    lmerTest_3.1-3  
+ [5] lme4_1.1-25      Matrix_1.5-1     MASS_7.3-51.4    kableExtra_1.3.4
+ [9] knitr_1.40       dplyr_1.0.10    
+
+loaded via a namespace (and not attached):
+ [1] httr_1.4.4          sass_0.4.0          tidyr_1.2.1        
+ [4] jsonlite_1.8.3      viridisLite_0.4.1   splines_3.6.1      
+ [7] modelr_0.1.9        bslib_0.4.0         datawizard_0.6.2   
+[10] assertthat_0.2.1    statmod_1.4.37      highr_0.9          
+[13] renv_0.12.0         robustbase_0.95-0   yaml_2.2.1         
+[16] bayestestR_0.13.0   numDeriv_2016.8-1.1 pillar_1.8.1       
+[19] backports_1.4.1     lattice_0.20-45     glue_1.6.2         
+[22] digest_0.6.30       rvest_1.0.3         minqa_1.2.4        
+[25] colorspace_2.0-3    psych_2.2.9         htmltools_0.5.3    
+[28] pkgconfig_2.0.3     broom_1.0.1         purrr_0.3.5        
+[31] xtable_1.8-4        mvtnorm_1.1-3       patchwork_1.1.2    
+[34] scales_1.2.1        webshot_0.5.4       svglite_2.1.0      
+[37] emmeans_1.6.0       tibble_3.1.8        generics_0.1.3     
+[40] ggplot2_3.3.6       ellipsis_0.3.2      sjlabelled_1.2.0   
+[43] withr_2.5.0         cachem_1.0.4        mnormt_2.1.1       
+[46] cli_3.4.1           magrittr_2.0.3      effectsize_0.7.0.5 
+[49] estimability_1.4.1  evaluate_0.16       fansi_1.0.3        
+[52] nlme_3.1-140        xml2_1.3.3          tools_3.6.1        
+[55] lifecycle_1.0.3     stringr_1.4.1       munsell_0.5.0      
+[58] ggeffects_1.1.3     compiler_3.6.1      jquerylib_0.1.4    
+[61] systemfonts_1.0.4   rlang_1.0.6         grid_3.6.1         
+[64] nloptr_1.2.2.2      parameters_0.19.0   rstudioapi_0.14    
+[67] rmarkdown_2.16      boot_1.3-22         gtable_0.3.1       
+[70] sjstats_0.18.1      DBI_1.1.3           sjmisc_2.8.9       
+[73] R6_2.5.1            performance_0.10.0  fastmap_1.1.0      
+[76] utf8_1.2.2          insight_0.18.4      stringi_1.6.1      
+[79] parallel_3.6.1      Rcpp_1.0.9          vctrs_0.5.0        
+[82] DEoptimR_1.0-11     tidyselect_1.2.0    xfun_0.33          </code></pre>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkVSUCBEYXRhIg0Kb3V0cHV0OiANCiAgaHRtbF9kb2N1bWVudA0KLS0tDQoNCjwhLS0gU2V0IGdlbmVyYWwgc2V0dGluZ3MgLS0+DQoNCmBgYHtyIHNldHVwLCBtZXNzYWdlID0gRkFMU0UsIHdhcm5pbmcgPSBGQUxTRX0NCg0KIyBTZXQgZ2VuZXJhbCBzZXR0aW5ncyBmb3IgbWFya2Rvd24gZmlsZQ0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KA0KICBtZXNzYWdlID0gRkFMU0UsDQogIHdhcm5pbmcgPSBGQUxTRSwNCiAgY29tbWVudCA9ICIiLA0KICByZXN1bHRzID0gImhvbGQiKQ0KDQoNCiMgQ2xlYXIgZW52aXJvbm1lbnQNCnJtKGxpc3QgPSBscygpKQ0KDQoNCiMgTG9hZCBwYWNrYWdlcw0KbGlicmFyeShkcGx5cikgICAgICAjIGZvciBkYXRhIHdyYW5nbGluZw0KbGlicmFyeShrbml0cikgICAgICAjIGZvciBpbnRlZ3JhdGluZyBjb21wdXRpbmcgYW5kIHJlcG9ydGluZyBpbiBtYXJrZG93bg0KbGlicmFyeShrYWJsZUV4dHJhKSAjIGZvciBjdXN0b21pemluZyBhcHBlYXJhbmNlIG9mIHRhYmxlcw0KbGlicmFyeShNQVNTKSAgICAgICAjIGZvciBib3hjb3ggZnVuY3Rpb24gYW5kIGNvbnRyYXN0IGRlZmluaXRpb24NCmxpYnJhcnkobG1lNCkgICAgICAgIyBmb3IgKEcpTE1Ncw0KbGlicmFyeShsbWVyVGVzdCkgICAjIGZvciBMTU0gcCB2YWx1ZXMgKFNhdHRlcnRod2FpdGUncyBtZXRob2QgZm9yIGFwcHJveGltYXRpbmcgZGZzIGZvciB0IGFuZCBGIHRlc3RzKQ0KbGlicmFyeShzalBsb3QpICAgICAjIGZvciB0YWJfbW9kZWwgZnVuY3Rpb24gdG8gZGlzcGxheSAoRylMTU0gcmVzdWx0cw0KbGlicmFyeShzcGxpdGhhbGYpICAjIGZvciBwZXJtdXRhdGlvbi1iYXNlZCBzcGxpdC1oYWxmIHJlbGlhYmlsaXR5DQoNCg0KIyBMb2FkIGZ1bmN0aW9ucw0Kc291cmNlKCIuL2Z1bmN0aW9ucy9zdW1tYXJ5U0V3aXRoaW5PLlIiKSAgIyBGdW5jdGlvbiBwcm92aWRlZCBieSBSLWNvb2tib29rOiBodHRwOi8vd3d3LmNvb2tib29rLXIuY29tL0dyYXBocy9QbG90dGluZ19tZWFuc19hbmRfZXJyb3JfYmFyc18oZ2dwbG90MikvDQpzb3VyY2UoIi4vZnVuY3Rpb25zL215X3RhYmxlX3RlbXBsYXRlLlIiKSAjIEZ1bmN0aW9uIHRvIGNyZWF0ZSB0YWJsZSB0ZW1wbGF0ZQ0KDQoNCiMgVHVybiBvZmYgc2NpZW50aWZpYyBub3RhdGlvbg0Kb3B0aW9ucyhzY2lwZW4gPSA5OTkpDQoNCg0KIyBQcmVwYXJlIGxhYmVscyBmb3IgTE1NIHRhYmxlcw0KbGFiZWxzIDwtIGMoDQogICIoSW50ZXJjZXB0KSIgPSAiSW50ZXJjZXB0IiwNCiAgImdyb3VwMi0xIiAgICA9ICJHcm91cCAoT0NEIOKAkyBIQykiKQ0KYGBgDQo8YnI+DQoNCiMjIERhdGEgQ2xlYW5pbmcNCioqKg0KDQpgYGB7ciBsb2FkLWFuZC1jbGVhbi1kYXRhfQ0KDQojIExvYWQgZGF0YQ0KbG9hZChmaWxlID0gIi4vZGF0YS9TaW5nbGVfVHJpYWxfRGF0YS5yZGEiKQ0KDQoNCiMgRm9yIEVSUCBhbmFseXNpcywgZXhjbHVkZSBpbmhpYml0ZWQgZ25nIHJlc3BvbnNlcywgbWlzc2luZyBnbmcgcmVzcG9uc2VzLCBnbmcgcmVzcG9uc2VzIHdpdGgNCiMgd3Jvbmcga2V5LCBnbmcgUlQgb3V0bGllcnMsIGFuZCB0cmlhbHMgd2l0aCBFUlAgYXJ0aWZhY3RzDQpzaW5nbGVfdHJpYWxfZGF0YV9lcnAgPC0gc2luZ2xlX3RyaWFsX2RhdGEgJT4lDQogIGRwbHlyOjpmaWx0ZXIoDQogICAgZ25nX3Jlc3BvbnNlX3R5cGUgIT0gIklSIiAmDQogICAgZ25nX3Jlc3BvbnNlX3R5cGUgIT0gIm1pc3MiICYNCiAgICBnbmdfcmVzcG9uc2VfdHlwZSAhPSAid3Jvbmdfa2V5IiAmDQogICAgKGlzLm5hKGduZ19ydF9pbnZhbGlkKSB8IGduZ19ydF9pbnZhbGlkICA9PSBGQUxTRSkgJg0KICAgIHN0aW11bGF0aW9uID09ICJzaGFtIiAmDQogICAgTUZOX2FydGlmYWN0ID09IEZBTFNFKQ0KDQoNCiMgQ3JlYXRlIGFjY3VyYWN5IHZhcmlhYmxlICgiaW5jb3JyZWN0IiA9IEZBOyAiY29ycmVjdCIgPSBTSCwgRkgpDQpzaW5nbGVfdHJpYWxfZGF0YV9lcnAgPC0gc2luZ2xlX3RyaWFsX2RhdGFfZXJwICU+JQ0KICBkcGx5cjo6bXV0YXRlKGduZ19hY2N1cmFjeSA9IGlmZWxzZShnbmdfcmVzcG9uc2VfdHlwZSA9PSAiRkEiLCAiaW5jb3JyZWN0IiwgImNvcnJlY3QiKSkNCg0KDQojIENhbGN1bGF0ZSAlIG9mIGV4Y2x1ZGVkIHRyaWFscyBwZXIgcGFydGljaXBhbnQNCmV4Y2x1ZGVkX3RyaWFsc19wZXJfcGFydGljaXBhbnQgPC0gc2luZ2xlX3RyaWFsX2RhdGEgJT4lDQogIGRwbHlyOjpmaWx0ZXIoc3RpbXVsYXRpb24gPT0gInNoYW0iKSAlPiUNCiAgZHBseXI6Omdyb3VwX2J5KHBhcnRpY2lwYW50X2lkKSAlPiUNCiAgZHBseXI6OnN1bW1hcml6ZShFRUdfYXJ0aWZhY3QgPSBzdW0oaXMubmFuKE1GTl8wXzEwMF9GQ3opKSAvIGxlbmd0aChwYXJ0aWNpcGFudF9pZCkgKiAxMDApICU+JQ0KICBkcGx5cjo6dW5ncm91cCgpICU+JQ0KICBkcGx5cjo6c3VtbWFyaXplKGFjcm9zcygtYyhwYXJ0aWNpcGFudF9pZCksIGxpc3QobWVhbiwgc2QpKSkNCg0KDQojIE1ha2UgY2F0ZWdvcmljYWwgdmFyaWFibGVzIGZhY3RvcnMNCnNpbmdsZV90cmlhbF9kYXRhX2VycCRwYXJ0aWNpcGFudF9pZCA8LSBmYWN0b3Ioc2luZ2xlX3RyaWFsX2RhdGFfZXJwJHBhcnRpY2lwYW50X2lkKQ0Kc2luZ2xlX3RyaWFsX2RhdGFfZXJwJGdyb3VwICAgICAgICAgIDwtIGZhY3RvcihzaW5nbGVfdHJpYWxfZGF0YV9lcnAkZ3JvdXApDQpgYGANCg0KSW4gdGhlIGFuYWx5c2lzIG9mIEVSUHMgaW4gdGhlIGdvL25vLWdvIHRhc2ssIHRyaWFscyB3ZXJlIGRpc2NhcmRlZCBpZiBSVCBpbiB0aGUgZ28vbm8tZ28gdGFzayB3YXMgYmVsb3cgMTAwIG1zIG9yIGFib3ZlIDgwMCBtcywgbm8gcmVzcG9uc2Ugd2FzIG1hZGUsIG9yIHRoZSByZXNwb25zZSB3YXMgbWFkZSB3aXRoIGEga2V5IG5vdCBhc3NpZ25lZCB0byB0aGUgZ28vbm8tZ28gdGFzay4gV2UgZnVydGhlciBkaXNjYXJkZWQgdHJpYWxzIGNvbnRhaW5pbmcgYXJ0aWZhY3RzIGluIHRoZSBFRUcsIGkuZS4sIGEgdm9sdGFnZSBkaWZmZXJlbmNlIGV4Y2VlZGluZyAyMDAgzrxWIHdpdGhpbiBhbiBlcG9jaCBvciA1MCDOvFYgYmV0d2VlbiBzYW1wbGUgcG9pbnRzLCByZXN1bHRpbmcgaW4gcmVqZWN0aW9uIG9mIGByIHJvdW5kKGV4Y2x1ZGVkX3RyaWFsc19wZXJfcGFydGljaXBhbnQkRUVHX2FydGlmYWN0XzEsIGRpZ2l0cyA9IDIpYCUgKCpTRCogPSBgciByb3VuZChleGNsdWRlZF90cmlhbHNfcGVyX3BhcnRpY2lwYW50JEVFR19hcnRpZmFjdF8yLCBkaWdpdHMgPSAyKWApIG9mIGVwb2NocyBvbiBhdmVyYWdlLiANCjxicj48YnI+PGJyPg0KDQojIyBEZXNjcmlwdGl2ZSBTdGF0aXN0aWNzIA0KKioqDQoNClRoaXMgdGFibGUgY29ycmVzcG9uZHMgdG8gVGFibGUgUzIgaW4gdGhlIHN1cHBsZW1lbnRhbCBtYXRlcmlhbC4NCg0KYGBge3IgZGVzY3JpcHRpdmUtc3RhdGlzdGljcy10YWJsZX0NCg0KIyBDYWxjdWxhdGUgZGVzY3JpcHRpdmUgc3RhdGlzdGljcyBmb3IgRVJOL0NSTg0KZGVzY3JpcHRpdmVfc3RhdGlzdGljcyA8LSBzdW1tYXJ5U0V3aXRoaW5PKA0KICBkYXRhICAgICAgICAgID0gc2luZ2xlX3RyaWFsX2RhdGFfZXJwLA0KICBtZWFzdXJldmFyICAgID0gIk1GTl8wXzEwMF9GQ3oiLA0KICB3aXRoaW52YXJzICAgID0gImduZ19hY2N1cmFjeSIsDQogIGJldHdlZW52YXJzICAgPSAiZ3JvdXAiLA0KICBpZHZhciAgICAgICAgID0gInBhcnRpY2lwYW50X2lkIiwNCiAgY29uZi5pbnRlcnZhbCA9IC45NSkgJT4lDQogICMgUmVuYW1lIHZhcmlhYmxlIGFuZCBjcmVhdGUgbWVhc3VyZSB2YXJpYWJsZQ0KICBkcGx5cjo6cmVuYW1lKG1lYW4gPSBNRk5fMF8xMDBfRkN6KSAlPiUNCiAgZHBseXI6Om11dGF0ZShtZWFzdXJlID0gcmVwKGMoIkNSTiAowrVWKSIsICJFUk4gKMK1VikiKSwgMikpDQoNCg0KIyBDcmVhdGUgY29sdW1uIHdpdGggZm9ybWF0ICJNIFtDSV0iIChyb3VuZCB0byAyIGRlY2ltYWxzKQ0KZGVzY3JpcHRpdmVfc3RhdGlzdGljcyRNX0NJIDwtIHBhc3RlMCgNCiAgZm9ybWF0KHJvdW5kKGRlc2NyaXB0aXZlX3N0YXRpc3RpY3MkbWVhbiwgMiksIG5zbWFsbCA9IDIpLCAiIFsiLA0KICBmb3JtYXQocm91bmQoZGVzY3JpcHRpdmVfc3RhdGlzdGljcyRtZWFuIC0NCiAgICAgICAgICAgICAgIGRlc2NyaXB0aXZlX3N0YXRpc3RpY3MkY2ksICAgMiksIG5zbWFsbCA9IDIpLCAiLCAiLA0KICBmb3JtYXQocm91bmQoZGVzY3JpcHRpdmVfc3RhdGlzdGljcyRtZWFuICsNCiAgICAgICAgICAgICAgIGRlc2NyaXB0aXZlX3N0YXRpc3RpY3MkY2ksICAgMiksIG5zbWFsbCA9IDIpLCAiXSIpDQoNCg0KIyBTcGxpdCBhbmQgcmUtbWVyZ2UgdGFibGUgdG8gZGlzcGxheSBib3RoIGdyb3VwcyBuZXh0IHRvIGVhY2ggb3RoZXINCmRlc2NyaXB0aXZlX3N0YXRpc3RpY3MgPC0gc3BsaXQoZGVzY3JpcHRpdmVfc3RhdGlzdGljcywgZGVzY3JpcHRpdmVfc3RhdGlzdGljcyRncm91cCkNCmRlc2NyaXB0aXZlX3N0YXRpc3RpY3NfZGlzcGxheSA8LSBjYmluZChkZXNjcmlwdGl2ZV9zdGF0aXN0aWNzJE9DRFssIGMoIm1lYXN1cmUiLCAiTV9DSSIpXSwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGl2ZV9zdGF0aXN0aWNzJEhDWywgIk1fQ0kiXSkNCg0KDQojIERpc3BsYXkgdGFibGUgKGFuZCByZWFycmFuZ2Ugcm93cykNCm15X3RhYmxlX3RlbXBsYXRlKGRlc2NyaXB0aXZlX3N0YXRpc3RpY3NfZGlzcGxheVtjKDIsIDEpLCBdLA0KICBjYXB0aW9uID0gIkRlc2NyaXB0aXZlIFN0YXRpc3RpY3MgZm9yIEVSUCBNZWFzdXJlcyIsDQogIGNvbF9uYW1lcyA9IGMoIk1lYXN1cmUiLCByZXAoIk0gWzk1JSBDSV0iLCAyKSksDQogIGhlYWRlcl9hYm92ZV9jb25maWcgPSBjKCIiLCAiUGF0aWVudHMgd2l0aCBPQ0QiLCAiSGVhbHRoeSBjb250cm9sIHBhcnRpY2lwYW50cyIpKSAlPiUNCiAgYWRkX2Zvb3Rub3RlKCJcbiBOb3RlLiBDSXMgYXJlIGFkanVzdGVkIGZvciB3aXRoaW4tcGFydGljaXBhbnQgZGVzaWducyB1c2luZyB0aGUgbWV0aG9kIA0KICBkZXNjcmliZWQgYnkgTW9yZXkgKDIwMDgpLiBFUk4gYW5kIENSTiB3ZXJlIG1lYXN1cmVkIGFzIG1lYW4gYW1wbGl0dWRlIA0KICBmcm9tIDAgdG8gMTAwIG1zIGF0IGVsZWN0cm9kZSBGQ3ogYWZ0ZXIgZmFsc2UgYWxhcm1zIGFuZCBoaXRzLCByZXNwZWN0aXZlbHkuIiwgbm90YXRpb24gPSAibm9uZSIpIA0KYGBgDQo8YnI+PGJyPg0KDQojIyBTcGxpdC1IYWxmIFJlbGlhYmlsaXR5DQoqKioNCg0KYGBge3IgcGVybXV0YXRpb24tc3BsaXQtaGFsZi1yZWxpYWJpbGl0eX0NCg0KIyBDYWxjdWxhdGUgcGVybXV0YXRpb24tYmFzZWQgc3BsaXQtaGFsZiBpbnRlcm5hbCBjb25zaXN0ZW5jeSBmb3IgRVJOL0NSTg0KaW52aXNpYmxlKGNhcHR1cmUub3V0cHV0KHNwbGl0X2hhbGZfcmVsaWFiaWxpdHkgPC0gc3BsaXRoYWxmKA0KICBkYXRhID0gc2luZ2xlX3RyaWFsX2RhdGFfZXJwLA0KICBvdXRjb21lID0gIlJUIiwNCiAgc2NvcmUgPSAiYXZlcmFnZSIsDQogIHBlcm11dGF0aW9ucyA9IDUwMDAsDQogIGhhbGZ0eXBlID0gInJhbmRvbSIsDQogIHZhci5SVCA9ICJNRk5fMF8xMDBfRkN6IiwNCiAgdmFyLnBhcnRpY2lwYW50ID0gInBhcnRpY2lwYW50X2lkIiwNCiAgdmFyLmNvbmRpdGlvbiA9ICJnbmdfYWNjdXJhY3kiLA0KICBjb25kaXRpb25saXN0ID0gYygiY29ycmVjdCIsICJpbmNvcnJlY3QiKSwNCiAgYXZlcmFnZSA9ICJtZWFuIikpKQ0KDQoNCiMgTWFrZSBuaWNlIHRhYmxlIGZvciBkaXNwbGF5DQpzcGxpdF9oYWxmX3JlbGlhYmlsaXR5IDwtIGNiaW5kKEVSUCA9IGMoIkNSTiIsICJFUk4iKSwgc3BsaXRfaGFsZl9yZWxpYWJpbGl0eSRmaW5hbF9lc3RpbWF0ZXMpICU+JQ0KICBkcGx5cjo6c2VsZWN0KEVSUCwgc3BlYXJtYW5icm93biwgU0JfbG93LCBTQl9oaWdoKSAlPiUNCiAgZHBseXI6OnJlbmFtZShyID0gc3BlYXJtYW5icm93biwgQ0lfbG93ID0gU0JfbG93LCBDSV91cCA9IFNCX2hpZ2gpDQoNCg0KIyBEaXNwbGF5IHBlcm11dGF0aW9uLWJhc2VkIHNwbGl0LWhhbGYgaW50ZXJuYWwgY29uc2lzdGVuY3kNCm15X3RhYmxlX3RlbXBsYXRlKHNwbGl0X2hhbGZfcmVsaWFiaWxpdHlbYygyLCAxKSwgXSwNCiAgY2FwdGlvbiA9ICJQZXJtdXRhdGlvbi1iYXNlZCBzcGxpdC1oYWxmIHJlbGlhYmlsaXR5IikNCmBgYA0KSW50ZXJuYWwgY29uc2lzdGVuY3kgd2FzIGdvb2QgZm9yIEVSTiAoKnIqID0gYHIgcm91bmQoc3BsaXRfaGFsZl9yZWxpYWJpbGl0eVsyLF0kciwgZGlnaXRzID0gMilgLCA5NSUgQ0kgW2ByIHJvdW5kKHNwbGl0X2hhbGZfcmVsaWFiaWxpdHlbMixdJENJX2xvdywgZGlnaXRzID0gMilgLCBgciByb3VuZChzcGxpdF9oYWxmX3JlbGlhYmlsaXR5WzIsXSRDSV91cCwgZGlnaXRzID0gMilgXSkgYW5kIGV4Y2VsbGVudCBmb3IgQ1JOICgqciogPSBgciByb3VuZChzcGxpdF9oYWxmX3JlbGlhYmlsaXR5WzEsXSRyLCBkaWdpdHMgPSAyKWAsIDk1JSBDSSBbYHIgcm91bmQoc3BsaXRfaGFsZl9yZWxpYWJpbGl0eVsxLF0kQ0lfbG93LCBkaWdpdHMgPSAyKWAsIGByIHJvdW5kKHNwbGl0X2hhbGZfcmVsaWFiaWxpdHlbMSxdJENJX3VwLCBkaWdpdHMgPSAyKWBdKSwgYXMgYXNzZXNzZWQgd2l0aCBhIHBlcm11dGF0aW9uLWJhc2VkIHNwbGl0LWhhbGYgbWV0aG9kIHVzaW5nIDUsMDAwIHJhbmRvbSBzcGxpdHMgYW5kIFNwZWFybWFu4oCTQnJvd24gY29ycmVjdGlvbi4NCjxicj48YnI+PGJyPg0KDQojIyBBbmFseXNpcyBvZiBFUk4gJiBDUk4gey50YWJzZXR9DQoqKioNCg0KV2UgcGVyZm9ybWVkIGxpbmVhciBtaXhlZCBtb2RlbHMgKExNTXMpIG9uIHNpbmdsZS10cmlhbCBkYXRhLiBBbmFseXNpcyBvZiBFUlAgYW1wbGl0dWRlcyBpbiB0aGUgZ28vbm8tZ28gdGFzayBpbmNsdWRlZCBncm91cCBhcyBmaXhlZCBlZmZlY3QuIE1vZGVscyBvbiBFUk4gYW5kIENSTiB3ZXJlIGJhc2VkIG9uIGZhbHNlIGFsYXJtIGFuZCBoaXQgdHJpYWxzLCByZXNwZWN0aXZlbHkuIA0KDQpXZSB1c2VkIHNsaWRpbmcgZGlmZmVyZW5jZSBjb250cmFzdHMgZm9yIGNhdGVnb3JpY2FsIGZpeGVkIGVmZmVjdHMgYW5kIHN0YXJ0ZWQgd2l0aCB0aGUgbWF4aW1hbCByYW5kb20tZWZmZWN0cyBzdHJ1Y3R1cmUgZm9yIGVhY2ggbW9kZWwuIEluIGNhc2Ugb2Ygbm9uLWNvbnZlcmdlbmNlLCByYW5kb20gZWZmZWN0cyB3ZXJlIHNwZWNpZmllZCBhcyB1bmNvcnJlbGF0ZWQuIFVzaW5nIHByaW5jaXBhbCBjb21wb25lbnQgYW5hbHlzaXMsIHdlIGlkZW50aWZpZWQgcmFuZG9tIGVmZmVjdHMgZXhwbGFpbmluZyB6ZXJvIHZhcmlhbmNlIGFuZCByZW1vdmVkIHRoZXNlLCBhcyByZWNvbW1lbmRlZCBieSBCYXRlcywgS2xpZWdsLCBldCBhbC4gKDIwMTUpLiANCjxicj48YnI+DQoNCiMjIyBEZXRlcm1pbmUgRGF0YSBUcmFuc2Zvcm1hdGlvbg0KDQpObyBkYXRhIHRyYW5zZm9ybWF0aW9uIHdhcyByZXF1aXJlZCB0byBtZWV0IHRoZSBhc3N1bXB0aW9uIG9mIG5vcm1hbGx5IGRpc3RyaWJ1dGVkIHJlc2lkdWFscy4gVGhpcyB3YXMgZGV0ZXJtaW5lZCB1c2luZyB0aGUgQm944oCTQ294IHByb2NlZHVyZSAoQm94ICYgQ294LCAxOTY0KS4NCg0KYGBge3IgZXJwLWRldGVybWluZS10cmFuc2Zvcm1hdGlvbiwgZmlnLndpZHRoID0gOCwgZmlnLmhlaWdodCA9IDZ9DQoNCiMgQXJyYW5nZSBwbG90cw0KcGFyKG1mcm93ID0gYygyLCAzKSkNCg0KDQojIERldGVybWluZSB0cmFuc2Zvcm1hdGlvbiBvZiBFUk4gYnkgZXN0aW1hdGluZyBvcHRpbWFsIGxhbWJkYSB1c2luZyBCb3jigJNDb3ggcHJvY2VkdXJlDQpiY19lcm4gPC0gYm94Y294KE1GTl8wXzEwMF9GQ3ogKyA1MCB+IDEsDQogIGRhdGEgPSBzaW5nbGVfdHJpYWxfZGF0YV9lcnBbc2luZ2xlX3RyaWFsX2RhdGFfZXJwJGduZ19hY2N1cmFjeSA9PSAiaW5jb3JyZWN0IiwgXSkNCm9wdGxhbWJkYV9lcm4gPC0gYmNfZXJuJHhbd2hpY2gubWF4KGJjX2VybiR5KV0NCg0KDQojIERlbnNpdHkgcGxvdCBmb3IgRVJOIHZhbHVlcw0KcGxvdChkZW5zaXR5KHNpbmdsZV90cmlhbF9kYXRhX2VycFtzaW5nbGVfdHJpYWxfZGF0YV9lcnAkZ25nX2FjY3VyYWN5ID09ICJpbmNvcnJlY3QiLCBdJE1GTl8wXzEwMF9GQ3opLA0KICBtYWluID0gIkVSTjogRGVuc2l0eSBQbG90IikNCg0KDQojIFEtcSBwbG90IGZvciBFUk4gdmFsdWVzDQpxcW5vcm0oc2luZ2xlX3RyaWFsX2RhdGFfZXJwW3NpbmdsZV90cmlhbF9kYXRhX2VycCRnbmdfYWNjdXJhY3kgPT0gImluY29ycmVjdCIsIF0kTUZOXzBfMTAwX0ZDeiwNCiAgbWFpbiA9ICJFUk46IFEtUSBQbG90IiwgcGNoID0gMSkNCg0KDQojIERldGVybWluZSB0cmFuc2Zvcm1hdGlvbiBvZiBDUk4gYnkgZXN0aW1hdGluZyBvcHRpbWFsIGxhbWJkYSB1c2luZyBCb3jigJNDb3ggcHJvY2VkdXJlDQpiY19jcm4gPC0gYm94Y294KE1GTl8wXzEwMF9GQ3ogKyA1MCB+IDEsDQogIGRhdGEgPSBzaW5nbGVfdHJpYWxfZGF0YV9lcnBbc2luZ2xlX3RyaWFsX2RhdGFfZXJwJGduZ19hY2N1cmFjeSA9PSAiY29ycmVjdCIsIF0pDQpvcHRsYW1iZGFfY3JuIDwtIGJjX2NybiR4W3doaWNoLm1heChiY19jcm4keSldDQoNCg0KIyBEZW5zaXR5IHBsb3QgZm9yIENSTiB2YWx1ZXMNCnBsb3QoZGVuc2l0eShzaW5nbGVfdHJpYWxfZGF0YV9lcnBbc2luZ2xlX3RyaWFsX2RhdGFfZXJwJGduZ19hY2N1cmFjeSA9PSAiY29ycmVjdCIsIF0kTUZOXzBfMTAwX0ZDeiksDQogIG1haW4gPSAiQ1JOOiBEZW5zaXR5IFBsb3QiKQ0KDQoNCiMgUS1xIHBsb3QgZm9yIENSTiB2YWx1ZXMNCnFxbm9ybShzaW5nbGVfdHJpYWxfZGF0YV9lcnBbc2luZ2xlX3RyaWFsX2RhdGFfZXJwJGduZ19hY2N1cmFjeSA9PSAiY29ycmVjdCIsIF0kTUZOXzBfMTAwX0ZDeiwNCiAgbWFpbiA9ICJDUk46IFEtUSBQbG90IiwgcGNoID0gMSkNCg0KDQojIFJlc2V0IHBsb3QgbGF5b3V0DQpwYXIobWZyb3cgPSBjKDEsIDEpKQ0KYGBgDQpGb3IgdGhlIEVSTiwgdGhlIG9wdGltYWwgbGFtYmRhIGlzIGByIHJvdW5kKG9wdGxhbWJkYV9lcm4sIGRpZ2l0cyA9IDIpYCAodXBwZXIgbGVmdCBwbG90KSwgc3VnZ2VzdGluZyB0aGF0IG5vIHRyYW5zZm9ybWF0aW9uIGlzIG5lZWRlZC4NCkZvciB0aGUgQ1JOLCB0aGUgb3B0aW1hbCBsYW1iZGEgaXMgYHIgcm91bmQob3B0bGFtYmRhX2NybiwgZGlnaXRzID0gMilgIChsb3dlciBsZWZ0IHBsb3QpLCBzdWdnZXN0aW5nIHRoYXQgbm8gdHJhbnNmb3JtYXRpb24gaXMgbmVlZGVkLg0KPGJyPjxicj48YnI+DQoNCiMjIyBMTU0gb24gRVJOICYgQ1JOIHsuYWN0aXZlfQ0KDQpUaGlzIHRhYmxlIGNvcnJlc3BvbmRzIHRvIFRhYmxlIDUgaW4gdGhlIG1hbnVzY3JpcHQuIA0KDQpgYGB7ciBsbW0tZXJwfQ0KDQojIERlZmluZSBjb250cmFzdHMgKHNsaWRpbmcgZGlmZmVyZW5jZSBjb250cmFzdHMgPSBlZmZlY3QgY29kaW5nIGZvciBmYWN0b3JzIHdpdGggMiBsZXZlbHMpDQpjb250cmFzdHMoc2luZ2xlX3RyaWFsX2RhdGFfZXJwJGdyb3VwKSA8LSBjb250ci5zZGlmKDIpDQoNCg0KIyBSdW4gbW9kZWwgb24gRVJOIHdpdGggbWF4aW1hbCByYW5kb20tZWZmZWN0cyBzdHJ1Y3R1cmUNCkxNTV9lcm4gPC0gbG1lcihNRk5fMF8xMDBfRkN6IH4gZ3JvdXAgKyAoMSB8IHBhcnRpY2lwYW50X2lkKSwNCiAgZGF0YSA9IHNpbmdsZV90cmlhbF9kYXRhX2VycFtzaW5nbGVfdHJpYWxfZGF0YV9lcnAkZ25nX2FjY3VyYWN5ID09ICJpbmNvcnJlY3QiLCBdLA0KICBSRU1MID0gVFJVRSwNCiAgY29udHJvbCA9IGxtZXJDb250cm9sKG9wdGltaXplciA9ICJib2J5cWEiKSkNCg0KDQojIENoZWNrIG1vZGVsIG91dHB1dCBhbmQgUENBIG9mIHJhbmRvbS1lZmZlY3RzIHZhcmlhbmNlLWNvdmFyaWFuY2UgZXN0aW1hdGVzDQojIHN1bW1hcnkoTE1NX2VybikgICAgICAgICMgTW9kZWwgZG9lcyBjb252ZXJnZQ0KIyBpc1Npbmd1bGFyKExNTV9lcm4pICAgICAjIE5vIHNpbmd1bGFyIGZpdA0KIyBzdW1tYXJ5KHJlUENBKExNTV9lcm4pKSAjIEFsbCB0ZXJtcyBleHBsYWluIHZhcmlhbmNlDQoNCg0KIyBSdW4gbW9kZWwgb24gQ1JOIHdpdGggbWF4aW1hbCByYW5kb20tZWZmZWN0cyBzdHJ1Y3R1cmUNCkxNTV9jcm4gPC0gbG1lcihNRk5fMF8xMDBfRkN6IH4gZ3JvdXAgKyAoMSB8IHBhcnRpY2lwYW50X2lkKSwNCiAgZGF0YSA9IHNpbmdsZV90cmlhbF9kYXRhX2VycFtzaW5nbGVfdHJpYWxfZGF0YV9lcnAkZ25nX2FjY3VyYWN5ID09ICJjb3JyZWN0IiwgXSwNCiAgUkVNTCA9IFRSVUUsDQogIGNvbnRyb2wgPSBsbWVyQ29udHJvbChvcHRpbWl6ZXIgPSAiYm9ieXFhIikpDQoNCg0KIyBDaGVjayBtb2RlbCBvdXRwdXQgYW5kIFBDQSBvZiByYW5kb20tZWZmZWN0cyB2YXJpYW5jZS1jb3ZhcmlhbmNlIGVzdGltYXRlcw0KIyBzdW1tYXJ5KExNTV9jcm4pICAgICAgICAjIE1vZGVsIGRvZXMgY29udmVyZ2UNCiMgaXNTaW5ndWxhcihMTU1fY3JuKSAgICAgIyBObyBzaW5ndWxhciBmaXQNCiMgc3VtbWFyeShyZVBDQShMTU1fY3JuKSkgIyBBbGwgdGVybXMgZXhwbGFpbiB2YXJpYW5jZQ0KDQoNCiMgRGlzcGxheSByZXN1bHRzIChmaXhlZCBlZmZlY3RzKQ0KdGFiX21vZGVsKExNTV9lcm4sIExNTV9jcm4sDQogIGR2LmxhYmVscyA9IGMoIkVSTiIsICJDUk4iKSwgcHJlZC5sYWJlbHMgPSBsYWJlbHMsIHNob3cuc3RhdCA9IFRSVUUsIHNob3cuaWNjID0gRkFMU0UsDQogIHNob3cucjIgPSBGQUxTRSwgc2hvdy5yZS52YXIgPSBGQUxTRSwgc2hvdy5uZ3JvdXBzID0gRkFMU0UsIG1pbnVzLnNpZ24gPSAiLSIsDQogIHN0cmluZy5wcmVkID0gIkZpeGVkIGVmZmVjdHMiLCBzdHJpbmcuZXN0ID0gImIiLCBzdHJpbmcuc3RhdCA9ICJ0Iiwgc3RyaW5nLmNpID0gIjk1ICUgQ0kiLA0KICBwLnZhbCA9ICJzYXR0ZXJ0aHdhaXRlIiwgdGl0bGUgPSAiTE1NIFJlc3VsdHMgZm9yIEVSTiBhbmQgQ1JOIGluIHRoZSBHby9Oby1HbyBUYXNrIikNCg0KDQojIERpc3BsYXkgcmFuZG9tIGVmZmVjdHMNCnByaW50KCJSYW5kb20gZWZmZWN0cyBFUk46IikNCnByaW50KFZhckNvcnIoTE1NX2VybiksIGRpZ2l0cyA9IDMsIGNvbXAgPSAiU3RkLkRldi4iKQ0KDQoNCiMgRGlzcGxheSByYW5kb20gZWZmZWN0cw0KcHJpbnQoIlJhbmRvbSBlZmZlY3RzIENSTjoiKQ0KcHJpbnQoVmFyQ29ycihMTU1fY3JuKSwgZGlnaXRzID0gMywgY29tcCA9ICJTdGQuRGV2LiIpDQpgYGANCjxicj4NCkVSTiBhbmQgQ1JOIGFtcGxpdHVkZXMgZGlkIG5vdCBkaWZmZXIgc2lnbmlmaWNhbnRseSBiZXR3ZWVuIGdyb3Vwcy4NCjxicj48YnI+PGJyPg0KDQojIyBSZWZlcmVuY2VzDQoqKioNCkJhdGVzLCBELiwgS2xpZWdsLCBSLiwgVmFzaXNodGgsIFMuLCAmIEJhYXllbiwgSC4gKDIwMTUpLiAqUGFyc2ltb25pb3VzIG1peGVkIG1vZGVscy4qIGFyWGl2LiBodHRwczovL2FyeGl2Lm9yZy9hYnMvMTUwNi4wNDk2N3YyIDxicj48YnI+DQpCb3gsIEcuIEUuLCAmIENveCwgRC4gUi4gKDE5NjQpLiBBbiBhbmFseXNpcyBvZiB0cmFuc2Zvcm1hdGlvbnMuICpKb3VybmFsIG9mIHRoZSBSb3lhbCBTdGF0aXN0aWNhbCBTb2NpZXR5OiBTZXJpZXMgQiAoTWV0aG9kb2xvZ2ljYWwpLCAyNiooMiksIDIxMeKAkzI0My4gaHR0cHM6Ly9kb2kub3JnLzEwLjExMTEvai4yNTE3LTYxNjEuMTk2NC50YjAwNTUzLnggPGJyPjxicj4NCk1vcmV5LCBSLiAoMjAwOCkuIENvbmZpZGVuY2UgaW50ZXJ2YWxzIGZyb20gbm9ybWFsaXplZCBkYXRhOiBBIGNvcnJlY3Rpb24gdG8gQ291c2luZWF1ICgyMDA1KS4gKlR1dG9yaWFscyBpbiBRdWFudGl0YXRpdmUgTWV0aG9kcyBmb3IgUHN5Y2hvbG9neSwgNCooMiksIDYx4oCTNjQuIGh0dHBzOi8vZG9pLm9yZy8xMC4yMDk4Mi90cW1wLjA0LjIucDA2MSANCjxicj48YnI+PGJyPg0KDQojIyBTZXNzaW9uIEluZm8NCioqKg0KYGBge3Igc2Vzc2lvbi1pbmZvfQ0KDQpzZXNzaW9uSW5mbygpDQpgYGANCg==</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("4_ERP.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

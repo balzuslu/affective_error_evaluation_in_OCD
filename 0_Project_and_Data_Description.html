@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Project &amp; Data Description</title>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="web_style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Affective Error Evaluation in OCD</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="0_Project_and_Data_Description.html">
+    <span class="glyphicon glyphicon-info-sign"></span>
+     
+    Project &amp; Data
+  </a>
+</li>
+<li>
+  <a href="1_Participants.html">
+    <span class="glyphicon glyphicon-info-sign"></span>
+     
+    Participants
+  </a>
+</li>
+<li>
+  <a href="2_Go_No-Go.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-hand-up"></span>
+     
+    Go/No-Go Data
+  </a>
+</li>
+<li>
+  <a href="3_Word_Categorization.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-hand-up"></span>
+     
+    Word Categorization Data (&amp; ERPs)
+  </a>
+</li>
+<li>
+  <a href="4_ERP.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-flash"></span>
+     
+    ERP Data
+  </a>
+</li>
+<li>
+  <a href="5_Plots.html">
+    <span class="glyphicon glyphicon glyphicon glyphicon-stats"></span>
+     
+    Plots
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:luisa.balzus@gmail.com">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Project &amp; Data Description</h1>
+
+</div>
+
+
+<!-- Set general settings -->
+<!-- Load Project_and_Data_Description.md file containing project and data description -->
+<pre class="r"><code># Load markdown file that contains the project and data description
+filename         &lt;- &quot;Project_and_Data_Description.md&quot;
+data_description &lt;- readChar(filename, file.info(filename)$size, )</code></pre>
+<!--
+Project and Data Description
+-->
+<div id="project-overview" class="section level2">
+<h2>Project Overview</h2>
+<p> </p>
+<ul>
+<li>In this preregistered study, we investigated the affective evaluation of errors and its relation to the error-related negativity (ERN) in patients with obsessive-compulsive disorder (OCD) and healthy individuals. Electroencephalogram (EEG) was recorded during an affective priming paradigm in which responses in a go/no-go task were followed by valence-based word categorization.</li>
+</ul>
+<p> </p>
+</div>
+<div id="procedure" class="section level2">
+<h2>Procedure</h2>
+<p> </p>
+<ul>
+<li><p>Participants performed a go/no-go task with an embedded word categorization task in which each go/no-go response was followed by categorization of a word.<br />
+ </p></li>
+<li><p>Go/no-go task:</p>
+<ul>
+<li>A white upward- or downward-pointing arrow was presented, followed by a green or turquoise arrow that pointed in the same or opposite direction as the white arrow. Participants were instructed to respond by key press if the white arrow turned green and kept the same direction (go trial) and to withhold their response if it turned turquoise or changed its direction (no-go trial).</li>
+<li>Different response types were defined in the go/no-go task:
+<ul>
+<li>fast hits (FH; correct responses to go stimuli below response time [RT] limit)</li>
+<li>slow hits (SH; correct responses to go stimuli above RT limit)</li>
+<li>inhibited responses (IR; correct inhibitions to no-go stimuli)</li>
+<li>false alarms (FA; erroneous responses to no-go stimuli)<br />
+ </li>
+</ul></li>
+</ul></li>
+<li><p>Word categorization task:</p>
+<ul>
+<li>After each go/no-go trial, an affective word was presented that participants were instructed to categorize as positive or negative.<br />
+ </li>
+</ul></li>
+<li><p>During the task, the EEG was recorded.</p>
+<ul>
+<li>To quantify single-trial ERN and correct-response negativity (CRN), we computed mean amplitudes from 0 to 100 ms post-response (in the go/no-go task) at FCz.<br />
+ </li>
+</ul></li>
+<li><p>This study was part of a project on effects of transcranial direct current stimulation (tDCS) on error monitoring in OCD (Balzus et al., 2022) comprising one session with active and one with placebo stimulation in randomized counterbalanced order. Only data obtained after placebo stimulation were included in the present study.</p></li>
+</ul>
+<p> </p>
+</div>
+<div id="hypotheses" class="section level2">
+<h2>Hypotheses</h2>
+<p> </p>
+<ul>
+<li><p>We expected that errors are evaluated as negative, such that after erroneous responses to no-go stimuli (false alarms), participants across groups would categorize negative words faster and more accurately than positive words (= affective priming effect).  </p></li>
+<li><p>Additionally, we assumed that strong negative evaluation of errors relates to increased ERN amplitudes, such that larger ERN amplitudes would be associated with larger response facilitation to negative compared to positive words after false alarms (i.e., a larger priming effect).  </p></li>
+<li><p>Moreover, we predicted that after correct responses to go stimuli, participants across groups would categorize positive words faster than negative words and that this response facilitation would be associated with the CRN.  </p></li>
+<li><p>With regard to group differences, we hypothesized that patients with OCD differ from healthy individuals in the affective evaluation of their errors.</p></li>
+</ul>
+<p> </p>
+</div>
+<div id="preregistration" class="section level2">
+<h2>Preregistration</h2>
+<p> </p>
+<ul>
+<li>Hypotheses, experimental design, sample size, and analysis plan of this study were preregistered on the Open Science Framework (<a href="https://osf.io/j28hr/" class="uri">https://osf.io/j28hr/</a>).</li>
+</ul>
+<p> </p>
+</div>
+<div id="data-description" class="section level2">
+<h2>Data Description</h2>
+<p> </p>
+<div id="single_trial_data.rda" class="section level3">
+<h3>‘Single_Trial_Data.rda’</h3>
+<p> </p>
+<table>
+<colgroup>
+<col width="13%" />
+<col width="38%" />
+<col width="48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">VARIABLE</th>
+<th align="left">DESCRIPTION</th>
+<th align="left">VALUES</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">participant_id</td>
+<td align="left">Participant identifier</td>
+<td align="left">C_01 to C_30 and P_01 to P_30</td>
+</tr>
+<tr class="even">
+<td align="left">group</td>
+<td align="left">Participant group</td>
+<td align="left">HC = healthy control participant <br> OCD = patient with OCD</td>
+</tr>
+<tr class="odd">
+<td align="left">session</td>
+<td align="left">Experimental session</td>
+<td align="left">T1 = first experimental session <br> T2 = second experimental session</td>
+</tr>
+<tr class="even">
+<td align="left">stimulation</td>
+<td align="left">Stimulation condition</td>
+<td align="left">verum = cathodal tDCS <br> sham = placebo tDCS</td>
+</tr>
+<tr class="odd">
+<td align="left">trial</td>
+<td align="left">Trial number within the task</td>
+<td align="left">1 to 516</td>
+</tr>
+<tr class="even">
+<td align="left">gng_response_type</td>
+<td align="left">Response type in the go/no-go task</td>
+<td align="left">SH = slow hit <br> FH = fast hit <br> FA = false alarm <br> IR = inhibited response <br> miss = missing response in go trial <br> wrong_key = response made with a word categorization key</td>
+</tr>
+<tr class="odd">
+<td align="left">gng_rt</td>
+<td align="left">RT in the go/no-go task</td>
+<td align="left">RT in milliseconds <br> NAs for trials in which no response was made (IR, miss)</td>
+</tr>
+<tr class="even">
+<td align="left">gng_rt_invalid</td>
+<td align="left">Indication whether RT in the go/no-go task was &lt; 100 ms or &gt; 800 ms</td>
+<td align="left">TRUE <br> FALSE <br> NAs for trials in which no response was made (IR, miss)</td>
+</tr>
+<tr class="odd">
+<td align="left">gng_rt_log</td>
+<td align="left">Log-transformed RT in the go/no-go task</td>
+<td align="left">log(RT) in milliseconds <br> NAs for trials in which no response was made (IR, miss)</td>
+</tr>
+<tr class="even">
+<td align="left">word</td>
+<td align="left">Affective word presented in the word categorization task</td>
+<td align="left">60 German words (30 positive, 30 negative) from the Berlin Affective Word List Reloaded (Vo et al., 2009)</td>
+</tr>
+<tr class="odd">
+<td align="left">word_valence</td>
+<td align="left">Valence of the affective word</td>
+<td align="left">pos = positive <br> neg = negative</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy</td>
+<td align="left">Correctness of the word categorization</td>
+<td align="left">correct = correct categorization <br> incorrect = incorrect categorization <br> miss = missing response <br> wrong_key = response made with the go/no-go key</td>
+</tr>
+<tr class="odd">
+<td align="left">word_rt</td>
+<td align="left">RT in the word categorization task</td>
+<td align="left">RT in milliseconds <br> NAs for trials in which no response was made (miss)</td>
+</tr>
+<tr class="even">
+<td align="left">word_rt_outlier</td>
+<td align="left">Indication whether word categorization RT deviated more than three median absolute deviations from the individual condition-specific median</td>
+<td align="left">TRUE <br> FALSE <br> NAs for trials in which no response was made (miss)</td>
+</tr>
+<tr class="odd">
+<td align="left">word_rt_log</td>
+<td align="left">Log-transformed RT in the word categorization task</td>
+<td align="left">log(RT) in milliseconds <br> NAs for trials in which no response was made (miss)</td>
+</tr>
+<tr class="even">
+<td align="left">MFN_0_100_FCz</td>
+<td align="left">Medial-frontal negativity (MFN; refers to ERN for errors and CRN for hits); response-locked ERP from 0-100 ms at electrode FCz</td>
+<td align="left">Mean amplitude in microvolts <br> NAs for trials with EEG artifact</td>
+</tr>
+<tr class="odd">
+<td align="left">MFN_artifact</td>
+<td align="left">Indication whether EEG artifact was present in the trial</td>
+<td align="left">TRUE <br> FALSE</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+</div>
+<div id="trait_data.rda" class="section level3">
+<h3>‘Trait_Data.rda’</h3>
+<p> </p>
+<table>
+<colgroup>
+<col width="13%" />
+<col width="38%" />
+<col width="48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">VARIABLE</th>
+<th align="left">DESCRIPTION</th>
+<th align="left">VALUES</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">participant_id</td>
+<td align="left">Participant identifier</td>
+<td align="left">C_01 to C_30 and P_01 to P_30</td>
+</tr>
+<tr class="even">
+<td align="left">BDI-II</td>
+<td align="left">Score on the Beck Depression Inventory-II (assessment of depressive symptom severity)</td>
+<td align="left">0 to 52 (questionnaire scale range: 0 to 63)</td>
+</tr>
+<tr class="odd">
+<td align="left">OCI-R</td>
+<td align="left">Score on the Obsessive-Compulsive Inventory-Revised (assessment of obsessive-compulsive symptom severity)</td>
+<td align="left">0 to 45 (questionnaire scale range: 0 to 72)</td>
+</tr>
+<tr class="even">
+<td align="left">PSWQ</td>
+<td align="left">Score on the Penn State Worry Questionnaire (assessment of trait worry)</td>
+<td align="left">23 to 77 (questionnaire scale range: 16 to 80)</td>
+</tr>
+<tr class="odd">
+<td align="left">STAI trait</td>
+<td align="left">Score on the State-Trait Anxiety Inventory (assessment of trait anxiety)</td>
+<td align="left">22 to 79 (questionnaire scale range: 20 to 80)</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+</div>
+<div id="response_locked_data_for_plots.csv" class="section level3">
+<h3>‘response_locked_data_for_plots.csv’</h3>
+<p> </p>
+<table>
+<colgroup>
+<col width="30%" />
+<col width="21%" />
+<col width="48%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">VARIABLE</th>
+<th align="left">DESCRIPTION</th>
+<th align="left">VALUES</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">participant_id</td>
+<td align="left">Participant identifier</td>
+<td align="left">C_01 to C_30 and P_01 to P_30</td>
+</tr>
+<tr class="even">
+<td align="left">time</td>
+<td align="left">Time sampling point within an EEG epoch</td>
+<td align="left">-500 to 1000 ms in steps of 2 ms (locked to the go/no-go response)</td>
+</tr>
+<tr class="odd">
+<td align="left">condition</td>
+<td align="left">Response type in the go/no-go task</td>
+<td align="left">1 = correct <br> 2 = incorrect</td>
+</tr>
+<tr class="even">
+<td align="left">Fp1, Fp2, F9, F7, F3, Fz, F4, F8, F10, FC1, FCz, FC2, T7, C3, Cz, C4, T8, CPz, P7, P3, Pz, P4, P8, O1, O2, M1, IO1</td>
+<td align="left">Electrode site</td>
+<td align="left">Mean amplitude in microvolts</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p> </p>
+<p>Balzus, L., Klawohn, J., Elsner, B., Schmidt, S., Brandt, S. A., &amp; Kathmann, N. (2022). Non-invasive brain stimulation modulates neural correlates of performance monitoring in patients with obsessive-compulsive disorder. <em>NeuroImage: Clinical, 35</em>, Article 103113. <a href="https://doi.org/10.1016/j.nicl.2022.103113" class="uri">https://doi.org/10.1016/j.nicl.2022.103113</a> <br><br> Vo, M. L., Conrad, M., Kuchinke, L., Urton, K., Hofmann, M. J., &amp; Jacobs, A. M. (2009). The Berlin Affective Word List Reloaded (BAWL-R). <em>Behavior Research Methods, 41</em>(2), 534-538. <a href="https://doi.org/10.3758/BRM.41.2.534" class="uri">https://doi.org/10.3758/BRM.41.2.534</a></p>
+<p><br><br></p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.6.1 (2019-07-05)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=German_Germany.1252  LC_CTYPE=German_Germany.1252   
+## [3] LC_MONETARY=German_Germany.1252 LC_NUMERIC=C                   
+## [5] LC_TIME=German_Germany.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices datasets  utils     methods   base     
+## 
+## loaded via a namespace (and not attached):
+##  [1] digest_0.6.30   R6_2.5.1        jsonlite_1.8.3  magrittr_2.0.3 
+##  [5] evaluate_0.16   stringi_1.6.1   cachem_1.0.4    rlang_1.0.6    
+##  [9] cli_3.4.1       renv_0.12.0     rstudioapi_0.14 jquerylib_0.1.4
+## [13] bslib_0.4.0     rmarkdown_2.16  tools_3.6.1     stringr_1.4.1  
+## [17] xfun_0.33       yaml_2.2.1      fastmap_1.1.0   compiler_3.6.1 
+## [21] htmltools_0.5.3 knitr_1.40      sass_0.4.0</code></pre>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlByb2plY3QgJiBEYXRhIERlc2NyaXB0aW9uIg0Kb3V0cHV0OiANCiAgaHRtbF9kb2N1bWVudA0KLS0tDQoNCjwhLS0gU2V0IGdlbmVyYWwgc2V0dGluZ3MgLS0+DQoNCmBgYHtyIHNldHVwLCBpbmNsdWRlID0gRkFMU0V9DQoNCiMgU2V0IGdlbmVyYWwgc2V0dGluZ3MgZm9yIG1hcmtkb3duIGZpbGUNCmtuaXRyOjpvcHRzX2NodW5rJHNldCgNCiAgbWVzc2FnZSA9IEZBTFNFLA0KICB3YXJuaW5nID0gRkFMU0UpDQoNCg0KIyBDbGVhciBlbnZpcm9ubWVudA0Kcm0obGlzdCA9IGxzKCkpDQpgYGANCg0KPCEtLSBMb2FkIFByb2plY3RfYW5kX0RhdGFfRGVzY3JpcHRpb24ubWQgZmlsZSBjb250YWluaW5nIHByb2plY3QgYW5kIGRhdGEgZGVzY3JpcHRpb24gLS0+DQoNCmBgYHtyIGRhdGEtZGVzY3JpcHRpb259IA0KDQojIExvYWQgbWFya2Rvd24gZmlsZSB0aGF0IGNvbnRhaW5zIHRoZSBwcm9qZWN0IGFuZCBkYXRhIGRlc2NyaXB0aW9uDQpmaWxlbmFtZSAgICAgICAgIDwtICJQcm9qZWN0X2FuZF9EYXRhX0Rlc2NyaXB0aW9uLm1kIg0KZGF0YV9kZXNjcmlwdGlvbiA8LSByZWFkQ2hhcihmaWxlbmFtZSwgZmlsZS5pbmZvKGZpbGVuYW1lKSRzaXplLCApDQpgYGANCmByIGRhdGFfZGVzY3JpcHRpb25gDQo8YnI+PGJyPg0KDQojIyBTZXNzaW9uIEluZm8NCg0KYGBge3Igc2Vzc2lvbi1pbmZvfQ0KDQpzZXNzaW9uSW5mbygpDQpgYGANCg==</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("0_Project_and_Data_Description.Rmd");
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

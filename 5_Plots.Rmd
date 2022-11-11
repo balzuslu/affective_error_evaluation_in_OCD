@@ -1,0 +1,615 @@
+---
+title: "Plots"
+output: 
+  html_document
+---
+
+<!-- Set general settings -->
+
+```{r setup, message = FALSE, warning = FALSE}
+
+# Set general settings for markdown file
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  comment = "",
+  results = "hold")
+
+
+# Clear environment
+rm(list = ls())
+
+
+# Enable/disable caching of time-consuming code chunks
+knitr_cache_enabled = TRUE
+
+
+# Load packages
+library(dplyr)      # for data wrangling
+library(ggplot2)    # for plotting
+library(ggsignif)   # for adding asterisks
+library(cowplot)    # for arranging plots
+library(purrr)      # for calculating within-participant CIs
+library(eegUtils)   # for plotting EEG topographies
+library(tidyr)      # for gather function
+library(sjPlot)     # for plot_model function
+library(ggeffects)  # for extracting certain effects from model
+
+
+# Load functions
+source("./functions/summarySEwithinO.R")  # Function provided by R-cookbook: http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+source("./functions/R_rainclouds.R")      # Function to create raincloud plots
+
+
+# Define function to create common legend (from http://www.sthda.com/english/wiki/wiki.php?id_contents=7930#add-a-common-legend-for-multiple-ggplot2-graphs)
+get_legend <- function(myggplot) {
+  tmp      <- ggplot_gtable(ggplot_build(myggplot))
+  leg      <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend   <- tmp$grobs[[leg]]
+  return(legend)}
+
+
+# Set figure theme
+my_figure_theme <- theme_classic(base_size = 11) +
+  theme(legend.position  = "bottom",
+        axis.ticks.x     = element_blank(),
+        plot.title       = element_text(hjust = 0.5),
+        axis.title.x     = element_text(vjust = -1),
+        strip.background = element_rect(color = "gray84", fill = "gray94", size = 0.3))
+
+
+# Set figure colors
+colors <- c("#2d5a7d", "tan1")
+colors_erp <- c("royalblue1", "navy", "tan1", "sienna3")
+```
+<br>
+
+## Plot Behavioral Data (Observed)
+***
+
+This figure corresponds to Figure 2 in the manuscript.
+
+```{r create-obs-value-plot, fig.width = 8, fig.height = 10, dpi = 600, fig.cap = "<br> Note. (A) Observed word categorization RT per preceding response type in the go/no-go task, word valence, and group. (B) Observed word categorization accuracy per preceding response type in the go/no-go task, word valence, and group. (A–B) The plots show individual data points, boxplots, and probability density plots based on raw data that were aggregated by participant. Asterisks indicate significant differences yielded by the (generalized) linear mixed model analysis. * p < .05, ** p < .01, *** p < .001."}
+
+
+# Load aggregated data per participant
+load(file = "./saved_objects_for_plots/data_aggregated_rt.Rda")
+load(file = "./saved_objects_for_plots/data_aggregated_acc.Rda")
+
+
+# Define facet labels
+group.labs <- c("Healthy Control Participants", "Patients With OCD")
+names(group.labs) <- c("HC", "OCD")
+
+
+#### Create RT plot ####
+
+# Create raincloud plot
+plot_rt <- ggplot() +
+  geom_flat_violin(data = data_aggregated_rt, aes(x = gng_response_type, y = word_rt, fill = word_valence),
+    position = position_nudge(x = .16, y = 0), adjust = 1.5, trim = FALSE, alpha = .7, color = NA) +
+  geom_point(data = data_aggregated_rt, aes(x = as.numeric(gng_response_type) - .23, y = word_rt, color = word_valence),
+    position = position_jitter(width = .05), size = 1, shape = 20, alpha = 0.8) +
+  geom_boxplot(data = data_aggregated_rt, aes(x = gng_response_type, y = word_rt, fill = word_valence),
+    outlier.shape = NA, alpha = 0.9, width = .3, color = "black") +
+  labs(x = "Response in the Go/No-Go Task", y = "Word Categorization RT (ms)") +
+  coord_cartesian(ylim = c(200, 1600)) +
+  scale_y_continuous(breaks = seq(200, 1600, 200), expand = c(0, 0)) +
+  scale_x_discrete(labels = c("SH" = "Slow Hit", "FH" = "Fast Hit", "FA" = "False Alarm", "IR" = "Inhibition")) +
+  scale_color_manual(name = "Word Valence:", labels = c("Negative", "Positive"), values = colors,
+    guide = guide_legend(override.aes = list(size = 6, shape = 15, alpha = 1), label.hjust = -2)) +
+  scale_fill_manual(name  = "Word Valence:", labels = c("Negative", "Positive"), values = colors, guide = "none") +
+  facet_wrap(~group, labeller = labeller(group = group.labs)) +
+  my_figure_theme
+
+
+# Save and remove legend
+legend <- get_legend(plot_rt)
+plot_rt <- plot_rt + theme(legend.position = "none")
+
+
+# Add position of asterisks
+asteriks_rt <- data.frame(
+  x1    = c(1.85, 2.85, 1.85, 2.85),
+  x2    = c(2.15, 3.15, 2.15, 3.15),
+  y1    = c(1320, 1320, 1320, 1320),
+  xstar = c(2,    3,    2,    3),
+  ystar = c(1330, 1330, 1330, 1330),
+  lab   = c("*", "***", "**", "*"),
+  group = c("HC", "HC",  "OCD", "OCD"))
+
+
+# Add position of asterisks across groups
+asteriks_rt2 <- data.frame(
+  x1    = .370,
+  x2    = .820,
+  y1    = .820,
+  xstar = .595,
+  ystar = .830,
+  lab   = "**")
+
+
+# Add a new layer on-top to add asterisks
+plot_rt <- plot_rt +
+  geom_text(data = asteriks_rt,    aes(x = xstar, y = ystar, label = lab, size = 2.5),    color = "gray30") +
+  geom_segment(data = asteriks_rt, aes(x = x1, xend = x2, y = y1, yend = y1), size = 0.3, color = "gray30") +
+  facet_grid(. ~ group, labeller = labeller(group = group.labs))
+
+
+# Add a new layer on-top to add asterisks across groups
+plot_rt <- ggdraw(plot_rt) +
+  geom_text(data = asteriks_rt2,    aes(x = xstar, y = ystar, label = lab, size = 2.5),    color = "gray30") +
+  geom_segment(data = asteriks_rt2, aes(x = x1, xend = x2, y = y1, yend = y1), size = 0.3, color = "gray30")
+
+
+#### Create accuracy plot ####
+
+# Create raincloud plot
+plot_acc <- ggplot() +
+  geom_flat_violin(data = data_aggregated_acc, aes(x = gng_response_type, y = accuracy, fill = word_valence),
+    position = position_nudge(x = .16, y = 0), adjust = 1.5, trim = FALSE, alpha = .7, color = NA) +
+  geom_point(data = data_aggregated_acc, aes(x = as.numeric(gng_response_type) - .23, y = accuracy, color = word_valence),
+    position = position_jitter(width = .05), size = 1, shape = 20, alpha = 0.8) +
+  geom_boxplot(data = data_aggregated_acc, aes(x = gng_response_type, y = accuracy, fill = word_valence),
+    outlier.shape = NA, alpha = 0.9, width = .3, color = "black") +
+  labs(x = "Response in the Go/No-Go Task", y = "Word Categorization Accuracy (%)") +
+  coord_cartesian(ylim = c(0, 101)) +
+  scale_y_continuous(breaks = seq(0, 100, 10), expand = c(0, 0)) +
+  scale_x_discrete(labels = c("SH" = "Slow Hit", "FH" = "Fast Hit", "FA" = "False Alarm", "IR" = "Inhibition")) +
+  scale_color_manual(name = "Word Valence:", labels = c("Negative", "Positive"), values = colors) +
+  scale_fill_manual(name  = "Word Valence:", labels = c("Negative", "Positive"), values = colors) +
+  facet_wrap(~group, labeller = labeller(group = group.labs)) +
+  my_figure_theme + theme(legend.position = "none")
+
+
+# Add position of asterisks
+asteriks_acc <- data.frame(
+  x1    = c(2.85, 2.85),
+  x2    = c(3.15, 3.15),
+  y1    = c(19,   19),
+  xstar = c(3,    3),
+  ystar = c(15,   15),
+  lab   = c("***", "***"),
+  group = c("HC", "OCD"))
+
+
+# Add a new layer on-top to add asterisks
+plot_acc <- plot_acc +
+  geom_text(data = asteriks_acc,    aes(x = xstar, y = ystar, label = lab, size = 2.5),    color = "gray30") +
+  geom_segment(data = asteriks_acc, aes(x = x1, xend = x2, y = y1, yend = y1), size = 0.3, color = "gray30") +
+  facet_grid(. ~ group, labeller = labeller(group = group.labs))
+
+
+# Arrange plots
+figure_obs_val <- ggdraw() +
+  draw_plot(plot_rt,  x = .00, y = .450, width = 1,  height = .55) +
+  draw_plot(plot_acc, x = .00, y = .050, width = 1,  height = .38) +
+  draw_plot(legend,   x = .28, y = .015, width = .5, height = .00) +
+  draw_plot_label(c("A", "B"), c(0, 0), c(1, 0.43), size = 15)
+figure_obs_val
+
+
+# Save plot
+ggsave(plot = figure_obs_val, "./figures/figure_2.tiff", width = 16, height = 23,
+  units = "cm", dpi = 600, compression = "lzw")
+```
+<br><br>
+
+## Plot Behavioral Data (Predicted)
+***
+
+This figure corresponds to Figure 3 in the manuscript.
+
+```{r create-pred-value-plot, fig.width = 8, fig.height = 5, dpi = 600, fig.cap = "<br> Note. (A) Model-predicted mean word categorization RT per preceding response type (fast hit, false alarm) in the go/no-go task, word valence, and group, computed as partial effects from the linear mixed model (LMM). RT data were log-transformed for analysis but back-transformed to ms for visualization. (B) Model-predicted mean word categorization accuracy per preceding response type (fast hit, false alarm) in the go/no-go task, word valence, and group, computed as partial effects from the generalized linear mixed model (GLMM). (A–B) Error bars indicate 95% confidence intervals. Asterisks indicate significant differences yielded by the (G)LMM analysis. * p < .05, ** p < .01, *** p < .001."}
+
+# Load (G)LMM output
+LMM_rt_final   <- readRDS(file = "./saved_objects_for_plots/LMM_rt_final.rds")
+GLMM_acc_final <- readRDS(file = "./saved_objects_for_plots/GLMM_acc_final.rds")
+
+
+# Define facet labels
+group.labs <- c("Healthy Control Participants", "Patients With OCD")
+names(group.labs) <- c("HC", "OCD")
+
+
+#### Create RT plot ####
+
+# Extract only FA and FH from LMM
+LMM_rt        <- ggpredict(LMM_rt_final, terms = c("gng_response_type", "word_valence", "group"))
+LMM_rt_plot   <- LMM_rt[LMM_rt$x %in% c("FH", "FA"), ]
+LMM_rt_plot$x <- droplevels(LMM_rt_plot$x)
+
+
+# Plot predicted means
+plot_LMM_rt <- ggplot() +
+  geom_point(data = LMM_rt_plot, aes(x = x, y = predicted, color = group),
+    position = position_dodge(width = .25), size = 2.5) +
+  geom_errorbar(data = LMM_rt_plot, aes(x = x, ymax = conf.low, ymin = conf.high,  color = group),
+    position = position_dodge(width = .25), size = .7, width = .2) +
+  labs(x = "Response in the Go/No-Go Task", y = "Predicted Word Categorization RT (ms)") +
+  coord_cartesian(ylim = c(500, 950)) +
+  scale_y_continuous(breaks = seq(500, 950, 50), expand = c(0, 0)) +
+  scale_x_discrete(labels = c("FH" = "Fast Hit", "FA" = "False Alarm")) +
+  scale_color_manual(name = "Word Valence:", labels = c("Negative", "Positive"), values = colors) +
+  facet_wrap(~facet, labeller = labeller(facet = group.labs)) +
+  my_figure_theme
+
+
+# Save and remove legend
+legend <- get_legend(plot_LMM_rt)
+plot_LMM_rt  <- plot_LMM_rt + theme(legend.position = "none")
+
+
+# Add position of asterisks
+asteriks_rt <- data.frame(
+  x1    = c(.225, .415, .655, .845, .430),
+  x2    = c(.275, .465, .705, .895, .880),
+  y1    = c(.800, .800, .800, .800, .860),
+  xstar = c(.250, .440, .680, .870, .655),
+  ystar = c(.810, .810, .810, .810, .870),
+  lab   = c("*",  "***", "**", "*",  "**"))
+
+
+# Add a new layer on-top to add asterisks
+plot_LMM_rt <- ggdraw(plot_LMM_rt) +
+  geom_text(data = asteriks_rt,    aes(x = xstar, y = ystar, label = lab, size = 2.5),    color = "gray30") +
+  geom_segment(data = asteriks_rt, aes(x = x1, xend = x2, y = y1, yend = y1), size = 0.3, color = "gray30")
+
+
+#### Create accuracy plot ####
+
+# Extract only FA and FH from GLMM
+GLMM_acc        <- ggpredict(GLMM_acc_final, terms = c("gng_response_type", "word_valence", "group"))
+GLMM_acc_plot   <- GLMM_acc[GLMM_acc$x %in% c("FH", "FA"), ]
+GLMM_acc_plot$x <- droplevels(GLMM_acc_plot$x)
+
+
+# Plot predicted means
+plot_GLMM_acc <- ggplot() +
+  geom_point(data = GLMM_acc_plot, aes(x = x, y = predicted * 100, color = group),
+    position = position_dodge(width = .25), size = 2.5) +
+  geom_errorbar(data = GLMM_acc_plot, aes(x = x, ymax = conf.low * 100, ymin = conf.high * 100, color = group),
+    position = position_dodge(width = .25), size = .7, width = .2) +
+  labs(x = "Response in the Go/No-Go Task", y = "Predicted Word Categorization Accuracy (%)") +
+  coord_cartesian(ylim = c(50, 110)) +
+  scale_y_continuous(breaks = seq(50, 100, 5), expand = c(0, 0)) +
+  scale_x_discrete(labels = c("FH" = "Fast Hit", "FA" = "False Alarm")) +
+  scale_color_manual(name = "Word Valence:", labels = c("Negative", "Positive"), values = colors) +
+  facet_wrap(~facet, labeller = labeller(facet = group.labs)) +
+  my_figure_theme +
+  theme(legend.position = "none")
+
+
+# Add position of asterisks
+asteriks_acc <- data.frame(
+  x1    = c(.415, .845),
+  x2    = c(.465, .895),
+  y1    = c(.800, .800),
+  xstar = c(.440, .870),
+  ystar = c(.810, .810),
+  lab   = c("***", "***"))
+
+
+# Add a new layer on-top with ggdraw in order to add asterisks
+plot_GLMM_acc <- ggdraw(plot_GLMM_acc) +
+  geom_text(data = asteriks_acc,    aes(x = xstar,  y = ystar, label = lab, size = 2.5),   color = "gray30") +
+  geom_segment(data = asteriks_acc, aes(x = x1, xend = x2, y = y1, yend = y1), size = 0.3, color = "gray30")
+
+
+#### Arrange plots
+figure_pred_val <- ggdraw() +
+  draw_plot(plot_LMM_rt,   x = .00, y = .070, width = .49, height = .93) +
+  draw_plot(plot_GLMM_acc, x = .52, y = .070, width = .49, height = .93) +
+  draw_plot(legend,        x = .28, y = .015, width = .50, height = .00)   +
+  draw_plot_label(c("A", "B"), c(0, 0.52), c(1, 1), size = 15)
+figure_pred_val
+
+
+# Save plot
+ggsave(plot = figure_pred_val, "./figures/figure_3.tiff", width = 20, height = 12,
+  units = "cm", dpi = 600, compression = "lzw")
+```
+<br><br>
+
+## Plot ERP Data
+***
+
+This figure corresponds to Figure 4 in the manuscript.
+
+<!-- Load and clean data -->
+
+```{r load-and-clean-erp-data, cache = knitr_cache_enabled}
+
+# Load data
+resp_locked_data <- read.csv(file = "./data/response_locked_data_for_plots.csv", header = TRUE)
+
+
+# Create relevant variables and filter data
+resp_locked_data <- resp_locked_data %>%
+  dplyr::mutate(
+    stimulation = factor(ifelse(
+      participant_id == "C_01_T1" | participant_id == "C_02_T1" | participant_id == "C_03_T2" |
+      participant_id == "C_04_T2" | participant_id == "C_05_T1" | participant_id == "C_06_T2" |
+      participant_id == "C_07_T1" | participant_id == "C_08_T1" | participant_id == "C_09_T2" |
+      participant_id == "C_10_T2" | participant_id == "C_11_T2" | participant_id == "C_12_T2" |
+      participant_id == "C_13_T1" | participant_id == "C_15_T2" | participant_id == "C_16_T1" |
+      participant_id == "C_17_T2" | participant_id == "C_18_T2" | participant_id == "C_19_T1" |
+      participant_id == "C_20_T1" | participant_id == "C_21_T2" | participant_id == "C_22_T2" |
+      participant_id == "C_23_T1" | participant_id == "C_24_T1" | participant_id == "C_25_T1" |
+      participant_id == "C_26_T1" | participant_id == "C_27_T2" | participant_id == "C_28_T2" |
+      participant_id == "C_29_T1" | participant_id == "C_30_T2" | participant_id == "P_01_T1" |
+      participant_id == "P_02_T2" | participant_id == "P_03_T2" | participant_id == "P_04_T1" |
+      participant_id == "P_05_T1" | participant_id == "P_06_T1" | participant_id == "P_07_T2" |
+      participant_id == "P_08_T2" | participant_id == "P_09_T2" | participant_id == "P_10_T1" |
+      participant_id == "P_11_T2" | participant_id == "P_12_T2" | participant_id == "P_13_T1" |
+      participant_id == "P_15_T1" | participant_id == "P_16_T1" | participant_id == "P_17_T2" |
+      participant_id == "P_18_T1" | participant_id == "P_19_T1" | participant_id == "P_20_T2" |
+      participant_id == "P_21_T2" | participant_id == "P_22_T1" | participant_id == "P_23_T1" |
+      participant_id == "P_24_T2" | participant_id == "P_25_T1" | participant_id == "P_26_T2" |
+      participant_id == "P_27_T1" | participant_id == "P_28_T2" | participant_id == "P_29_T2" |
+      participant_id == "P_30_T1", "sham", "verum")),
+    condition      = factor(ifelse(condition == 1, "correct", "incorrect"), levels = c("incorrect", "correct")),
+    group          = factor(ifelse(substr(participant_id, 1, 1) == "C", "HC", "OCD")),
+    session        = factor(ifelse(substr(participant_id, 6, 7) == "T1", "T1", "T2")),
+    participant_id = factor(substr(participant_id, 1, 4))) %>% # to get correct no. of factor levels
+  # Only keep sham session and exclude P_02 and C_02
+  dplyr::filter(stimulation == "sham" & participant_id != "P_02" & participant_id != "C_02")
+
+
+# Update factor levels
+resp_locked_data$participant_id <- droplevels(resp_locked_data$participant_id)
+
+
+# Calculate running within-participant CIs
+running_ci_mfn <- resp_locked_data %>%
+  split(.$time) %>%
+  map(~ summarySEwithinO(
+    data = .,
+    measurevar  = "FCz",
+    withinvars  = "condition",
+    betweenvars = "group",
+    idvar       = "participant_id"))
+
+
+ci_mfn <- purrr::map_df(running_ci_mfn, magrittr::extract) %>%
+  dplyr::mutate(time = rep(unique(resp_locked_data$time), each = 4))
+# Note. 4 refers to  no. of conditions (group x response_type = 2 x 2 = 4)
+
+
+# Convert to long format for electrodes
+data_topo_mfn <- resp_locked_data %>%
+  # Remove channels of no interest
+  dplyr::select(-IO1, -M1, -F9, -F10) %>%
+  # Change from wide to long format for electrodes
+  tidyr::gather(., electrode, amplitude, Fp1:O2, factor_key = TRUE)  %>%
+  # Select time windows
+  dplyr::filter(time >= 0 & time <= 100) %>%
+  # Add electrode information
+  electrode_locations(., electrode = "electrode", drop = FALSE, montage = NULL)
+```
+
+<!-- Create plots -->
+
+```{r create-erp-plot, fig.width = 8, fig.height = 5, cache = knitr_cache_enabled, dpi = 600, fig.cap = "Note. (A) Grand average response-locked waveforms at electrode site FCz with 95% confidence intervals in patients with OCD and HC participants for correct (hit) and incorrect (false alarm) responses in the go/no-go task. The gray shaded time interval was used to quantify ERN and CRN amplitude. (B) Scalp topographies of ERN and CRN in both groups in the time window 0–100 ms after false alarms or hits, respectively."}
+
+#### Create waveform plot ####
+
+# Define electrode labels
+label_fcz <- data.frame(time = -320, FCz = 17.5, lab = "Text") 
+
+
+# Create waveform plot
+plot_waveform_mfn <- ggplot(resp_locked_data, aes(time, FCz)) +
+  stat_summary(fun = mean, geom = "line", size = 0.5, linetype = "solid", aes(color = condition:group)) +
+  geom_ribbon(data = ci_mfn, aes(ymin = FCz - ci, ymax = FCz + ci, fill = condition:group), alpha = 0.2) +
+  guides(fill = "none") +
+  geom_segment(aes(x = 0,    xend = 0,   y = -8, yend = 18), linetype = "dashed", color = "gray60", size = 0.2) +
+  geom_segment(aes(x = -400, xend = 800, y =  0, yend = 0),  linetype = "dashed", color = "gray60", size = 0.2) +
+  geom_text(data = label_fcz, label = "FCz") +
+  annotate("rect", xmin = 0, xmax = 100, ymin = -8, ymax = 18, alpha = .2, fill = "gray50") + # Shaded time area
+  labs(x = "Time (ms)", y = expression(paste("Amplitude (", mu, "V)"))) +
+  coord_cartesian(ylim = c(-8, 18), xlim = c(-400, 800)) +
+  scale_y_continuous(breaks = seq(-8, 18, 2), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(-400, 800, 200), expand = c(0, 0)) +
+  scale_color_manual(values = colors_erp, labels = c("HC: False Alarm", "OCD: False Alarm", "HC: Hit", "OCD: Hit"),
+    guide = guide_legend(override.aes = list(size = 1.3))) + # Thickness legend lines
+  scale_fill_manual(values = colors_erp) +
+  my_figure_theme + 
+  theme(axis.ticks.x = NULL, legend.title = element_blank(), legend.text = element_text(size = 9))
+
+
+#### Create topography plots ####
+
+# Define facet labels
+labs_incorr <- c("HC: False Alarm", "OCD: False Alarm")
+names(labs_incorr) <- c("HC", "OCD")
+
+labs_corr <- c("HC: Hit", "OCD: Hit")
+names(labs_corr) <- c("HC", "OCD")
+
+
+# ERN
+plot_topo_ern <- ggplot(data_topo_mfn[data_topo_mfn$condition == "incorrect", ],
+  aes(x = x, y = y, fill = amplitude, label = electrode)) +
+  geom_topo(grid_res = 300, interp_limit = "head", chan_markers = "point", chan_size = 0.1, head_size = 0.2) +
+  scale_fill_distiller(palette = "RdBu", limits = c(-4, 4), breaks = c(-4, 0, 4)) +
+  theme_void() +
+  coord_equal() +
+  labs(fill = expression(paste(mu, "V"))) +
+  theme(legend.position = "right", legend.text = element_text(size = 6.5, color = "gray30"),
+    legend.title = element_text(size = 6.5, color = "gray30"), legend.key.height = unit(0.25, 'cm'),
+    legend.key.width = unit(0.25, 'cm'), strip.text.x = element_text(size = 6.5)) +
+  facet_wrap(. ~group, ncol = 1, labeller = labeller(group = labs_incorr))
+
+
+# CRN
+plot_topo_crn <- ggplot(data_topo_mfn[data_topo_mfn$condition == "correct", ],
+  aes(x = x, y = y, fill = amplitude, label = electrode)) +
+  geom_topo(grid_res = 300, interp_limit = "head", chan_markers = "point", chan_size = 0.1, head_size = 0.2) +
+  scale_fill_distiller(palette = "RdBu", limits = c(-4, 8.4), breaks = c(-4, 0, 4, 8)) +
+  theme_void() +
+  coord_equal() +
+  labs(fill = expression(paste(mu, "V"))) +
+  theme(legend.position = "right", legend.text = element_text(size = 6.5, color = "gray30"),
+    legend.title = element_text(size = 6.5, color = "gray30"), legend.key.height = unit(0.25, 'cm'),
+    legend.key.width = unit(0.25, 'cm'), strip.text.x = element_text(size = 6.5)) +
+  facet_wrap(. ~group, ncol = 1, labeller = labeller(group = labs_corr))
+
+
+# Overlay waveform and topopgraphy plots
+aligned_plots1_mfn <- align_plots(plot_waveform_mfn, plot_topo_ern, axis = "tr")
+aligned_plots2_mfn <- align_plots(plot_waveform_mfn, plot_topo_crn, axis = "tr")
+
+
+# Arrange plots
+figure_ern_crn <- ggdraw() +
+  draw_plot(aligned_plots1_mfn[[1]],  x =  0,  y = 0,    width = .77, height = .99) +
+  draw_plot(aligned_plots1_mfn[[2]],  x = .75, y = .525, width = .3,  height = .45) +
+  draw_plot(aligned_plots2_mfn[[2]],  x = .75, y = .05,  width = .3,  height = .45) +
+  draw_plot_label(c("A", "B"), c(0, .75), c(1, 1), size = 15)
+figure_ern_crn
+
+
+# Save plot
+ggsave(plot = figure_ern_crn, "./figures/figure_4.tiff", width = 16, height = 10,
+  units = "cm", dpi = 600, compression = "lzw")
+```
+<br><br>
+
+## Plot Effects of OCD Characteristics
+***
+
+### OCD Symptom Severity (OCI-R)
+<br>
+This figure corresponds to Figure 5 in the manuscript.
+
+```{r create-plot-oci, fig.width = 8, fig.height = 5, dpi = 600, fig.cap = "<br> Note. (A) Estimated interaction effect between Obsessive-Compulsive Inventory-Revised (OCI-R) score, preceding response type (fast hit, false alarm) in the go/no-go task, and word valence on word categorization response time (RT) in patients with OCD, computed as partial effect from the linear mixed model. RT data were log-transformed for analysis but were back-transformed to ms for data visualization. (B) Negative correlation between the OCI-R score and the overall priming effect across participants. The overall priming effect refers to the priming effect after false alarms and fast hits and was calculated by subtracting the RT in congruent conditions (positive words after fast hits and negative words after false alarms) from the RT in incongruent conditions (positive words after false alarms and negative words after fast hits) for each participant (Aarts et al., 2012). (A–B) Shaded bands represent 95% confidence intervals."}
+
+# Load LMM output and correlation data
+LMM_rt_oci_ocd  <- readRDS(file = "./saved_objects_for_plots/LMM_rt_oci_ocd.rds")
+load(file = "./saved_objects_for_plots/df_corr.Rda")
+
+
+# Create plot of estimated interaction effects
+plot_oci_1 <- plot_model(LMM_rt_oci_ocd,
+                         type   = "pred",
+                         terms  = c("oci_centered", "pos_neg", "FA_FH"),
+                         ci.lvl = .95,
+                         transform = "exp",
+                         line.size = 1) +
+  labs(title = NULL, y = "Word Categorization RT (ms)", x = "OCI-R Score (Group-Mean Centered)") +
+  coord_cartesian(ylim = c(500, 900), xlim = c(-13, 20)) +
+  scale_y_continuous(breaks = seq(500, 900, 50), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(-10, 20, 5), expand = c(0, 0)) +
+  scale_color_manual(name = "Word Valence:", values = colors, labels = c("Negative", "Positive")) +
+  scale_fill_manual(name  = "Word Valence:", values = colors, labels = c("Negative", "Positive")) +
+  my_figure_theme +
+  theme(strip.text.x = element_text(size = 11), axis.ticks.x = NULL) +
+  guides(fill = guide_legend(override.aes = list(color = colors, size = 0.65)))
+
+
+# Change facet labels
+plot_oci_1$data$facet <- ifelse(plot_oci_1$data$facet == "FA_FH = -0.5", "Fast Hits", "False Alarms")
+
+
+# Create scatterplot
+plot_oci_2 <- ggplot(data = df_corr[df_corr$group == "OCD", ], aes(x = oci, y = priming, fill = group)) +
+  geom_point(color = "#003192", size = 1) +
+  geom_smooth(method = 'lm', color = "#003192") +
+  labs(title = NULL, x = "OCI-R Score", y = "Overall Priming Effect (ms)") +
+  coord_cartesian(ylim = c(-150, 400), xlim = c(12.9, 45.5)) +
+  scale_y_continuous(breaks = seq(-150, 400, 50), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(15, 45, 5), expand = c(0, 0)) +
+  scale_fill_manual(values = "#003192") +
+  my_figure_theme +
+  theme(legend.position = "none", axis.ticks.x = NULL) +
+  annotate("text", x = 45, y = -120, label = paste("list(italic(r)(26) ==", -.41, ", italic(p) == .029)"),
+    parse = TRUE, hjust = 1, size = 3, color = "gray20")
+
+
+# Arrange plots
+figure_oci <- ggdraw() +
+  draw_plot(plot_oci_1, x = .00, y = .000, width = .60, height = 1) +
+  draw_plot(plot_oci_2, x = .61, y = .115, width = .39, height = .83) +
+  draw_plot_label(c("A", "B"), c(0, .61), c(1, 1), size = 15)
+figure_oci
+
+
+# Save plot
+ggsave(plot = figure_oci, "./figures/figure_5.tiff", width = 20, height = 12,
+  units = "cm", dpi = 600, compression = "lzw")
+```
+<br><br>
+
+### Trait Anxiety (STAI)
+<br>
+This figure corresponds to Figure S1 in the supplemental material.
+
+```{r create-plot-stai, fig.width = 8, fig.height = 5, dpi = 600, fig.cap = "<br> Note. (A) Estimated interaction effect between State-Trait Anxiety Inventory (STAI) trait score, preceding response type (fast hit, false alarm) in the go/no-go task, and word valence on word categorization response time (RT) in patients with OCD, computed as partial effect from the linear mixed model. RT data were log-transformed for analysis but were back-transformed to ms for data visualization. (B) Negative correlation between the STAI trait score and the overall priming effect across participants. The overall priming effect refers to the priming effect after false alarms and fast hits and was calculated by subtracting the RT in congruent conditions (positive words after fast hits and negative words after false alarms) from the RT in incongruent conditions (positive words after false alarms and negative words after fast hits) for each participant (Aarts et al., 2012). (A–B) Shaded bands represent 95% confidence intervals."}
+
+# Load LMM output
+LMM_rt_stai_ocd <- readRDS(file = "./saved_objects_for_plots/LMM_rt_stai_ocd.rds")
+
+
+# Create plot of estimated interaction effects
+plot_stai_1 <- plot_model(LMM_rt_stai_ocd,
+                          type   = "pred",
+                          terms  = c("stai_centered", "pos_neg", "FA_FH"),
+                          ci.lvl = .95,
+                          transform = "exp",
+                          line.size = 1) +
+  labs(title = NULL, y = "Word Categorization RT (ms)", x = "STAI Trait Score (Group-Mean Centered)") +
+  coord_cartesian(ylim = c(450, 900), xlim = c(-18, 25)) +
+  scale_y_continuous(breaks = seq(450, 900, 50), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(-15, 25, 5), expand = c(0, 0)) +
+  scale_color_manual(name = "Word Valence:", values = colors, labels = c("Negative", "Positive")) +
+  scale_fill_manual(name  = "Word Valence:", values = colors, labels = c("Negative", "Positive")) +
+  my_figure_theme +
+  theme(strip.text.x = element_text(size = 11), axis.ticks.x = NULL) +
+  guides(fill = guide_legend(override.aes = list(color = colors, size = 0.65)))
+
+
+# Change facet labels
+plot_stai_1$data$facet <- ifelse(plot_stai_1$data$facet == "FA_FH = -0.5", "Fast Hits", "False Alarms")
+
+
+# Create scatterplot
+plot_stai_2 <- ggplot(data = df_corr[df_corr$group == "OCD", ], aes(x = stai, y = priming, fill = group)) +
+  geom_point(color = "#003192", size = 1) +
+  geom_smooth(method = 'lm', color = "#003192") +
+  labs(title = NULL, x = "STAI Trait Score", y = "Overall Priming Effect (ms)") +
+  coord_cartesian(ylim = c(-150, 400), xlim = c(35.8, 80)) +
+  scale_y_continuous(breaks = seq(-150, 400, 50), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(40, 80, 10), expand = c(0, 0)) +
+  scale_fill_manual(values = "#003192") +
+  my_figure_theme +
+  theme(legend.position = "none", axis.ticks.x = NULL) +
+  annotate("text", x = 80, y = -115, label = paste("list(italic(r)(26) ==", -.34, ", italic(p) == .078)"),
+    parse = TRUE, hjust = 1, size = 3, color = "gray20")
+
+
+# Arrange plots
+figure_stai <- ggdraw() +
+  draw_plot(plot_stai_1, x = .00, y = .000, width = .60, height = 1) +
+  draw_plot(plot_stai_2, x = .61, y = .115, width = .39, height = 0.83) +
+  draw_plot_label(c("A", "B"), c(0, .61), c(1, 1), size = 15)
+figure_stai
+
+
+# Save plot
+ggsave(plot = figure_stai, "./figures/figure_S1.tiff", width = 20, height = 12,
+  units = "cm", dpi = 600, compression = "lzw")
+```
+<br><br>
+
+## References
+***
+Aarts, K., De Houwer, J., & Pourtois, G. (2012). Evidence for the automatic evaluation of self-generated actions. *Cognition, 124*(2), 117–127. https://doi.org/10.1016/j.cognition.2012.05.009
+<br><br><br>
+
+## Session Info
+***
+```{r session-info}
+
+sessionInfo()
+```

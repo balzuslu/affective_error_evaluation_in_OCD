@@ -1,0 +1,297 @@
+---
+title: "ERP Data"
+output: 
+  html_document
+---
+
+<!-- Set general settings -->
+
+```{r setup, message = FALSE, warning = FALSE}
+
+# Set general settings for markdown file
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  comment = "",
+  results = "hold")
+
+
+# Clear environment
+rm(list = ls())
+
+
+# Load packages
+library(dplyr)      # for data wrangling
+library(knitr)      # for integrating computing and reporting in markdown
+library(kableExtra) # for customizing appearance of tables
+library(MASS)       # for boxcox function and contrast definition
+library(lme4)       # for (G)LMMs
+library(lmerTest)   # for LMM p values (Satterthwaite's method for approximating dfs for t and F tests)
+library(sjPlot)     # for tab_model function to display (G)LMM results
+library(splithalf)  # for permutation-based split-half reliability
+
+
+# Load functions
+source("./functions/summarySEwithinO.R")  # Function provided by R-cookbook: http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+source("./functions/my_table_template.R") # Function to create table template
+
+
+# Turn off scientific notation
+options(scipen = 999)
+
+
+# Prepare labels for LMM tables
+labels <- c(
+  "(Intercept)" = "Intercept",
+  "group2-1"    = "Group (OCD – HC)")
+```
+<br>
+
+## Data Cleaning
+***
+
+```{r load-and-clean-data}
+
+# Load data
+load(file = "./data/Single_Trial_Data.rda")
+
+
+# For ERP analysis, exclude inhibited gng responses, missing gng responses, gng responses with
+# wrong key, gng RT outliers, and trials with ERP artifacts
+single_trial_data_erp <- single_trial_data %>%
+  dplyr::filter(
+    gng_response_type != "IR" &
+    gng_response_type != "miss" &
+    gng_response_type != "wrong_key" &
+    (is.na(gng_rt_invalid) | gng_rt_invalid  == FALSE) &
+    stimulation == "sham" &
+    MFN_artifact == FALSE)
+
+
+# Create accuracy variable ("incorrect" = FA; "correct" = SH, FH)
+single_trial_data_erp <- single_trial_data_erp %>%
+  dplyr::mutate(gng_accuracy = ifelse(gng_response_type == "FA", "incorrect", "correct"))
+
+
+# Calculate % of excluded trials per participant
+excluded_trials_per_participant <- single_trial_data %>%
+  dplyr::filter(stimulation == "sham") %>%
+  dplyr::group_by(participant_id) %>%
+  dplyr::summarize(EEG_artifact = sum(is.nan(MFN_0_100_FCz)) / length(participant_id) * 100) %>%
+  dplyr::ungroup() %>%
+  dplyr::summarize(across(-c(participant_id), list(mean, sd)))
+
+
+# Make categorical variables factors
+single_trial_data_erp$participant_id <- factor(single_trial_data_erp$participant_id)
+single_trial_data_erp$group          <- factor(single_trial_data_erp$group)
+```
+
+In the analysis of ERPs in the go/no-go task, trials were discarded if RT in the go/no-go task was below 100 ms or above 800 ms, no response was made, or the response was made with a key not assigned to the go/no-go task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points, resulting in rejection of `r round(excluded_trials_per_participant$EEG_artifact_1, digits = 2)`% (*SD* = `r round(excluded_trials_per_participant$EEG_artifact_2, digits = 2)`) of epochs on average. 
+<br><br><br>
+
+## Descriptive Statistics 
+***
+
+This table corresponds to Table S2 in the supplemental material.
+
+```{r descriptive-statistics-table}
+
+# Calculate descriptive statistics for ERN/CRN
+descriptive_statistics <- summarySEwithinO(
+  data          = single_trial_data_erp,
+  measurevar    = "MFN_0_100_FCz",
+  withinvars    = "gng_accuracy",
+  betweenvars   = "group",
+  idvar         = "participant_id",
+  conf.interval = .95) %>%
+  # Rename variable and create measure variable
+  dplyr::rename(mean = MFN_0_100_FCz) %>%
+  dplyr::mutate(measure = rep(c("CRN (µV)", "ERN (µV)"), 2))
+
+
+# Create column with format "M [CI]" (round to 2 decimals)
+descriptive_statistics$M_CI <- paste0(
+  format(round(descriptive_statistics$mean, 2), nsmall = 2), " [",
+  format(round(descriptive_statistics$mean -
+               descriptive_statistics$ci,   2), nsmall = 2), ", ",
+  format(round(descriptive_statistics$mean +
+               descriptive_statistics$ci,   2), nsmall = 2), "]")
+
+
+# Split and re-merge table to display both groups next to each other
+descriptive_statistics <- split(descriptive_statistics, descriptive_statistics$group)
+descriptive_statistics_display <- cbind(descriptive_statistics$OCD[, c("measure", "M_CI")],
+                                        descriptive_statistics$HC[, "M_CI"])
+
+
+# Display table (and rearrange rows)
+my_table_template(descriptive_statistics_display[c(2, 1), ],
+  caption = "Descriptive Statistics for ERP Measures",
+  col_names = c("Measure", rep("M [95% CI]", 2)),
+  header_above_config = c("", "Patients with OCD", "Healthy control participants")) %>%
+  add_footnote("\n Note. CIs are adjusted for within-participant designs using the method 
+  described by Morey (2008). ERN and CRN were measured as mean amplitude 
+  from 0 to 100 ms at electrode FCz after false alarms and hits, respectively.", notation = "none") 
+```
+<br><br>
+
+## Split-Half Reliability
+***
+
+```{r permutation-split-half-reliability}
+
+# Calculate permutation-based split-half internal consistency for ERN/CRN
+invisible(capture.output(split_half_reliability <- splithalf(
+  data = single_trial_data_erp,
+  outcome = "RT",
+  score = "average",
+  permutations = 5000,
+  halftype = "random",
+  var.RT = "MFN_0_100_FCz",
+  var.participant = "participant_id",
+  var.condition = "gng_accuracy",
+  conditionlist = c("correct", "incorrect"),
+  average = "mean")))
+
+
+# Make nice table for display
+split_half_reliability <- cbind(ERP = c("CRN", "ERN"), split_half_reliability$final_estimates) %>%
+  dplyr::select(ERP, spearmanbrown, SB_low, SB_high) %>%
+  dplyr::rename(r = spearmanbrown, CI_low = SB_low, CI_up = SB_high)
+
+
+# Display permutation-based split-half internal consistency
+my_table_template(split_half_reliability[c(2, 1), ],
+  caption = "Permutation-based split-half reliability")
+```
+Internal consistency was good for ERN (*r* = `r round(split_half_reliability[2,]$r, digits = 2)`, 95% CI [`r round(split_half_reliability[2,]$CI_low, digits = 2)`, `r round(split_half_reliability[2,]$CI_up, digits = 2)`]) and excellent for CRN (*r* = `r round(split_half_reliability[1,]$r, digits = 2)`, 95% CI [`r round(split_half_reliability[1,]$CI_low, digits = 2)`, `r round(split_half_reliability[1,]$CI_up, digits = 2)`]), as assessed with a permutation-based split-half method using 5,000 random splits and Spearman–Brown correction.
+<br><br><br>
+
+## Analysis of ERN & CRN {.tabset}
+***
+
+We performed linear mixed models (LMMs) on single-trial data. Analysis of ERP amplitudes in the go/no-go task included group as fixed effect. Models on ERN and CRN were based on false alarm and hit trials, respectively. 
+
+We used sliding difference contrasts for categorical fixed effects and started with the maximal random-effects structure for each model. In case of non-convergence, random effects were specified as uncorrelated. Using principal component analysis, we identified random effects explaining zero variance and removed these, as recommended by Bates, Kliegl, et al. (2015). 
+<br><br>
+
+### Determine Data Transformation
+
+No data transformation was required to meet the assumption of normally distributed residuals. This was determined using the Box–Cox procedure (Box & Cox, 1964).
+
+```{r erp-determine-transformation, fig.width = 8, fig.height = 6}
+
+# Arrange plots
+par(mfrow = c(2, 3))
+
+
+# Determine transformation of ERN by estimating optimal lambda using Box–Cox procedure
+bc_ern <- boxcox(MFN_0_100_FCz + 50 ~ 1,
+  data = single_trial_data_erp[single_trial_data_erp$gng_accuracy == "incorrect", ])
+optlambda_ern <- bc_ern$x[which.max(bc_ern$y)]
+
+
+# Density plot for ERN values
+plot(density(single_trial_data_erp[single_trial_data_erp$gng_accuracy == "incorrect", ]$MFN_0_100_FCz),
+  main = "ERN: Density Plot")
+
+
+# Q-q plot for ERN values
+qqnorm(single_trial_data_erp[single_trial_data_erp$gng_accuracy == "incorrect", ]$MFN_0_100_FCz,
+  main = "ERN: Q-Q Plot", pch = 1)
+
+
+# Determine transformation of CRN by estimating optimal lambda using Box–Cox procedure
+bc_crn <- boxcox(MFN_0_100_FCz + 50 ~ 1,
+  data = single_trial_data_erp[single_trial_data_erp$gng_accuracy == "correct", ])
+optlambda_crn <- bc_crn$x[which.max(bc_crn$y)]
+
+
+# Density plot for CRN values
+plot(density(single_trial_data_erp[single_trial_data_erp$gng_accuracy == "correct", ]$MFN_0_100_FCz),
+  main = "CRN: Density Plot")
+
+
+# Q-q plot for CRN values
+qqnorm(single_trial_data_erp[single_trial_data_erp$gng_accuracy == "correct", ]$MFN_0_100_FCz,
+  main = "CRN: Q-Q Plot", pch = 1)
+
+
+# Reset plot layout
+par(mfrow = c(1, 1))
+```
+For the ERN, the optimal lambda is `r round(optlambda_ern, digits = 2)` (upper left plot), suggesting that no transformation is needed.
+For the CRN, the optimal lambda is `r round(optlambda_crn, digits = 2)` (lower left plot), suggesting that no transformation is needed.
+<br><br><br>
+
+### LMM on ERN & CRN {.active}
+
+This table corresponds to Table 5 in the manuscript. 
+
+```{r lmm-erp}
+
+# Define contrasts (sliding difference contrasts = effect coding for factors with 2 levels)
+contrasts(single_trial_data_erp$group) <- contr.sdif(2)
+
+
+# Run model on ERN with maximal random-effects structure
+LMM_ern <- lmer(MFN_0_100_FCz ~ group + (1 | participant_id),
+  data = single_trial_data_erp[single_trial_data_erp$gng_accuracy == "incorrect", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_ern)        # Model does converge
+# isSingular(LMM_ern)     # No singular fit
+# summary(rePCA(LMM_ern)) # All terms explain variance
+
+
+# Run model on CRN with maximal random-effects structure
+LMM_crn <- lmer(MFN_0_100_FCz ~ group + (1 | participant_id),
+  data = single_trial_data_erp[single_trial_data_erp$gng_accuracy == "correct", ],
+  REML = TRUE,
+  control = lmerControl(optimizer = "bobyqa"))
+
+
+# Check model output and PCA of random-effects variance-covariance estimates
+# summary(LMM_crn)        # Model does converge
+# isSingular(LMM_crn)     # No singular fit
+# summary(rePCA(LMM_crn)) # All terms explain variance
+
+
+# Display results (fixed effects)
+tab_model(LMM_ern, LMM_crn,
+  dv.labels = c("ERN", "CRN"), pred.labels = labels, show.stat = TRUE, show.icc = FALSE,
+  show.r2 = FALSE, show.re.var = FALSE, show.ngroups = FALSE, minus.sign = "-",
+  string.pred = "Fixed effects", string.est = "b", string.stat = "t", string.ci = "95 % CI",
+  p.val = "satterthwaite", title = "LMM Results for ERN and CRN in the Go/No-Go Task")
+
+
+# Display random effects
+print("Random effects ERN:")
+print(VarCorr(LMM_ern), digits = 3, comp = "Std.Dev.")
+
+
+# Display random effects
+print("Random effects CRN:")
+print(VarCorr(LMM_crn), digits = 3, comp = "Std.Dev.")
+```
+<br>
+ERN and CRN amplitudes did not differ significantly between groups.
+<br><br><br>
+
+## References
+***
+Bates, D., Kliegl, R., Vasishth, S., & Baayen, H. (2015). *Parsimonious mixed models.* arXiv. https://arxiv.org/abs/1506.04967v2 <br><br>
+Box, G. E., & Cox, D. R. (1964). An analysis of transformations. *Journal of the Royal Statistical Society: Series B (Methodological), 26*(2), 211–243. https://doi.org/10.1111/j.2517-6161.1964.tb00553.x <br><br>
+Morey, R. (2008). Confidence intervals from normalized data: A correction to Cousineau (2005). *Tutorials in Quantitative Methods for Psychology, 4*(2), 61–64. https://doi.org/10.20982/tqmp.04.2.p061 
+<br><br><br>
+
+## Session Info
+***
+```{r session-info}
+
+sessionInfo()
+```
