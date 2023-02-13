@@ -82,12 +82,21 @@ excluded_trials_per_participant <- single_trial_data %>%
   dplyr::summarize(across(-c(participant_id), list(mean, sd)))
 
 
+# Calculate number of remaining trials per participant
+remaining_trials_per_participant <- single_trial_data_erp %>%
+  dplyr::group_by(participant_id, gng_accuracy) %>%
+  dplyr::summarize(n = n()) %>%
+  dplyr::group_by(gng_accuracy) %>% 
+  dplyr::summarize(mean = mean(n), sd = sd(n)) %>%
+  dplyr::ungroup() 
+
+
 # Make categorical variables factors
 single_trial_data_erp$participant_id <- factor(single_trial_data_erp$participant_id)
 single_trial_data_erp$group          <- factor(single_trial_data_erp$group)
 ```
 
-In the analysis of ERPs in the go/no-go task, trials were discarded if RT in the go/no-go task was below 100 ms or above 800 ms, no response was made, or the response was made with a key not assigned to the go/no-go task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points, resulting in rejection of `r round(excluded_trials_per_participant$EEG_artifact_1, digits = 2)`% (*SD* = `r round(excluded_trials_per_participant$EEG_artifact_2, digits = 2)`) of epochs on average. 
+In the analysis of ERPs in the go/no-go task, trials were discarded if RT in the go/no-go task was below 100 ms or above 800 ms, response was missing, or the response was made with a key not assigned to the go/no-go task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points, resulting in rejection of `r round(excluded_trials_per_participant$EEG_artifact_1, digits = 2)`% (*SD* = `r round(excluded_trials_per_participant$EEG_artifact_2, digits = 2)`) of epochs on average (remaining trials per participant for ERN analysis: *M* = `r round(remaining_trials_per_participant$mean[2], digits = 2)`, *SD* = `r round(remaining_trials_per_participant$sd[2], digits = 2)`; for CRN analysis: *M* = `r round(remaining_trials_per_participant$mean[1], digits = 2)`, *SD* = `r round(remaining_trials_per_participant$sd[1], digits = 2)`). 
 <br><br><br>
 
 ## Descriptive Statistics 
@@ -130,7 +139,7 @@ my_table_template(descriptive_statistics_display[c(2, 1), ],
   caption = "Descriptive Statistics for ERP Measures",
   col_names = c("Measure", rep("M [95% CI]", 2)),
   header_above_config = c("", "Patients with OCD", "Healthy control participants")) %>%
-  add_footnote("\n Note. CIs are adjusted for within-participant designs using the method 
+  add_footnote("\n Note. CIs are adjusted for within-participant comparisons using the method 
   described by Morey (2008). ERN and CRN were measured as mean amplitude 
   from 0 to 100 ms at electrode FCz after false alarms and hits, respectively.", notation = "none") 
 ```
