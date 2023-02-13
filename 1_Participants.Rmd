@@ -79,11 +79,12 @@ demographics <- participant_data %>%
     "Y-BOCS total score"         = YBOCS_gesamt,
     "Y-BOCS obsessions"          = YBOCS_Gedanken,
     "Y-BOCS compulsions"         = YBOCS_Handlungen,
-    "Verbal intelligence (WST)"  = WST) %>%
+    "Verbal intelligence (WST)"  = WST,
+    "Handedness"                 = "Händigkeit") %>%
   # Merge trait data
   dplyr::left_join(., traits, by = "participant_id") %>%
   # Select and reorder columns
-  dplyr::select(c("group", "Age (years)", "Gender", "Years of education", "Verbal intelligence (WST)",
+  dplyr::select(c("group", "Age (years)", "Gender", "Years of education", "Verbal intelligence (WST)", "Handedness",
     "BDI-II",  "OCI-R", "PSWQ", "STAI trait", "Y-BOCS total score",  "Y-BOCS obsessions", "Y-BOCS compulsions"))
 
 
@@ -103,12 +104,17 @@ demographics[demographics$"Verbal intelligence (WST)" == 36, ]$"Verbal intellige
 demographics[demographics$"Verbal intelligence (WST)" == 37, ]$"Verbal intelligence (WST)" <- 122
 
 
+# Rescore one handedness score (according to EHI score that deviates from self report)
+demographics[demographics$"Handedness" == "beidhändig" & 
+             demographics$"Age (years)" == 29, ]$"Handedness" <- "rechts"
+
+
 
 ### Numeric variables
 
 # Extract demographics per group
 demographics_groups <- list()
-demographics_groups <- describeBy(demographics %>% dplyr::select(-c("Gender", "group")), demographics$group)
+demographics_groups <- describeBy(demographics %>% dplyr::select(-c("Gender", "Handedness", "group")), demographics$group)
 ocd <- as.data.frame(demographics_groups$`OCD`)
 hc  <- as.data.frame(demographics_groups$`HC`)
 
@@ -142,9 +148,9 @@ demographics_numeric <- left_join(demographics_groups, t_tests, by = "Characteri
 
 
 
-### Count variables (gender)
+### Count variables (gender, handedness)
 
-# Calculate chi-squared test and extract counts formatted as "female:male"
+# Gender: calculate chi-squared test and extract counts formatted as "female:male"
 gender_test <- chisq.test(demographics$Gender, demographics$group)
 gender      <- demographics %>% dplyr::group_by(group) %>% dplyr::count(Gender)
 gender_ocd  <- paste0(gender[gender$group == "OCD" & gender$Gender == "weiblich", ]$n, ":",
@@ -153,14 +159,25 @@ gender_hc   <- paste0(gender[gender$group == "HC"  & gender$Gender == "weiblich"
                       gender[gender$group == "HC"  & gender$Gender == "männlich", ]$n)
 
 
-# Combine demographics and chi-squared test
+# Handedness: calculate Fishers's exact test and extract counts formatted as "right:left:ambidextrous"
+hand_test <- fisher.test(demographics$Handedness, demographics$group)
+hand      <- demographics %>% dplyr::group_by(group) %>% dplyr::count(Handedness)
+hand_ocd  <- paste0(hand[hand$group == "OCD" & hand$Handedness == "rechts", ]$n, ":",
+                    hand[hand$group == "OCD" & hand$Handedness == "links", ]$n, ":",
+                    hand[hand$group == "OCD" & hand$Handedness == "beidhändig", ]$n)
+hand_hc   <- paste0(hand[hand$group == "HC"  & hand$Handedness == "rechts", ]$n, ":",
+                    hand[hand$group == "HC"  & hand$Handedness == "links", ]$n, ":",
+                    length(hand[hand$group == "HC" & hand$Handedness == "beidhändig", ]$n))
+
+
+# Combine demographics and chi-squared test/Fisher's exact test
 demographics_factorial <- as.data.frame(cbind(
-  Characteristic = "Gender (n female:male)",
-  ocd = gender_ocd,
-  hc  = gender_hc,
-  "Test statistic" = gender_test$statistic,
-  df = gender_test$parameter,
-  p = gender_test$p.value))
+  Characteristic = c("Gender (n female:male)", "Handedness (n right:left:ambidextrous)"),
+  ocd = c(gender_ocd, hand_ocd),
+  hc  = c(gender_hc,  hand_hc),
+  "Test statistic" = c(gender_test$statistic, "-"),
+  df = c(gender_test$parameter, "-"),
+  p = c(gender_test$p.value, hand_test$p.value)))
 
 
 
@@ -178,8 +195,10 @@ table <- table %>% dplyr::rename("Patients with OCD" = ocd, "Healthy control par
 my_table_template(table, 
   caption = "Demographic and Clinical Characteristics") %>%
   add_footnote(
-  "\n Note. Means are reported with standard deviations in parentheses (except for gender). Welch’s t test was used for 
-  continuous variables. Age range was 18 to 54 years. Years of education include primary and secondary education.
+  "\n Note. Means are reported with standard deviations in parentheses (except for gender and handedness). 
+  Welch’s t test was used for continuous variables. Age range was 18 to 55 years  (control participants: 20 to 54 years; 
+  patients with OCD: 18 to 55 years). Handedness was assessed with the Edinburgh Handedness Inventory (Oldfield, 1971). 
+  For Fisher’s exact test, there is no test statistic to report. Years of education include primary and secondary education. 
   WST = Wortschatztest; BDI-II = Beck Depression Inventory-II; OCI-R = Obsessive-Compulsive Inventory-Revised; 
   PSWQ = Penn State Worry Questionnaire; STAI = State-Trait Anxiety Inventory; Y-BOCS = Yale-Brown Obsessive 
   Compulsive Scale.", notation = "none")
