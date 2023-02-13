@@ -219,7 +219,7 @@ save(data_aggregated_rt,  file = "./saved_objects_for_plots/data_aggregated_rt.R
 save(data_aggregated_acc, file = "./saved_objects_for_plots/data_aggregated_acc.Rda")
 ```
 
-In the analysis of RT and accuracy in the word categorization task, trials were discarded (*M* = `r round(excluded_trials_per_participant$excluded_1, digits = 2)`%, *SD* = `r round(excluded_trials_per_participant$excluded_2, digits = 2)`) if RT in the go/no-go task was below 100 ms or above 800 ms, word categorization RT deviated more than three median absolute deviations from the individual condition-specific median, no response was made, or the response was made with a key not assigned to the current task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points. In the analysis of word categorization RT, we excluded incorrect categorizations.
+In the analysis of RT and accuracy in the word categorization task, trials were discarded (*M* = `r round(excluded_trials_per_participant$excluded_1, digits = 2)`%, *SD* = `r round(excluded_trials_per_participant$excluded_2, digits = 2)`) if RT in the go/no-go task was below 100 ms or above 800 ms, word categorization RT deviated more than three median absolute deviations from the individual condition-specific median, response was missing, or the response was made with a key not assigned to the current task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points. In the analysis of word categorization RT, we excluded incorrect categorizations.
 <br><br><br>
 
 ## Descriptive Statistics
@@ -288,7 +288,7 @@ my_table_template(descriptive_statistics_display[c(8, 7, 4, 3, 2, 1, 6, 5, 16, 1
   caption = "Descriptive Statistics for Behavioral Performance in the Word Categorization Task",
   col_names = c("Measure", rep("M [95% CI]", 2)),
   header_above_config = c("", "Patients with OCD", "Healthy control participants")) %>%
-  add_footnote("\n Note. CIs are adjusted for within-participant designs using the method described 
+  add_footnote("\n Note. CIs are adjusted for within-participant comparisons using the method described 
   by Morey (2008).", notation = "none") %>%
   pack_rows("Response time (ms)", 1, 8) %>%
   pack_rows("Accuracy (%)", 9, 16)
@@ -685,7 +685,7 @@ Analysis of word categorization RT in fast hit trials including CRN as predictor
 
 ### Traits as Predictors
 
-To explore effects of trait anxiety, worry, and OCD symptom severity on action evaluation, we included these OCD-related characteristics as predictors. Models were calculated separately for each group since otherwise scores on trait measures are confounded by group differences. Trait measures were group-mean centered. <br><br>
+To explore effects of trait anxiety, worry, and OCD symptom severity on action evaluation, we included these OCD-related characteristics as predictors. Models were calculated separately for each group since otherwise effects of trait measures are confounded by group differences. Trait measures were group-mean centered. <br><br>
 This table corresponds to Table S5 in the supplemental material. 
 
 ```{r lmm-rt-traits, cache = knitr_cache_enabled}
@@ -833,7 +833,7 @@ Exploratory analyses on effects of trait anxiety, worry, and OCD symptom severit
 
 ### Correlations
 
-The lower table corresponds to Table S6 in the supplemental material.  
+The middle and lower tables correspond to Table S6 and S7 in the supplemental material.  
 
 ```{r correlations}
 
@@ -865,6 +865,12 @@ corr_priming_stai_ocd <- cor.test(df_corr[df_corr$group == "OCD",]$priming, df_c
 corr_priming_stai_hc  <- cor.test(df_corr[df_corr$group == "HC", ]$priming, df_corr[df_corr$group == "HC", ]$stai)
 corr_priming_pswq_ocd <- cor.test(df_corr[df_corr$group == "OCD",]$priming, df_corr[df_corr$group == "OCD",]$pswq)
 corr_priming_pswq_hc  <- cor.test(df_corr[df_corr$group == "HC", ]$priming, df_corr[df_corr$group == "HC", ]$pswq)
+corr_oci_stai_ocd     <- cor.test(df_corr[df_corr$group == "OCD",]$oci,     df_corr[df_corr$group == "OCD",]$stai)
+corr_oci_stai_hc      <- cor.test(df_corr[df_corr$group == "HC", ]$oci,     df_corr[df_corr$group == "HC", ]$stai)
+corr_oci_pswq_ocd     <- cor.test(df_corr[df_corr$group == "OCD",]$oci,     df_corr[df_corr$group == "OCD",]$pswq)
+corr_oci_pswq_hc      <- cor.test(df_corr[df_corr$group == "HC", ]$oci,     df_corr[df_corr$group == "HC", ]$pswq)
+corr_stai_pswq_ocd    <- cor.test(df_corr[df_corr$group == "OCD",]$stai,    df_corr[df_corr$group == "OCD",]$pswq)
+corr_stai_pswq_hc     <- cor.test(df_corr[df_corr$group == "HC", ]$stai,    df_corr[df_corr$group == "HC", ]$pswq)
 
 
 # Write correlations priming & ERPs in data frame
@@ -889,7 +895,22 @@ corr_trait <- rbind(cbind(corr_priming_oci_ocd$estimate,     corr_priming_oci_oc
                           corr_priming_pswq_hc$conf.int[2],  corr_priming_pswq_hc$p.value))
 
 
-# Dispay correlations priming & ERPs
+# Write correlations between questionnaire scores in data frame
+corr_quest <- rbind(cbind(corr_oci_stai_ocd$estimate,     corr_oci_stai_ocd$conf.int[1], 
+                          corr_oci_stai_ocd$conf.int[2],  corr_oci_stai_ocd$p.value,
+                          corr_oci_stai_hc$estimate,      corr_oci_stai_hc$conf.int[1], 
+                          corr_oci_stai_hc$conf.int[2],   corr_oci_stai_hc$p.value),
+                    cbind(corr_oci_pswq_ocd$estimate,     corr_oci_pswq_ocd$conf.int[1], 
+                          corr_oci_pswq_ocd$conf.int[2],  corr_oci_pswq_ocd$p.value,
+                          corr_oci_pswq_hc$estimate,      corr_oci_pswq_hc$conf.int[1], 
+                          corr_oci_pswq_hc$conf.int[2],   corr_oci_pswq_hc$p.value),
+                    cbind(corr_stai_pswq_ocd$estimate,    corr_stai_pswq_ocd$conf.int[1], 
+                          corr_stai_pswq_ocd$conf.int[2], corr_stai_pswq_ocd$p.value,
+                          corr_stai_pswq_hc$estimate,     corr_stai_pswq_hc$conf.int[1], 
+                          corr_stai_pswq_hc$conf.int[2],  corr_stai_pswq_hc$p.value))
+
+
+# Display correlations priming & ERPs
 my_table_template(data.frame(c("ERN & priming after false alarms", "CRN & priming after fast hits"), corr_erp),
   col_names = c("", "r(54)", "LL", "UL", "p"),
   digits = c(0, 2, 2, 2, 3),
@@ -897,7 +918,7 @@ my_table_template(data.frame(c("ERN & priming after false alarms", "CRN & primin
   caption = "Correlations Between ERPs and the Priming Effect")
 
 
-# Dispay correlations priming & traits
+# Display correlations priming & traits
 my_table_template(data.frame(c("Obsessive-compulsive symptoms (OCI-R)", "Trait anxiety (STAI trait)",
   "Trait worry (PSWQ)"), corr_trait),
   col_names = c("Characteristic", rep(c("r(26)", "LL", "UL", "p"), 2)),
@@ -905,6 +926,16 @@ my_table_template(data.frame(c("Obsessive-compulsive symptoms (OCI-R)", "Trait a
   header_above_config = c(" " = 2, "95% CI" = 2, " " = 2, "95% CI" = 2, " "),
   caption = "Correlations Between OCD-Related Characteristics and the Overall Priming Effect After False 
   Alarms and Fast Hits") %>%
+  add_header_above(c("", "Patients with OCD" = 4, "Healthy control participants" = 4)) %>%
+  add_footnote("\n Note. Pearson correlation coefficients are reported.", notation = "none")
+
+
+# Display correlations between questionnaire scores
+my_table_template(data.frame(c("OCI-R & STAI trait", "OCI-R & PSWQ", "STAI trait & PSWQ"), corr_quest),
+  col_names = c("Questionnaire scores", rep(c("r(26)", "LL", "UL", "p"), 2)),
+  digits = c(0, 2, 2, 2, 3, 2, 2, 2, 3),
+  header_above_config = c(" " = 2, "95% CI" = 2, " " = 2, "95% CI" = 2, " "),
+  caption = "Correlations Between Questionnaire Scores") %>%
   add_header_above(c("", "Patients with OCD" = 4, "Healthy control participants" = 4)) %>%
   add_footnote("\n Note. Pearson correlation coefficients are reported.", notation = "none")
 
@@ -1140,7 +1171,7 @@ The study was part of a project comprising one session with active and one with 
 
 ### RT: Session as Cov. 
 
-This table corresponds to Table S9 in the supplemental material. 
+This table corresponds to Table S10 in the supplemental material. 
 
 ```{r lmm-rt-session, cache = knitr_cache_enabled}
 
@@ -1174,7 +1205,7 @@ tab_model(LMM_rt_session,
 
 ### RT with ERN & CRN: Session as Cov. 
 
-This table corresponds to Table S10 in the supplemental material. 
+This table corresponds to Table S11 in the supplemental material. 
 
 ``` {r lmm-rt-ern-crn-session}
 
@@ -1224,7 +1255,7 @@ tab_model(LMM_rt_ern_session, LMM_rt_crn_session,
 
 ### Accuracy: Session as Cov. 
 
-This table corresponds to Table S9 in the supplemental material.
+This table corresponds to Table S10 in the supplemental material.
 
 ```{r glmm-accuracy-session, cache = knitr_cache_enabled}
 
