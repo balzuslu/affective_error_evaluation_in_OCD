@@ -98,7 +98,7 @@ single_trial_data_gng_acc$participant_id   <- factor(single_trial_data_gng_acc$p
 single_trial_data_gng_acc$group            <- factor(single_trial_data_gng_acc$group)
 ```
 
-In the analysis of RT and accuracy in the go/no-go task, trials were discarded if RT in the go/no-go task was below 100 ms or above 800 ms, no response was made, or the response was made with a key not assigned to the go/no-go task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points. 
+In the analysis of RT and accuracy in the go/no-go task, trials were discarded if RT in the go/no-go task was below 100 ms or above 800 ms, response was missing, or the response was made with a key not assigned to the go/no-go task. We further discarded trials containing artifacts in the EEG, i.e., a voltage difference exceeding 200 μV within an epoch or 50 μV between sample points. 
 <br><br><br>
 
 ## Descriptive Statistics
@@ -177,10 +177,54 @@ my_table_template(descriptive_statistics_display[c(3:1, 4:9), ],
   caption = "Descriptive Statistics for Behavioral Performance in the Go/No-Go Task",
   col_names = c("Measure", rep("M [95% CI]", 2)),
   header_above_config = c("", "Patients with OCD", "Healthy control participants")) %>%
-  add_footnote("\n Note. CIs are adjusted for within-participant designs using the method described 
+  add_footnote("\n Note. CIs are adjusted for within-participant comparisons using the method described 
   by Morey (2008).", notation = "none") %>%
   pack_rows("Response time (ms)", 1, 3) %>%
   pack_rows("Proportion of responses (%)", 4, 9)
+```
+
+```{r fast-hit-time}
+
+# Add block variable
+single_trial_data_gng_rt <- single_trial_data_gng_rt %>%
+  dplyr::mutate(block = ifelse(trial < 29, 1, 
+                           ifelse((trial > 28 & trial < 101), 2,
+                              ifelse((trial > 100 & trial < 173), 3, 
+                                 ifelse((trial > 172 & trial < 201), 4,
+                                    ifelse((trial > 200 & trial < 273), 5,
+                                       ifelse((trial > 272 & trial < 345), 6,
+                                          ifelse((trial > 344 & trial < 373), 7,
+                                             ifelse((trial > 372 & trial < 445), 8, 9)))))))))
+
+
+# Get mean RT per block
+mean_rt_per_block <- single_trial_data_gng_rt %>%
+  dplyr::group_by(participant_id, block) %>%
+  dplyr::summarize(mean_rt = mean(gng_rt)) %>%
+  dplyr::ungroup()
+
+
+# Calculate fast hit time in calibration blocks 1, 4, and 7
+mean_rt_per_block <- mean_rt_per_block %>% 
+  dplyr::filter(block == 1 | block == 4 | block == 7) %>% 
+  dplyr::mutate(fh_time = ifelse(block == 1, mean_rt * 0.8, mean_rt * 0.9),
+                group   = as.factor(ifelse(substr(participant_id, 1, 1) == "C", "HC", "OCD"))) 
+
+
+# Calculate mean, sd, min, and max of fast hit time per group
+fh_time <- mean_rt_per_block %>%
+  dplyr::group_by(group) %>% 
+  dplyr::summarize(M = mean(fh_time), SD = sd(fh_time), min = min(fh_time), max = max(fh_time)) %>%
+  dplyr::ungroup() 
+
+
+# Round values
+fh_time[, c(2:5)] <- round(fh_time[, c(2:5)], digits = 0)
+
+
+# Display table 
+my_table_template(fh_time, caption = "Fast Hit Time",
+  col_names = c("Group", "M", "SD", "min", "max"))
 ```
 <br><br>
 
