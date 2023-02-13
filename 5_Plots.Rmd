@@ -100,7 +100,7 @@ plot_rt <- ggplot() +
     guide = guide_legend(override.aes = list(size = 6, shape = 15, alpha = 1), label.hjust = -2)) +
   scale_fill_manual(name  = "Word Valence:", labels = c("Negative", "Positive"), values = colors, guide = "none") +
   facet_wrap(~group, labeller = labeller(group = group.labs)) +
-  my_figure_theme
+  my_figure_theme 
 
 
 # Save and remove legend
@@ -153,13 +153,15 @@ plot_acc <- ggplot() +
   geom_boxplot(data = data_aggregated_acc, aes(x = gng_response_type, y = accuracy, fill = word_valence),
     outlier.shape = NA, alpha = 0.9, width = .3, color = "black") +
   labs(x = "Response in the Go/No-Go Task", y = "Word Categorization Accuracy (%)") +
-  coord_cartesian(ylim = c(0, 101)) +
+  coord_cartesian(ylim = c(0, 105)) +
   scale_y_continuous(breaks = seq(0, 100, 10), expand = c(0, 0)) +
   scale_x_discrete(labels = c("SH" = "Slow Hit", "FH" = "Fast Hit", "FA" = "False Alarm", "IR" = "Inhibition")) +
   scale_color_manual(name = "Word Valence:", labels = c("Negative", "Positive"), values = colors) +
   scale_fill_manual(name  = "Word Valence:", labels = c("Negative", "Positive"), values = colors) +
   facet_wrap(~group, labeller = labeller(group = group.labs)) +
-  my_figure_theme + theme(legend.position = "none")
+  annotate("rect", xmin = 0.5, xmax = 4.5, ymin = 101, ymax = 105, fill = "white") + # Add whitespace below facet
+  my_figure_theme + theme(legend.position = "none")  
+
 
 
 # Add position of asterisks
@@ -182,15 +184,15 @@ plot_acc <- plot_acc +
 
 # Arrange plots
 figure_obs_val <- ggdraw() +
-  draw_plot(plot_rt,  x = .00, y = .450, width = 1,  height = .55) +
-  draw_plot(plot_acc, x = .00, y = .050, width = 1,  height = .38) +
+  draw_plot(plot_rt,  x = .00, y = .490, width = 1,  height = .51) +
+  draw_plot(plot_acc, x = .00, y = .050, width = 1,  height = .42) +
   draw_plot(legend,   x = .28, y = .015, width = .5, height = .00) +
-  draw_plot_label(c("A", "B"), c(0, 0), c(1, 0.43), size = 15)
+  draw_plot_label(c("A", "B"), c(0, 0), c(1, 0.47), size = 15)
 figure_obs_val
 
 
 # Save plot
-ggsave(plot = figure_obs_val, "./figures/figure_2.tiff", width = 16, height = 23,
+ggsave(plot = figure_obs_val, "./figures/figure_2.tiff", width = 16, height = 27,
   units = "cm", dpi = 600, compression = "lzw")
 ```
 <br><br>
@@ -408,9 +410,9 @@ plot_waveform_mfn <- ggplot(resp_locked_data, aes(time, FCz)) +
   geom_text(data = label_fcz, label = "FCz") +
   annotate("rect", xmin = 0, xmax = 100, ymin = -8, ymax = 18, alpha = .2, fill = "gray50") + # Shaded time area
   labs(x = "Time (ms)", y = expression(paste("Amplitude (", mu, "V)"))) +
-  coord_cartesian(ylim = c(-8, 18), xlim = c(-400, 800)) +
+  coord_cartesian(ylim = c(-8, 18), xlim = c(-200, 400)) +
   scale_y_continuous(breaks = seq(-8, 18, 2), expand = c(0, 0)) +
-  scale_x_continuous(breaks = seq(-400, 800, 200), expand = c(0, 0)) +
+  scale_x_continuous(breaks = seq(-200, 400, 100), expand = c(0, 0)) +
   scale_color_manual(values = colors_erp, labels = c("HC: False Alarm", "OCD: False Alarm", "HC: Hit", "OCD: Hit"),
     guide = guide_legend(override.aes = list(size = 1.3))) + # Thickness legend lines
   scale_fill_manual(values = colors_erp) +
@@ -483,7 +485,7 @@ ggsave(plot = figure_ern_crn, "./figures/figure_4.tiff", width = 16, height = 10
 <br>
 This figure corresponds to Figure 5 in the manuscript.
 
-```{r create-plot-oci, fig.width = 8, fig.height = 5, dpi = 600, fig.cap = "<br> Note. (A) Estimated interaction effect between Obsessive-Compulsive Inventory-Revised (OCI-R) score, preceding response type (fast hit, false alarm) in the go/no-go task, and word valence on word categorization response time (RT) in patients with OCD, computed as partial effect from the linear mixed model. RT data were log-transformed for analysis but were back-transformed to ms for data visualization. (B) Negative correlation between the OCI-R score and the overall priming effect across participants. The overall priming effect refers to the priming effect after false alarms and fast hits and was calculated by subtracting the RT in congruent conditions (positive words after fast hits and negative words after false alarms) from the RT in incongruent conditions (positive words after false alarms and negative words after fast hits) for each participant (Aarts et al., 2012). (A–B) Shaded bands represent 95% confidence intervals."}
+```{r create-plot-oci, fig.width = 8, fig.height = 5, dpi = 600, fig.cap = "<br> Note. (A) Model-predicted interaction effect between Obsessive-Compulsive Inventory-Revised (OCI-R) score, preceding response type (fast hit, false alarm) in the go/no-go task, and word valence on word categorization response time (RT) in patients with OCD, computed as partial effects from the linear mixed model. RT data were log-transformed for analysis but were back-transformed to ms for data visualization. (B) Negative correlation between the OCI-R score and the overall priming effect across participants. The overall priming effect refers to the priming effect after false alarms and fast hits and was calculated by subtracting the RT in congruent conditions (positive words after fast hits and negative words after false alarms) from the RT in incongruent conditions (positive words after false alarms and negative words after fast hits) for each participant (Aarts et al., 2012). (A–B) Shaded bands represent 95% confidence intervals."}
 
 # Load LMM output and correlation data
 LMM_rt_oci_ocd  <- readRDS(file = "./saved_objects_for_plots/LMM_rt_oci_ocd.rds")
@@ -545,7 +547,7 @@ ggsave(plot = figure_oci, "./figures/figure_5.tiff", width = 20, height = 12,
 <br>
 This figure corresponds to Figure S1 in the supplemental material.
 
-```{r create-plot-stai, fig.width = 8, fig.height = 5, dpi = 600, fig.cap = "<br> Note. (A) Estimated interaction effect between State-Trait Anxiety Inventory (STAI) trait score, preceding response type (fast hit, false alarm) in the go/no-go task, and word valence on word categorization response time (RT) in patients with OCD, computed as partial effect from the linear mixed model. RT data were log-transformed for analysis but were back-transformed to ms for data visualization. (B) Negative correlation between the STAI trait score and the overall priming effect across participants. The overall priming effect refers to the priming effect after false alarms and fast hits and was calculated by subtracting the RT in congruent conditions (positive words after fast hits and negative words after false alarms) from the RT in incongruent conditions (positive words after false alarms and negative words after fast hits) for each participant (Aarts et al., 2012). (A–B) Shaded bands represent 95% confidence intervals."}
+```{r create-plot-stai, fig.width = 8, fig.height = 5, dpi = 600, fig.cap = "<br> Note. (A) Model-predicted interaction effect between State-Trait Anxiety Inventory (STAI) trait score, preceding response type (fast hit, false alarm) in the go/no-go task, and word valence on word categorization response time (RT) in patients with OCD, computed as partial effects from the linear mixed model. RT data were log-transformed for analysis but were back-transformed to ms for data visualization. (B) Negative correlation between the STAI trait score and the overall priming effect across participants. The overall priming effect refers to the priming effect after false alarms and fast hits and was calculated by subtracting the RT in congruent conditions (positive words after fast hits and negative words after false alarms) from the RT in incongruent conditions (positive words after false alarms and negative words after fast hits) for each participant (Aarts et al., 2012). (A–B) Shaded bands represent 95% confidence intervals."}
 
 # Load LMM output
 LMM_rt_stai_ocd <- readRDS(file = "./saved_objects_for_plots/LMM_rt_stai_ocd.rds")
