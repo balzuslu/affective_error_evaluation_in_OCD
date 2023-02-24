@@ -183,10 +183,20 @@ my_table_template(descriptive_statistics_display[c(3:1, 4:9), ],
   pack_rows("Proportion of responses (%)", 4, 9)
 ```
 
-```{r fast-hit-time}
+```{r fast-hit-response-time-limit}
+
+# Define data basis (all go trials, equivalent to calculation in task program) 
+single_trial_data_rt_limit <- single_trial_data %>%
+  dplyr::filter(
+    gng_response_type != "FA" & 
+    gng_response_type != "IR" &
+    gng_response_type != "miss" &
+    gng_response_type != "wrong_key" & 
+    stimulation == "sham")
+
 
 # Add block variable
-single_trial_data_gng_rt <- single_trial_data_gng_rt %>%
+single_trial_data_rt_limit <- single_trial_data_rt_limit %>%
   dplyr::mutate(block = ifelse(trial < 29, 1, 
                            ifelse((trial > 28 & trial < 101), 2,
                               ifelse((trial > 100 & trial < 173), 3, 
@@ -198,20 +208,20 @@ single_trial_data_gng_rt <- single_trial_data_gng_rt %>%
 
 
 # Get mean RT per block
-mean_rt_per_block <- single_trial_data_gng_rt %>%
+mean_rt_per_block <- single_trial_data_rt_limit %>%
   dplyr::group_by(participant_id, block) %>%
   dplyr::summarize(mean_rt = mean(gng_rt)) %>%
   dplyr::ungroup()
 
 
-# Calculate fast hit time in calibration blocks 1, 4, and 7
+# Calculate fast hit response time limit in calibration blocks 1, 4, and 7
 mean_rt_per_block <- mean_rt_per_block %>% 
   dplyr::filter(block == 1 | block == 4 | block == 7) %>% 
   dplyr::mutate(fh_time = ifelse(block == 1, mean_rt * 0.8, mean_rt * 0.9),
                 group   = as.factor(ifelse(substr(participant_id, 1, 1) == "C", "HC", "OCD"))) 
 
 
-# Calculate mean, sd, min, and max of fast hit time per group
+# Calculate mean, sd, min, and max of fast hit response time limit per group
 fh_time <- mean_rt_per_block %>%
   dplyr::group_by(group) %>% 
   dplyr::summarize(M = mean(fh_time), SD = sd(fh_time), min = min(fh_time), max = max(fh_time)) %>%
@@ -223,7 +233,7 @@ fh_time[, c(2:5)] <- round(fh_time[, c(2:5)], digits = 0)
 
 
 # Display table 
-my_table_template(fh_time, caption = "Fast Hit Time",
+my_table_template(fh_time, caption = "Fast Hit Response Time Limit",
   col_names = c("Group", "M", "SD", "min", "max"))
 ```
 <br><br>
