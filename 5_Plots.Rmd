@@ -392,7 +392,7 @@ data_topo_mfn <- resp_locked_data %>%
 
 <!-- Create plots -->
 
-```{r create-erp-plot, fig.width = 8, fig.height = 5, cache = knitr_cache_enabled, dpi = 600, fig.cap = "Note. (A) Grand average response-locked waveforms at electrode site FCz with 95% confidence intervals in patients with OCD and HC participants for correct (hit) and incorrect (false alarm) responses in the go/no-go task. The gray shaded time interval was used to quantify ERN and CRN amplitude. (B) Scalp topographies of ERN and CRN in both groups in the time window 0–100 ms after false alarms or hits, respectively."}
+```{r create-erp-plot, fig.width = 8, fig.height = 10, cache = knitr_cache_enabled, dpi = 600, fig.cap = "Note. (A) Grand average response-locked waveforms at electrode site FCz with 95% confidence intervals in patients with OCD and HC participants for correct (hit) and incorrect (false alarm) responses in the go/no-go task. The gray shaded time interval was used to quantify ERN and CRN amplitude. (B) Scalp topographies of ERN and CRN in both groups in the time window 0–100 ms after false alarms or hits, respectively."}
 
 #### Create waveform plot ####
 
@@ -432,30 +432,42 @@ names(labs_corr) <- c("HC", "OCD")
 
 # ERN
 plot_topo_ern <- ggplot(data_topo_mfn[data_topo_mfn$condition == "incorrect", ],
-  aes(x = x, y = y, fill = amplitude, label = electrode)) +
-  geom_topo(grid_res = 300, interp_limit = "head", chan_markers = "point", chan_size = 0.1, head_size = 0.2) +
+  aes(x = x, y = y, fill = amplitude, z = amplitude, label = electrode)) +
+  geom_topo(grid_res = 300, interp_limit = "head", chan_markers = "point", chan_size = 0.1, 
+            head_size = 0.2, colour = "gray40", size = 0.2) +
   scale_fill_distiller(palette = "RdBu", limits = c(-4, 4), breaks = c(-4, 0, 4)) +
   theme_void() +
   coord_equal() +
   labs(fill = expression(paste(mu, "V"))) +
-  theme(legend.position = "right", legend.text = element_text(size = 6.5, color = "gray30"),
-    legend.title = element_text(size = 6.5, color = "gray30"), legend.key.height = unit(0.25, 'cm'),
-    legend.key.width = unit(0.25, 'cm'), strip.text.x = element_text(size = 6.5)) +
-  facet_wrap(. ~group, ncol = 1, labeller = labeller(group = labs_incorr))
+  theme(legend.position = "bottom", legend.text = element_text(size = 8, color = "gray30"),
+    legend.title = element_text(size = 8, color = "gray30", vjust = 0.9), legend.key.height = unit(0.25, 'cm'),
+    legend.key.width = unit(0.3, 'cm'), strip.text.x = element_text(size = 9)) +
+  facet_wrap(. ~group, ncol = 2, labeller = labeller(group = labs_incorr))
+
+
+# Save and remove legend
+legend_ern <- get_legend(plot_topo_ern)
+plot_topo_ern <- plot_topo_ern + theme(legend.position = "none")
 
 
 # CRN
 plot_topo_crn <- ggplot(data_topo_mfn[data_topo_mfn$condition == "correct", ],
-  aes(x = x, y = y, fill = amplitude, label = electrode)) +
-  geom_topo(grid_res = 300, interp_limit = "head", chan_markers = "point", chan_size = 0.1, head_size = 0.2) +
+  aes(x = x, y = y, fill = amplitude, z = amplitude, label = electrode)) +
+  geom_topo(grid_res = 300, interp_limit = "head", chan_markers = "point", chan_size = 0.1, 
+            head_size = 0.2, colour = "gray40", size = 0.2) +
   scale_fill_distiller(palette = "RdBu", limits = c(-4, 8.4), breaks = c(-4, 0, 4, 8)) +
   theme_void() +
   coord_equal() +
   labs(fill = expression(paste(mu, "V"))) +
-  theme(legend.position = "right", legend.text = element_text(size = 6.5, color = "gray30"),
-    legend.title = element_text(size = 6.5, color = "gray30"), legend.key.height = unit(0.25, 'cm'),
-    legend.key.width = unit(0.25, 'cm'), strip.text.x = element_text(size = 6.5)) +
-  facet_wrap(. ~group, ncol = 1, labeller = labeller(group = labs_corr))
+  theme(legend.position = "bottom", legend.text = element_text(size = 8, color = "gray30"),
+    legend.title = element_text(size = 8, color = "gray30", vjust = 0.9), legend.key.height = unit(0.25, 'cm'),
+    legend.key.width = unit(0.3, 'cm'), strip.text.x = element_text(size = 9)) +
+  facet_wrap(. ~group, ncol = 2, labeller = labeller(group = labs_corr))
+
+
+# Save and remove legend
+legend_crn <- get_legend(plot_topo_crn)
+plot_topo_crn <- plot_topo_crn + theme(legend.position = "none")
 
 
 # Overlay waveform and topopgraphy plots
@@ -465,15 +477,17 @@ aligned_plots2_mfn <- align_plots(plot_waveform_mfn, plot_topo_crn, axis = "tr")
 
 # Arrange plots
 figure_ern_crn <- ggdraw() +
-  draw_plot(aligned_plots1_mfn[[1]],  x =  0,  y = 0,    width = .77, height = .99) +
-  draw_plot(aligned_plots1_mfn[[2]],  x = .75, y = .525, width = .3,  height = .45) +
-  draw_plot(aligned_plots2_mfn[[2]],  x = .75, y = .05,  width = .3,  height = .45) +
-  draw_plot_label(c("A", "B"), c(0, .75), c(1, 1), size = 15)
+  draw_plot(aligned_plots1_mfn[[1]], x = 0,   y = .32, width = .99, height = .64) +
+  draw_plot(aligned_plots1_mfn[[2]], x = .09, y = .05, width = .42, height = .21) +
+  draw_plot(aligned_plots2_mfn[[2]], x = .55, y = .05, width = .42, height = .21) +
+  draw_plot(legend_ern,              x = .07, y = 0,   width = .42, height = .05) +
+  draw_plot(legend_crn,              x = .53, y = 0,   width = .42, height = .05) +
+  draw_plot_label(c("A", "B"), c(0, 0), c(1, 0.285), size = 15)
 figure_ern_crn
 
 
 # Save plot
-ggsave(plot = figure_ern_crn, "./figures/figure_4.tiff", width = 16, height = 10,
+ggsave(plot = figure_ern_crn, "./figures/figure_4.tiff", width = 13.5, height = 16,
   units = "cm", dpi = 600, compression = "lzw")
 ```
 <br><br>
