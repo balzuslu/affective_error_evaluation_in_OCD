@@ -305,15 +305,14 @@
     },
     "eegUtils": {
       "Package": "eegUtils",
-      "Version": "0.5.0",
+      "Version": "0.6.1",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "eegUtils",
       "RemoteUsername": "craddm",
       "RemoteRef": "HEAD",
-      "RemoteSha": "01c939f2327a20131a92a61cfdd8da111c36d595",
-      "Hash": "dd0dbb2b061749e49cfd44b6e90d6f9b"
+      "RemoteSha": "f65305ace3fa0e85d16be039ad151202c016204b"
     },
     "effectsize": {
       "Package": "effectsize",
