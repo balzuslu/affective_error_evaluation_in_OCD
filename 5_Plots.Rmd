@@ -513,7 +513,7 @@ plot_oci_1 <- plot_model(LMM_rt_oci_ocd,
                          ci.lvl = .95,
                          transform = "exp",
                          line.size = 1) +
-  labs(title = NULL, y = "Word Categorization RT (ms)", x = "OCI-R Score (Group-Mean Centered)") +
+  labs(title = NULL, y = "Word Categorization RT (ms)", x = "OCI-R Score (Group-Mean-Centered)") +
   coord_cartesian(ylim = c(500, 900), xlim = c(-13, 20)) +
   scale_y_continuous(breaks = seq(500, 900, 50), expand = c(0, 0)) +
   scale_x_continuous(breaks = seq(-10, 20, 5), expand = c(0, 0)) +
@@ -574,7 +574,7 @@ plot_stai_1 <- plot_model(LMM_rt_stai_ocd,
                           ci.lvl = .95,
                           transform = "exp",
                           line.size = 1) +
-  labs(title = NULL, y = "Word Categorization RT (ms)", x = "STAI Trait Score (Group-Mean Centered)") +
+  labs(title = NULL, y = "Word Categorization RT (ms)", x = "STAI Trait Score (Group-Mean-Centered)") +
   coord_cartesian(ylim = c(450, 900), xlim = c(-18, 25)) +
   scale_y_continuous(breaks = seq(450, 900, 50), expand = c(0, 0)) +
   scale_x_continuous(breaks = seq(-15, 25, 5), expand = c(0, 0)) +
